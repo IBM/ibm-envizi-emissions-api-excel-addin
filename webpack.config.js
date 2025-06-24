@@ -1,16 +1,13 @@
 /* eslint-disable no-undef */
-
 const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
 
 /* global require, module, process, __dirname */
-
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
   return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
@@ -24,9 +21,12 @@ module.exports = async (env, options) => {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
       commands: "./src/commands/commands.ts",
-      functions: "./src/functions/functions.ts",
+      functions: "./src/functions_component/functions.ts",
+      tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
     },
     output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "[name].js",
       clean: true,
     },
     resolve: {
@@ -57,18 +57,29 @@ module.exports = async (env, options) => {
     },
     plugins: [
       new CustomFunctionsMetadataPlugin({
-        output: "functions.json",
-        input: "./src/functions/functions.ts",
+        output: "functions.json", // Fixed: removed subfolder path
+        input: "./src/functions_component/functions.ts",
       }),
       new HtmlWebpackPlugin({
         filename: "functions.html",
-        template: "./src/functions/functions.html",
+        template: "./src/functions_component/functions.html",
         chunks: ["polyfill", "functions"],
       }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
         chunks: ["polyfill", "taskpane"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "commands.html",
+        template: "./src/commands/commands.html",
+        chunks: ["polyfill", "commands"],
+      }),
+      // Add this for the token dialog
+      new HtmlWebpackPlugin({
+        filename: "tokenDialog.html",
+        template: "./src/taskpane/tokenDialog.html",
+        chunks: ["polyfill"],
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -89,11 +100,6 @@ module.exports = async (env, options) => {
           },
         ],
       }),
-      new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: ["polyfill", "commands"],
-      }),
     ],
     devServer: {
       static: {
@@ -110,6 +116,5 @@ module.exports = async (env, options) => {
       port: process.env.npm_package_config_dev_server_port || 3000,
     },
   };
-
   return config;
 };
