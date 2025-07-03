@@ -90,8 +90,8 @@
             <label for="clientId">Client ID:</label>
             <input type="text" id="clientId" placeholder="Enter your client ID" required />
 
-            <label for="authToken">Auth Token:</label>
-            <input type="password" id="authToken" placeholder="Paste your auth token here" required />
+            <!-- <label for="authToken">Auth Token:</label>
+            <input type="password" id="authToken" placeholder="Paste your auth token here" required /> -->
             
             <button type="submit" id="submitBtn">Submit</button>
         </form>
@@ -195,7 +195,7 @@
         async function submitCredentials() {
           const apiKey = document.getElementById("apiKey").value.trim();
           const clientId = document.getElementById("clientId").value.trim();
-          const authToken = document.getElementById("authToken").value.trim();
+        //   const authToken = document.getElementById("authToken").value.trim();
           const status = document.getElementById("status");
           const submitBtn = document.getElementById("submitBtn");
 
@@ -203,27 +203,27 @@
           status.style.display = "none";
           status.className = "";
 
-          if (!authToken) {
-            showStatus("Auth Token is required.", "error");
-            return;
-          }
+        //   if (!authToken) {
+        //     showStatus("Auth Token is required.", "error");
+        //     return;
+        //   }
 
           submitBtn.disabled = true;
           submitBtn.textContent = "Submitting...";
-          showStatus("Submitting token...", "loading");
+          showStatus("Submitting credentials...", "loading");
 
           try {
             const message = JSON.stringify({
               type: "success",
               apiKey,
               clientId,
-              authToken
+            //   authToken
             });
 
             console.log("Sending message to parent:", message);
             Office.context.ui.messageParent(message);
 
-            showStatus("Token submitted! Closing dialog...", "success");
+            showStatus("credentials submitted! Closing dialog...", "success");
 
             setTimeout(() => {
               try {

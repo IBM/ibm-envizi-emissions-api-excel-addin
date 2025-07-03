@@ -24,13 +24,16 @@
     "dev": "concurrently \"npm run log-server\" \"npm run watch\" \"office-addin-debugging start manifest.xml\""
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "core-js": "^3.36.0",
+    "ibm-ghg-sdk": "file:/Users/prakharsahu/Desktop/githubb/ibm-envizi-carbon-engine-nodejs-sdk-internal",
     "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-typescript": "^7.23.3",
+    "@types/axios": "^0.9.36",
     "@types/custom-functions-runtime": "^1.6.8",
     "@types/office-js": "^1.0.377",
     "@types/office-runtime": "^1.0.35",
