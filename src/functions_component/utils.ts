@@ -1,4 +1,4 @@
-function convertExcelDateToISO(input: string): string {
+ export function convertExcelDateToISO(input: string): string {
   const trimmed = input.trim();
 
   // Case 1: Already in ISO YYYY-MM-DD
