@@ -4,9 +4,9 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const urlDev = "https://localhost:8080/";
+const urlDev = "https://localhost:8000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
-
+const webpack = require("webpack");
 /* global require, module, process, __dirname */
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
@@ -30,8 +30,12 @@ module.exports = async (env, options) => {
       clean: true,
     },
     resolve: {
-      extensions: [".ts", ".html", ".js"],
-    },
+  extensions: [".ts", ".html", ".js"],
+  fallback: {
+    buffer: require.resolve("buffer/"),
+  },
+},
+
     module: {
       rules: [
         {
@@ -100,21 +104,46 @@ module.exports = async (env, options) => {
           },
         ],
       }),
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+
     ],
     devServer: {
-      static: {
-        directory: path.join(__dirname, "dist"),
-        publicPath: "/public",
-      },
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      server: {
-        type: "https",
-        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
-      },
-      port: process.env.npm_package_config_dev_server_port || 8080,
-    },
+  static: {
+    directory: path.join(__dirname, "dist"),
+    publicPath: "/public",
+  },
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
+  server: {
+    type: "https",
+    options:
+      env.WEBPACK_BUILD || options.https !== undefined
+        ? options.https
+        : await getHttpsOptions(),
+  },
+  port: process.env.npm_package_config_dev_server_port || 8000,
+
+  // 🔥 Add this block to enable proxying
+ proxy: [
+  {
+    context: ['/Auth'], // auth token endpoint
+    target: 'https://stg.auth-b2b-twc.ibm.com',
+    changeOrigin: true,
+    secure: false,
+  },
+  {
+    context: ['/v3'], // API endpoint for /v3/carbon/...
+    target: 'https://foundation-staging.agtech.ibm.com',
+    changeOrigin: true,
+    secure: false,
+  }
+],
+
+},
+
   };
   return config;
 };

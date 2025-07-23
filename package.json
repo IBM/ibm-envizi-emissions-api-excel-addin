@@ -21,10 +21,12 @@
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch",
     "log-server": "node logger-server.js",
-    "dev": "concurrently \"npm run log-server\" \"npm run watch\" \"office-addin-debugging start manifest.xml\""
+    "dev": "concurrently \"npm run dev-server\" \"npm start\""
   },
+  "proxy": "https://stg.auth-b2b-twc.ibm.com/",
   "dependencies": {
     "axios": "^1.10.0",
+    "buffer": "^6.0.3",
     "core-js": "^3.36.0",
     "ibm-ghg-sdk": "file:/Users/prakharsahu/Desktop/githubb/ibm-envizi-carbon-engine-nodejs-sdk-internal",
     "regenerator-runtime": "^0.14.1"
@@ -47,6 +49,7 @@
     "file-loader": "^6.2.0",
     "html-loader": "^5.0.0",
     "html-webpack-plugin": "^5.6.0",
+    "http-proxy-middleware": "^3.0.5",
     "office-addin-cli": "^2.0.3",
     "office-addin-debugging": "^6.0.3",
     "office-addin-dev-certs": "^2.0.3",

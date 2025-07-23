@@ -4,12 +4,24 @@
  */
 /* global console, document, Excel, Office */
 
+
+// Force axios to use relative path in development so proxy can intercept
+if (process.env.NODE_ENV === 'development') {
+  const axios = require('axios');
+  axios.defaults.baseURL = '/';
+  console.log('[DEV] Axios baseURL overridden to /');
+}
+
+
+
 // Store credentials in memory instead of localStorage
 let credentials = {
   apiKey: null as string | null,
   clientId: null as string | null,
   authToken: null as string | null
 };
+
+
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
