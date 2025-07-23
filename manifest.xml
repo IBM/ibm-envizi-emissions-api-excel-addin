@@ -5,13 +5,13 @@
   <ProviderName>ENVIZI</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="ENVIZI"/>
-  <Description DefaultValue="Write your own Excel functions in TypeScript."/>
+  <!-- <Description DefaultValue="Write your own Excel functions in TypeScript."/> -->
   <IconUrl DefaultValue="https://localhost:8000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:8000/assets/icon-64.png"/>
-  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
-  <AppDomains>
+  <!-- <SupportUrl DefaultValue="https://www.contoso.com/help"/> -->
+  <!-- <AppDomains>
     <AppDomain>https://www.contoso.com</AppDomain>
-  </AppDomains>
+  </AppDomains> -->
   <Hosts>
     <Host Name="Workbook"/>
   </Hosts>
