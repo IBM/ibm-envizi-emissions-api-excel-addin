@@ -1,12 +1,6 @@
 ﻿import { Client, LocationApi , MobileApi, FugitiveApi , StationaryApi , GenericCalculation  } from 'ibm-ghg-sdk';
 import { convertExcelDateToISO } from './utils';
-// // @ts-ignore
-// import { Buffer } from 'buffer';
 
-// // Excel custom functions runtime doesn't define Buffer. Patch it.
-// if (typeof globalThis.Buffer === 'undefined') {
-//   (globalThis as any).Buffer = Buffer;
-// }
 
 async function genericApiCall(
   apiType: 'location' | 'stationary' | 'fugitive' | 'mobile'| 'calculation',
