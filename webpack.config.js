@@ -20,7 +20,6 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
-      commands: "./src/commands/commands.ts",
       functions: "./src/functions_component/functions.ts",
       tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
     },
@@ -50,13 +49,6 @@ module.exports = async (env, options) => {
           exclude: /node_modules/,
           use: "html-loader",
         },
-        {
-          test: /\.(png|jpg|jpeg|gif|ico)$/,
-          type: "asset/resource",
-          generator: {
-            filename: "assets/[name][ext][query]",
-          },
-        },
       ],
     },
     plugins: [
@@ -74,11 +66,7 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/taskpane.html",
         chunks: ["polyfill", "taskpane"],
       }),
-      new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: ["polyfill", "commands"],
-      }),
+      
       // Add this for the token dialog
       new HtmlWebpackPlugin({
         filename: "tokenDialog.html",
