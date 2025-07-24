@@ -1,0 +1,137 @@
+/* eslint-disable no-undef */
+const devCerts = require("office-addin-dev-certs");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+const urlDev = "https://localhost:8000/";
+const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const webpack = require("webpack");
+/* global require, module, process, __dirname */
+async function getHttpsOptions() {
+  const httpsOptions = await devCerts.getHttpsServerOptions();
+  return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+}
+
+module.exports = async (env, options) => {
+  const dev = options.mode === "development";
+  const config = {
+    devtool: "source-map",
+    entry: {
+      polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
+      taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
+      functions: "./src/functions_component/functions.ts",
+      tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
+    },
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "[name].js",
+      clean: true,
+    },
+    resolve: {
+  extensions: [".ts", ".html", ".js"],
+  fallback: {
+    buffer: require.resolve("buffer/"),
+  },
+},
+
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader"
+          },
+        },
+        {
+          test: /\.html$/,
+          exclude: /node_modules/,
+          use: "html-loader",
+        },
+      ],
+    },
+    plugins: [
+      new CustomFunctionsMetadataPlugin({
+        output: "functions.json", // Fixed: removed subfolder path
+        input: "./src/functions_component/functions.ts",
+      }),
+      new HtmlWebpackPlugin({
+        filename: "functions.html",
+        template: "./src/functions_component/functions.html",
+        chunks: ["polyfill", "functions"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "taskpane.html",
+        template: "./src/taskpane/taskpane.html",
+        chunks: ["polyfill", "taskpane"],
+      }),
+      
+      // Add this for the token dialog
+      new HtmlWebpackPlugin({
+        filename: "tokenDialog.html",
+        template: "./src/taskpane/tokenDialog.html",
+        chunks: ["polyfill"],
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: "assets/*",
+            to: "assets/[name][ext][query]",
+          },
+          {
+            from: "manifest*.xml",
+            to: "[name]" + "[ext]",
+            transform(content) {
+              if (dev) {
+                return content;
+              } else {
+                return content.toString().replace(new RegExp(urlDev + "(?:public/)?", "g"), urlProd);
+              }
+            },
+          },
+        ],
+      }),
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+
+    ],
+    devServer: {
+  static: {
+    directory: path.join(__dirname, "dist"),
+    publicPath: "/public",
+  },
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
+  server: {
+    type: "https",
+    options:
+      env.WEBPACK_BUILD || options.https !== undefined
+        ? options.https
+        : await getHttpsOptions(),
+  },
+  port: process.env.npm_package_config_dev_server_port || 8000,
+
+  // 🔥 Add this block to enable proxying
+ proxy: [
+  {
+    context: ['/Auth'], // auth token endpoint
+    target: 'https://stg.auth-b2b-twc.ibm.com',
+    changeOrigin: true,
+    secure: false,
+  },
+  {
+    context: ['/v3'], // API endpoint for /v3/carbon/...
+    target: 'https://foundation-staging.agtech.ibm.com',
+    changeOrigin: true,
+    secure: false,
+  }
+],
+
+},
+
+  };
+  return config;
+};
