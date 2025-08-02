@@ -2,12 +2,13 @@
 import { convertExcelDateToISO } from './utils';
 
 
-async function genericApiCall(
+export async function genericApiCall(
   apiType: 'location' | 'stationary' | 'fugitive' | 'mobile'| 'calculation',
   payload: {
     date: string,
     country: string,
     stateProvince: string,
+    powerGrid?: string;
     type: string,
     value: number,
     unit: string
@@ -29,8 +30,18 @@ console.log("Formatted date:", formattedDate);
 
     await Client.getClient({ apiKey, clientId });
 
+    const location: any = {
+      country: payload.country,
+      stateProvince: payload.stateProvince,
+    };
+    if (apiType === "location" || apiType === "calculation") {
+      if (payload.powerGrid) {
+        location.powerGrid = payload.powerGrid;
+      }
+    }
+
     const apiParams = {
-      location: { country: payload.country, stateProvince: payload.stateProvince },
+      location,
       time: { date: formattedDate },
       activity: { type: payload.type, value: payload.value, unit: payload.unit },
       includeDetails: false,
@@ -66,11 +77,22 @@ export async function v3_location_helper(
   date: string,
   country: string,
   stateProvince: string,
+  powerGrid: string,
   type: string,
   value: number,
   unit: string
 ): Promise<string[]> {
-  return genericApiCall("location", { date, country, stateProvince, type, value, unit });
+  const state = stateProvince || "";
+  const grid = powerGrid || "";
+  return genericApiCall("location", {
+    date,
+    country,
+    stateProvince: state,
+    powerGrid: grid,
+    type,
+    value,
+    unit,
+  });
 }
 
 /**
@@ -121,7 +143,6 @@ export async function v3_mobile_helper(
   return genericApiCall("mobile", { date, country, stateProvince, type, value, unit });
 }
 
-
 /**
  * Calculates emissions using the generic calculation endpoint.
  * @customfunction
@@ -131,13 +152,23 @@ export async function v3_calculation_helper(
   date: string,
   country: string,
   stateProvince: string,
+  powerGrid: string,
   type: string,
   value: number,
   unit: string
 ): Promise<string[]> {
-  return genericApiCall("calculation", { date, country, stateProvince, type, value, unit });
+  const state = stateProvince || "";
+  const grid = powerGrid || "";
+  return genericApiCall("calculation", {
+    date,
+    country,
+    stateProvince: state,
+    powerGrid: grid,
+    type,
+    value,
+    unit,
+  });
 }
-
 
 /**
  * Wrapper for location emission calculation.
@@ -146,9 +177,20 @@ export async function v3_calculation_helper(
  */
 export async function v3_location(row: any[][]): Promise<string[][]> {
   const flat = Array.isArray(row) && Array.isArray(row[0]) ? row[0] : row;
-  if (flat.length < 6) return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
-  const [date, country, stateProvince, type, value, unit] = flat;
-  const result = await v3_location_helper(String(date), String(country), String(stateProvince), String(type), Number(value), String(unit));
+  if (flat.length < 7)
+    return [
+      ["Error", "Expected 7 fields: date, country, stateProvince, powerGrid, type, value, unit"],
+    ];
+  const [date, country, stateProvince, powerGrid, type, value, unit] = flat;
+  const result = await v3_location_helper(
+    String(date),
+    String(country),
+    String(stateProvince || ""),
+    String(type),
+    String(powerGrid || ""),
+    Number(value),
+    String(unit)
+  );
   return [result];
 }
 
@@ -159,9 +201,17 @@ export async function v3_location(row: any[][]): Promise<string[][]> {
  */
 export async function v3_stationary(row: any[][]): Promise<string[][]> {
   const flat = Array.isArray(row) && Array.isArray(row[0]) ? row[0] : row;
-  if (flat.length < 6) return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
+  if (flat.length < 6)
+    return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
   const [date, country, stateProvince, type, value, unit] = flat;
-  const result = await v3_stationary_helper(String(date), String(country), String(stateProvince), String(type), Number(value), String(unit));
+  const result = await v3_stationary_helper(
+    String(date),
+    String(country),
+    String(stateProvince || ""),
+    String(type),
+    Number(value),
+    String(unit)
+  );
   return [result];
 }
 
@@ -172,9 +222,17 @@ export async function v3_stationary(row: any[][]): Promise<string[][]> {
  */
 export async function v3_fugitive(row: any[][]): Promise<string[][]> {
   const flat = Array.isArray(row) && Array.isArray(row[0]) ? row[0] : row;
-  if (flat.length < 6) return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
+  if (flat.length < 6)
+    return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
   const [date, country, stateProvince, type, value, unit] = flat;
-  const result = await v3_fugitive_helper(String(date), String(country), String(stateProvince), String(type), Number(value), String(unit));
+  const result = await v3_fugitive_helper(
+    String(date),
+    String(country),
+    String(stateProvince || ""),
+    String(type),
+    Number(value),
+    String(unit)
+  );
   return [result];
 }
 
@@ -185,9 +243,17 @@ export async function v3_fugitive(row: any[][]): Promise<string[][]> {
  */
 export async function v3_mobile(row: any[][]): Promise<string[][]> {
   const flat = Array.isArray(row) && Array.isArray(row[0]) ? row[0] : row;
-  if (flat.length < 6) return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
+  if (flat.length < 6)
+    return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
   const [date, country, stateProvince, type, value, unit] = flat;
-  const result = await v3_mobile_helper(String(date), String(country), String(stateProvince), String(type), Number(value), String(unit));
+  const result = await v3_mobile_helper(
+    String(date),
+    String(country),
+    String(stateProvince || ""),
+    String(type),
+    Number(value),
+    String(unit)
+  );
   return [result];
 }
 /**
@@ -197,8 +263,19 @@ export async function v3_mobile(row: any[][]): Promise<string[][]> {
  */
 export async function v3_calculation(row: any[][]): Promise<string[][]> {
   const flat = Array.isArray(row) && Array.isArray(row[0]) ? row[0] : row;
-  if (flat.length < 6) return [["Error", "Expected 6 fields: date, country, stateProvince, type, value, unit"]];
-  const [date, country, stateProvince, type, value, unit] = flat;
-  const result = await v3_calculation_helper(String(date), String(country), String(stateProvince), String(type), Number(value), String(unit));
+  if (flat.length < 7)
+    return [
+      ["Error", "Expected 6 fields: date, country, stateProvince, powerGrid, type, value, unit"],
+    ];
+  const [date, country, stateProvince, powerGrid, type, value, unit] = flat;
+  const result = await v3_calculation_helper(
+    String(date),
+    String(country),
+    String(stateProvince || ""),
+    String(powerGrid || ""),
+    String(type),
+    Number(value),
+    String(unit)
+  );
   return [result];
 }

@@ -21,7 +21,8 @@
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch",
     "log-server": "node logger-server.js",
-    "dev": "concurrently \"npm run dev-server\" \"npm start\""
+    "dev": "concurrently \"npm run dev-server\" \"npm start\"",
+    "test":"jest"
   },
   "dependencies": {
     "axios": "^1.10.0",
