@@ -1,9 +1,16 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['test'],
+  roots: ['<rootDir>/test'],
   testMatch: ['**/*.test.ts'],
-  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverage: true,
-  coverageDirectory: 'dist/coverage'
+  coverageDirectory: 'dist/coverage',
+  coverageReporters: ['text', 'lcov'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
+  }
 };
