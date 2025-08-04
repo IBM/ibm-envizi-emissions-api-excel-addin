@@ -2,7 +2,6 @@ import { genericApiCall } from "../src/functions_component/functions";
 import * as utils from "../src/functions_component/utils";
 import { createMockOfficeRuntime } from "./__mocks__/officeRuntimeMock";
 
-// Mock the external SDK and date utility
 import { Client, LocationApi, StationaryApi, MobileApi, FugitiveApi, GenericCalculation } from "ibm-ghg-sdk";
 
 jest.mock("ibm-ghg-sdk");
@@ -10,13 +9,12 @@ jest.mock("../src/functions_component/utils");
 
 describe("genericApiCall", () => {
   beforeEach(() => {
-    // Always return a formatted date
     (utils.convertExcelDateToISO as jest.Mock).mockReturnValue("2025-01-01");
 
-    // Mock OfficeRuntime globally
+
     global.OfficeRuntime = createMockOfficeRuntime() as any;
 
-    // Mock external SDK client setup and APIs
+
     (Client.getClient as jest.Mock).mockResolvedValue(undefined);
     (LocationApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 123 });
     (StationaryApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 456 });
