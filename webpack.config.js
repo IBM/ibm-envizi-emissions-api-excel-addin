@@ -20,7 +20,10 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
-      functions: "./src/functions_component/functions.ts",
+      functions: [
+        "./src/functions_component/wrapperFunctions.ts",
+        "./src/functions_component/helperFunctions.ts"
+      ],
       tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
     },
     output: {
@@ -29,11 +32,11 @@ module.exports = async (env, options) => {
       clean: true,
     },
     resolve: {
-  extensions: [".ts", ".html", ".js"],
-  fallback: {
-    buffer: require.resolve("buffer/"),
-  },
-},
+      extensions: [".ts", ".html", ".js"],
+      fallback: {
+        buffer: require.resolve("buffer/"),
+      },
+    },
 
     module: {
       rules: [
@@ -54,7 +57,10 @@ module.exports = async (env, options) => {
     plugins: [
       new CustomFunctionsMetadataPlugin({
         output: "functions.json", // Fixed: removed subfolder path
-        input: "./src/functions_component/functions.ts",
+        input: [
+          "./src/functions_component/wrapperFunctions.ts",
+          "./src/functions_component/helperFunctions.ts"
+        ],
       }),
       new HtmlWebpackPlugin({
         filename: "functions.html",
@@ -66,7 +72,7 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/taskpane.html",
         chunks: ["polyfill", "taskpane"],
       }),
-      
+
       // Add this for the token dialog
       new HtmlWebpackPlugin({
         filename: "tokenDialog.html",
@@ -98,39 +104,39 @@ module.exports = async (env, options) => {
 
     ],
     devServer: {
-  static: {
-    directory: path.join(__dirname, "dist"),
-    publicPath: "/public",
-  },
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
-  server: {
-    type: "https",
-    options:
-      env.WEBPACK_BUILD || options.https !== undefined
-        ? options.https
-        : await getHttpsOptions(),
-  },
-  port: process.env.npm_package_config_dev_server_port || 8000,
+      static: {
+        directory: path.join(__dirname, "dist"),
+        publicPath: "/public",
+      },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      server: {
+        type: "https",
+        options:
+          env.WEBPACK_BUILD || options.https !== undefined
+            ? options.https
+            : await getHttpsOptions(),
+      },
+      port: process.env.npm_package_config_dev_server_port || 8000,
 
-  // 🔥 Add this block to enable proxying
- proxy: [
-  {
-    context: ['/Auth'], // auth token endpoint
-    target: 'https://stg.auth-b2b-twc.ibm.com',
-    changeOrigin: true,
-    secure: false,
-  },
-  {
-    context: ['/v3'], // API endpoint for /v3/carbon/...
-    target: 'https://foundation-staging.agtech.ibm.com',
-    changeOrigin: true,
-    secure: false,
-  }
-],
+      // 🔥 Add this block to enable proxying
+      proxy: [
+        {
+          context: ['/Auth'], // auth token endpoint
+          target: 'https://stg.auth-b2b-twc.ibm.com',
+          changeOrigin: true,
+          secure: false,
+        },
+        {
+          context: ['/v3'], // API endpoint for /v3/carbon/...
+          target: 'https://foundation-staging.agtech.ibm.com',
+          changeOrigin: true,
+          secure: false,
+        }
+      ],
 
-},
+    },
 
   };
   return config;
