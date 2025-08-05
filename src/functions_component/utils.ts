@@ -1,4 +1,4 @@
- export function convertExcelDateToISO(input: string): string {
+export function convertExcelDateToISO(input: string): string {
   const trimmed = input.trim();
 
   // Case 1: Already in ISO YYYY-MM-DD
@@ -13,26 +13,5 @@
     return date.toISOString().split("T")[0];
   }
 
-  // Case 3: DD/MM/YYYY or MM/DD/YYYY
-  const parts = trimmed.split(/[\/\-]/);
-  if (parts.length === 3) {
-    let [day, month, year] = parts.map((p) => parseInt(p, 10));
-
-    // Handle MM/DD/YYYY (US style)
-    if (month > 12 && day <= 12) {
-      [day, month] = [month, day];
-    }
-
-    if (year < 100) year += 2000; // handle 2-digit years
-
-    const date = new Date(year, month - 1, day);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString().split("T")[0];
-    }
-  }
-
-  return "Invalid date";
+  
 }
-
-
-
