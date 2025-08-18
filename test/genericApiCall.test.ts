@@ -4,11 +4,11 @@ import { createMockOfficeRuntime } from "./__mocks__/officeRuntimeMock";
 
 import {
   Client,
-  LocationApi,
-  StationaryApi,
-  MobileApi,
-  FugitiveApi,
-  GenericCalculation,
+  LocationEmission,
+  StationaryEmission,
+  MobileEmission,
+  FugitiveEmission,
+  GenericCalculationEmission,
 } from "ibm-ghg-sdk";
 
 jest.mock("ibm-ghg-sdk");
@@ -21,11 +21,11 @@ describe("genericApiCall", () => {
     global.OfficeRuntime = createMockOfficeRuntime() as any;
 
     (Client.getClient as jest.Mock).mockResolvedValue(undefined);
-    (LocationApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 123 });
-    (StationaryApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 456 });
-    (MobileApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 789 });
-    (FugitiveApi.calculate as jest.Mock).mockResolvedValue({ CO2e: 111 });
-    (GenericCalculation.calculate as jest.Mock).mockResolvedValue({ CO2e: 222 });
+    (LocationEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 123 });
+    (StationaryEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 456 });
+    (MobileEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 789 });
+    (FugitiveEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 111 });
+    (GenericCalculationEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 222 });
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -48,7 +48,7 @@ describe("genericApiCall", () => {
     expect(result[1]).toContain("Missing apiKey/clientId");
   });
 
-  it("calls LocationApi for 'location'", async () => {
+  it("calls LocationEmission for 'location'", async () => {
     const result = await genericApiCall("location", {
       date: "44562",
       country: "USA",
@@ -59,11 +59,11 @@ describe("genericApiCall", () => {
       unit: "kWh",
     });
 
-    expect(LocationApi.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["123"]);
+    expect(LocationEmission.calculate).toHaveBeenCalled();
+    expect(result).toEqual(["CO2e: 123"]);
   });
 
-  it("calls StationaryApi for 'stationary'", async () => {
+  it("calls StationaryEmission for 'stationary'", async () => {
     const result = await genericApiCall("stationary", {
       date: "44562",
       country: "USA",
@@ -73,11 +73,11 @@ describe("genericApiCall", () => {
       unit: "L",
     });
 
-    expect(StationaryApi.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["456"]);
+    expect(StationaryEmission.calculate).toHaveBeenCalled();
+    expect(result).toEqual(["CO2e: 456"]);
   });
 
-  it("calls MobileApi for 'mobile'", async () => {
+  it("calls MobileEmission for 'mobile'", async () => {
     const result = await genericApiCall("mobile", {
       date: "44562",
       country: "USA",
@@ -87,11 +87,11 @@ describe("genericApiCall", () => {
       unit: "L",
     });
 
-    expect(MobileApi.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["789"]);
+    expect(MobileEmission.calculate).toHaveBeenCalled();
+    expect(result).toEqual(["CO2e: 789"]);
   });
 
-  it("calls FugitiveApi for 'fugitive'", async () => {
+  it("calls FugitiveEmission for 'fugitive'", async () => {
     const result = await genericApiCall("fugitive", {
       date: "44562",
       country: "USA",
@@ -101,11 +101,11 @@ describe("genericApiCall", () => {
       unit: "kg",
     });
 
-    expect(FugitiveApi.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["111"]);
+    expect(FugitiveEmission.calculate).toHaveBeenCalled();
+    expect(result).toEqual(["CO2e: 111"]);
   });
 
-  it("calls GenericCalculation for 'calculation'", async () => {
+  it("calls GenericCalculationEmission for 'calculation'", async () => {
     const result = await genericApiCall("calculation", {
       date: "44562",
       country: "USA",
@@ -116,8 +116,8 @@ describe("genericApiCall", () => {
       unit: "kWh",
     });
 
-    expect(GenericCalculation.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["222"]);
+    expect(GenericCalculationEmission.calculate).toHaveBeenCalled();
+    expect(result).toEqual(["CO2e: 222"]);
   });
 
   it("returns error for unsupported API type", async () => {
@@ -128,7 +128,7 @@ describe("genericApiCall", () => {
   });
 
   it("returns error when API throws exception", async () => {
-    (LocationApi.calculate as jest.Mock).mockRejectedValue(new Error("Some API failure"));
+    (LocationEmission.calculate as jest.Mock).mockRejectedValue(new Error("Some API failure"));
 
     const result = await genericApiCall("location", {
       date: "44562",
@@ -145,7 +145,7 @@ describe("genericApiCall", () => {
   });
 
   it("returns error if API returns invalid (null) response", async () => {
-    (LocationApi.calculate as jest.Mock).mockResolvedValue(null);
+    (LocationEmission.calculate as jest.Mock).mockResolvedValue(null);
 
     const result = await genericApiCall("location", {
       date: "44562",
@@ -162,7 +162,7 @@ describe("genericApiCall", () => {
   });
 
   it("returns error if API returns non-object (string) response", async () => {
-    (LocationApi.calculate as jest.Mock).mockResolvedValue("unexpected" as any);
+    (LocationEmission.calculate as jest.Mock).mockResolvedValue("unexpected" as any);
 
     const result = await genericApiCall("location", {
       date: "44562",
