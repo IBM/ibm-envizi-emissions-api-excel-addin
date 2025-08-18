@@ -8,26 +8,22 @@ import { genericApiCall } from "./genericApiCall";
  * @requiresAddress
  */
 export async function location(
-  date: string,
-  country: string,
-  stateProvince: string,
-  powerGrid: string,
-  type: string,
-  value: number,
-  unit: string,
-  invocation: CustomFunctions.Invocation
-): Promise<string[]> {
- 
-  const state = stateProvince || "";
-  const grid = powerGrid || "";
-
-  const response=await genericApiCall(
+  date: string = "",
+  country: string = "",
+  stateProvince: string = "",
+  powerGrid: string = "",
+  type: string = "",
+  value: number = 1,
+  unit: string = "",
+  invocation?
+): Promise<string[][]> {
+  const response = await genericApiCall(
     "location",
     {
       date,
       country,
-      stateProvince: state,
-      powerGrid: grid,
+      stateProvince,
+      powerGrid,
       type,
       value,
       unit,
@@ -35,7 +31,7 @@ export async function location(
     invocation
   );
 
-  return response
+  return response;
 }
 
 /**
@@ -46,14 +42,14 @@ export async function location(
  * @requiresAddress
  */
 export async function stationary(
-  date: string,
-  country: string,
-  stateProvince: string,
-  type: string,
-  value: number,
-  unit: string,
-  invocation
-): Promise<string[]> {
+  date: string = "",
+  country: string = "",
+  stateProvince: string = "",
+  type: string = "",
+  value: number = 1,
+  unit: string = "",
+  invocation?
+): Promise<string[][]> {
   return genericApiCall(
     "stationary",
     { date, country, stateProvince, type, value, unit },
@@ -69,14 +65,14 @@ export async function stationary(
  * @requiresAddress
  */
 export async function fugitive(
-  date: string,
-  country: string,
-  stateProvince: string,
-  type: string,
-  value: number,
-  unit: string,
-  invocation
-): Promise<string[]> {
+  date: string = "",
+  country: string = "",
+  stateProvince: string = "",
+  type: string = "",
+  value: number = 1,
+  unit: string = "",
+  invocation?
+): Promise<string[][]> {
   return genericApiCall(
     "fugitive",
     { date, country, stateProvince, type, value, unit },
@@ -92,14 +88,14 @@ export async function fugitive(
  * @requiresAddress
  */
 export async function mobile(
-  date: string,
-  country: string,
-  stateProvince: string,
-  type: string,
-  value: number,
-  unit: string,
-  invocation
-): Promise<string[]> {
+  date: string = "",
+  country: string = "",
+  stateProvince: string = "",
+  type: string = "",
+  value: number = 1,
+  unit: string = "",
+  invocation?
+): Promise<string[][]> {
   return genericApiCall("mobile", { date, country, stateProvince, type, value, unit }, invocation);
 }
 
@@ -111,24 +107,22 @@ export async function mobile(
  * @requiresAddress
  */
 export async function calculation(
-  date: string,
-  country: string,
-  stateProvince: string,
-  powerGrid: string,
-  type: string,
-  value: number,
-  unit: string,
-  invocation
-): Promise<string[]> {
-  const state = stateProvince || "";
-  const grid = powerGrid || "";
+  date: string = "",
+  country: string = "",
+  stateProvince: string = "",
+  powerGrid: string = "",
+  type: string = "",
+  value: number = 1,
+  unit: string = "",
+  invocation?
+): Promise<string[][]> {
   return genericApiCall(
     "calculation",
     {
       date,
       country,
-      stateProvince: state,
-      powerGrid: grid,
+      stateProvince,
+      powerGrid,
       type,
       value,
       unit,
@@ -136,4 +130,3 @@ export async function calculation(
     invocation
   );
 }
-
