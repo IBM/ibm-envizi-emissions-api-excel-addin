@@ -21,7 +21,6 @@ module.exports = async (env, options) => {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
       functions: [
-        "./src/functions_component/wrapperFunctions.ts",
         "./src/functions_component/helperFunctions.ts"
       ],
       tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
@@ -56,9 +55,8 @@ module.exports = async (env, options) => {
     },
     plugins: [
       new CustomFunctionsMetadataPlugin({
-        output: "functions.json", // Fixed: removed subfolder path
+        output: "functions.json",
         input: [
-          "./src/functions_component/wrapperFunctions.ts",
           "./src/functions_component/helperFunctions.ts"
         ],
       }),
