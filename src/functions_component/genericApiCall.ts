@@ -20,14 +20,17 @@ export async function genericApiCall(
     unit: string;
   },
   invocation?: CustomFunctions.Invocation
-): Promise<string[]> {
+): Promise<string[][]> {
   try {
     const address = invocation?.address ?? null;
-    const formattedDate = convertExcelDateToISO(payload.date);
+    const formattedDate =
+      payload.date && payload.date.trim() !== ""
+        ? convertExcelDateToISO(payload.date)
+        : null;
 
     if (!OfficeRuntime?.storage) {
 
-        return ["OfficeRuntime.storage not availaible"]
+        return [["OfficeRuntime.storage not availaible"]]
 
     }
 
@@ -36,7 +39,7 @@ export async function genericApiCall(
 
     if (!apiKey || !clientId) {
 
-        return [`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]
+        return [[`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]]
 
     }
 
@@ -55,12 +58,15 @@ export async function genericApiCall(
       }
     }
 
-    const apiParams = {
+    const apiParams: any = {
       location,
-      time: { date: formattedDate },
       activity: { type: payload.type, value: payload.value, unit: payload.unit },
       includeDetails: false,
-    };
+    }
+    
+    if (formattedDate) {
+      apiParams.time = { date: formattedDate };
+    }
 
     let response: any;
     try {
@@ -81,7 +87,7 @@ export async function genericApiCall(
           response = await GenericCalculationEmission.calculate(apiParams);
           break;
         default:
-          return ["Error", `Unsupported API type: ${apiType}`];
+          return [["Error", `Unsupported API type: ${apiType}`]];
       }
     } catch (apiError: any) {
       const errMsg =
@@ -89,15 +95,15 @@ export async function genericApiCall(
         apiError?.message ||
         "Unknown API request error";
 
-      console.error(`[genericApiCall p] API request failed:`, errMsg);
 
-      throw new CustomFunctions.Error(CustomFunctions.ErrorCode.invalidValue, errMsg);
+      console.error(`[genericApiCall p] API request failed:`, errMsg);
+      return [[errMsg]]
     }
 
     if (!response || typeof response !== "object") {
       const msg = "Invalid API response";
       console.error(`[genericApiCall] ${msg}`, { response });
-      return ["Error", msg];
+      return [["Error", msg]];
     }
 
     const rowData = Object.entries(response);
@@ -112,7 +118,7 @@ export async function genericApiCall(
       console.error("[CustomFunction] Failed to store freezeData:", err);
     }
 
-    return rowData.map(([k, v]) => `${v}`);
+    return  [Object.entries(response).map(([k, v]) => `${v}`)];
   } catch (e: any) {
     return ["Error", e?.message || String(e)];
   }
