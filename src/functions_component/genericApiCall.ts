@@ -69,8 +69,6 @@ export async function genericApiCall(
     }
 
     let response: any;
-    console.log("prakhar sahu");
-    console.log(apiParams);
     try {
       switch (apiType) {
         case "location":
