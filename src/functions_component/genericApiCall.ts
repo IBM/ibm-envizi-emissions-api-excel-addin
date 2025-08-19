@@ -20,30 +20,26 @@ export async function genericApiCall(
     unit: string;
   },
   invocation?: CustomFunctions.Invocation
-): Promise<string[]> {
+): Promise<string[][]> {
   try {
     const address = invocation?.address ?? null;
-    const formattedDate = convertExcelDateToISO(payload.date);
+    const formattedDate = payload.date?.trim() ? convertExcelDateToISO(payload.date) : null;
 
     if (!OfficeRuntime?.storage) {
-
-        return ["OfficeRuntime.storage not availaible"]
-
+      return [["OfficeRuntime.storage not availaible"]];
     }
 
     const apiKey = await OfficeRuntime.storage.getItem("apiKey");
     const clientId = await OfficeRuntime.storage.getItem("clientId");
 
     if (!apiKey || !clientId) {
-
-        return [`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]
-
+      return [[`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]];
     }
-
-    await Client.getClient({
-      apiKey,
-      clientId,
-    });
+    
+      await Client.getClient({
+        apiKey,
+        clientId
+      });
 
     const location: any = {
       country: payload.country,
@@ -55,15 +51,18 @@ export async function genericApiCall(
       }
     }
 
-    const apiParams = {
+    const apiParams: any = {
       location,
-      time: { date: formattedDate },
       activity: { type: payload.type, value: payload.value, unit: payload.unit },
       includeDetails: false,
     };
 
+    if (formattedDate) {
+      apiParams.time = { date: formattedDate };
+    }
+
     let response: any;
-    try {
+    
       switch (apiType) {
         case "location":
           response = await LocationEmission.calculate(apiParams);
@@ -81,40 +80,29 @@ export async function genericApiCall(
           response = await GenericCalculationEmission.calculate(apiParams);
           break;
         default:
-          return ["Error", `Unsupported API type: ${apiType}`];
+          return [["Error", `Unsupported API type: ${apiType}`]];
       }
-    } catch (apiError: any) {
-      const errMsg =
-        apiError?.response?.data?.message ||
-        apiError?.message ||
-        "Unknown API request error";
-
-      console.error(`[genericApiCall p] API request failed:`, errMsg);
-
-      throw new CustomFunctions.Error(CustomFunctions.ErrorCode.invalidValue, errMsg);
-    }
 
     if (!response || typeof response !== "object") {
       const msg = "Invalid API response";
       console.error(`[genericApiCall] ${msg}`, { response });
-      return ["Error", msg];
+      return [["Error", msg]];
     }
 
     const rowData = Object.entries(response);
-
-    try {
-      const storagePayload = {
-        address: invocation?.address ?? null,
-        values: rowData,
-      };
-      await OfficeRuntime.storage.setItem(`freezeData-${address}`, JSON.stringify(storagePayload));
-    } catch (err) {
-      console.error("[CustomFunction] Failed to store freezeData:", err);
+    if (OfficeRuntime?.storage) {
+      const storagePayload = { address, values: rowData };
+      OfficeRuntime.storage.setItem(`freezeData-${address}`, JSON.stringify(storagePayload))
+        .catch((err) => {
+          console.error("[CustomFunction] Failed to store freezeData:", err);
+        });
     }
 
-    return rowData.map(([k, v]) => `${v}`);
+    return [Object.entries(response).map(([k, v]) => `${v}`)];
   } catch (e: any) {
-    return ["Error", e?.message || String(e)];
+    const errMsg =e?.response?.data?.message || e?.message || "Unknown API error";
+
+      console.error(`[genericApiCall pr] API request failed:`, errMsg);
+      return [[errMsg]];
   }
 }
-
