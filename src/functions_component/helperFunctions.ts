@@ -8,13 +8,13 @@ import { genericApiCall } from "./genericApiCall";
  * @requiresAddress
  */
 export async function location(
-  date: string = "",
-  country: string = "",
-  stateProvince: string = "",
-  powerGrid: string = "",
-  type: string = "",
-  value: number = 1,
-  unit: string = "",
+  date: string,
+  country: string,
+  stateProvince: string,
+  powerGrid: string,
+  type: string,
+  value: number,
+  unit: string,
   invocation?
 ): Promise<string[][]> {
   const response = await genericApiCall(
@@ -42,12 +42,12 @@ export async function location(
  * @requiresAddress
  */
 export async function stationary(
-  date: string = "",
-  country: string = "",
-  stateProvince: string = "",
-  type: string = "",
-  value: number = 1,
-  unit: string = "",
+  date: string,
+  country: string,
+  stateProvince: string,
+  type: string,
+  value: number,
+  unit: string,
   invocation?
 ): Promise<string[][]> {
   return genericApiCall(
@@ -65,12 +65,12 @@ export async function stationary(
  * @requiresAddress
  */
 export async function fugitive(
-  date: string = "",
-  country: string = "",
-  stateProvince: string = "",
-  type: string = "",
-  value: number = 1,
-  unit: string = "",
+  date: string,
+  country: string,
+  stateProvince: string,
+  type: string,
+  value: number,
+  unit: string,
   invocation?
 ): Promise<string[][]> {
   return genericApiCall(
@@ -88,12 +88,12 @@ export async function fugitive(
  * @requiresAddress
  */
 export async function mobile(
-  date: string = "",
-  country: string = "",
-  stateProvince: string = "",
-  type: string = "",
-  value: number = 1,
-  unit: string = "",
+  date: string,
+  country: string,
+  stateProvince: string,
+  type: string,
+  value: number,
+  unit: string,
   invocation?
 ): Promise<string[][]> {
   return genericApiCall("mobile", { date, country, stateProvince, type, value, unit }, invocation);
@@ -107,13 +107,13 @@ export async function mobile(
  * @requiresAddress
  */
 export async function calculation(
-  date: string = "",
-  country: string = "",
-  stateProvince: string = "",
-  powerGrid: string = "",
-  type: string = "",
-  value: number = 1,
-  unit: string = "",
+  date: string,
+  country: string,
+  stateProvince: string,
+  powerGrid: string,
+  type: string,
+  value: number,
+  unit: string,
   invocation?
 ): Promise<string[][]> {
   return genericApiCall(
