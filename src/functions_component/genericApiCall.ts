@@ -23,30 +23,30 @@ export async function genericApiCall(
 ): Promise<string[][]> {
   try {
     const address = invocation?.address ?? null;
-    const formattedDate =
-      payload.date && payload.date.trim() !== ""
-        ? convertExcelDateToISO(payload.date)
-        : null;
+    const formattedDate = payload.date?.trim() ? convertExcelDateToISO(payload.date) : null;
 
     if (!OfficeRuntime?.storage) {
-
-        return [["OfficeRuntime.storage not availaible"]]
-
+      return [["OfficeRuntime.storage not availaible"]];
     }
 
     const apiKey = await OfficeRuntime.storage.getItem("apiKey");
     const clientId = await OfficeRuntime.storage.getItem("clientId");
 
     if (!apiKey || !clientId) {
-
-        return [[`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]]
-
+      return [[`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]];
     }
-
-    await Client.getClient({
-      apiKey,
-      clientId,
-    });
+    try {
+      await Client.getClient({
+        apiKey,
+        clientId
+      });
+    } catch (initError: any) {
+      const errMsg =
+        initError?.response?.data?.message ||
+        initError?.message ||
+        "Failed to initialize API client";
+      return [[errMsg]];
+    }
 
     const location: any = {
       country: payload.country,
@@ -62,13 +62,15 @@ export async function genericApiCall(
       location,
       activity: { type: payload.type, value: payload.value, unit: payload.unit },
       includeDetails: false,
-    }
-    
+    };
+
     if (formattedDate) {
       apiParams.time = { date: formattedDate };
     }
 
     let response: any;
+    console.log("prakhar sahu");
+    console.log(apiParams);
     try {
       switch (apiType) {
         case "location":
@@ -91,13 +93,10 @@ export async function genericApiCall(
       }
     } catch (apiError: any) {
       const errMsg =
-        apiError?.response?.data?.message ||
-        apiError?.message ||
-        "Unknown API request error";
-
+        apiError?.response?.data?.message || apiError?.message || "Unknown API request error";
 
       console.error(`[genericApiCall p] API request failed:`, errMsg);
-      return [[errMsg]]
+      return [[errMsg]];
     }
 
     if (!response || typeof response !== "object") {
@@ -118,9 +117,8 @@ export async function genericApiCall(
       console.error("[CustomFunction] Failed to store freezeData:", err);
     }
 
-    return  [Object.entries(response).map(([k, v]) => `${v}`)];
+    return [Object.entries(response).map(([k, v]) => `${v}`)];
   } catch (e: any) {
     return ["Error", e?.message || String(e)];
   }
 }
-
