@@ -35,18 +35,11 @@ export async function genericApiCall(
     if (!apiKey || !clientId) {
       return [[`Missing apiKey/clientId: apiKey=${!!apiKey}, clientId=${!!clientId}`]];
     }
-    try {
+    
       await Client.getClient({
         apiKey,
         clientId
       });
-    } catch (initError: any) {
-      const errMsg =
-        initError?.response?.data?.message ||
-        initError?.message ||
-        "Failed to initialize API client";
-      return [[errMsg]];
-    }
 
     const location: any = {
       country: payload.country,
@@ -69,7 +62,7 @@ export async function genericApiCall(
     }
 
     let response: any;
-    try {
+    
       switch (apiType) {
         case "location":
           response = await LocationEmission.calculate(apiParams);
@@ -89,13 +82,6 @@ export async function genericApiCall(
         default:
           return [["Error", `Unsupported API type: ${apiType}`]];
       }
-    } catch (apiError: any) {
-      const errMsg =
-        apiError?.response?.data?.message || apiError?.message || "Unknown API request error";
-
-      console.error(`[genericApiCall p] API request failed:`, errMsg);
-      return [[errMsg]];
-    }
 
     if (!response || typeof response !== "object") {
       const msg = "Invalid API response";
@@ -104,19 +90,19 @@ export async function genericApiCall(
     }
 
     const rowData = Object.entries(response);
-
-    try {
-      const storagePayload = {
-        address: invocation?.address ?? null,
-        values: rowData,
-      };
-      await OfficeRuntime.storage.setItem(`freezeData-${address}`, JSON.stringify(storagePayload));
-    } catch (err) {
-      console.error("[CustomFunction] Failed to store freezeData:", err);
+    if (OfficeRuntime?.storage) {
+      const storagePayload = { address, values: rowData };
+      OfficeRuntime.storage.setItem(`freezeData-${address}`, JSON.stringify(storagePayload))
+        .catch((err) => {
+          console.error("[CustomFunction] Failed to store freezeData:", err);
+        });
     }
 
     return [Object.entries(response).map(([k, v]) => `${v}`)];
   } catch (e: any) {
-    return ["Error", e?.message || String(e)];
+    const errMsg =e?.response?.data?.message || e?.message || "Unknown API error";
+
+      console.error(`[genericApiCall pr] API request failed:`, errMsg);
+      return [[errMsg]];
   }
 }
