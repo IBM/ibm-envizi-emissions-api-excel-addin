@@ -1,5 +1,5 @@
-import { genericApiCall } from "../src/functions_component/genericApiCall";
-import * as utils from "../src/functions_component/utils";
+import { genericApiCall } from "../src/functions/generic-api-call";
+import * as utils from "../src/functions/utils";
 import { createMockOfficeRuntime } from "./__mocks__/officeRuntimeMock";
 
 import {
@@ -12,7 +12,7 @@ import {
 } from "ibm-ghg-sdk";
 
 jest.mock("ibm-ghg-sdk");
-jest.mock("../src/functions_component/utils");
+jest.mock("../src/functions/utils");
 
 describe("genericApiCall", () => {
   beforeEach(() => {

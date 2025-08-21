@@ -1,13 +1,19 @@
+// Copyright IBM Corp. 2025
+
 /* eslint-disable no-undef */
+
 const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const webpack = require("webpack");
+
 const urlDev = "https://localhost:8000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
-const webpack = require("webpack");
+
 /* global require, module, process, __dirname */
+
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
   return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
@@ -20,10 +26,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.ts", "./src/taskpane/taskpane.html"],
-      functions: [
-        "./src/functions_component/helperFunctions.ts"
-      ],
-      tokenDialog: "./src/taskpane/tokenDialog.html", // Add this entry
+      functions: ["./src/functions/functions.ts"],
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -43,7 +46,7 @@ module.exports = async (env, options) => {
           test: /\.ts$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader"
+            loader: "babel-loader",
           },
         },
         {
@@ -56,26 +59,12 @@ module.exports = async (env, options) => {
     plugins: [
       new CustomFunctionsMetadataPlugin({
         output: "functions.json",
-        input: [
-          "./src/functions_component/helperFunctions.ts"
-        ],
-      }),
-      new HtmlWebpackPlugin({
-        filename: "functions.html",
-        template: "./src/functions_component/functions.html",
-        chunks: ["polyfill", "functions"],
+        input: "./src/functions/functions.ts",
       }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunks: ["polyfill", "taskpane"],
-      }),
-
-      // Add this for the token dialog
-      new HtmlWebpackPlugin({
-        filename: "tokenDialog.html",
-        template: "./src/taskpane/tokenDialog.html",
-        chunks: ["polyfill"],
+        chunks: ["polyfill", "taskpane", "functions"],
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -90,16 +79,17 @@ module.exports = async (env, options) => {
               if (dev) {
                 return content;
               } else {
-                return content.toString().replace(new RegExp(urlDev + "(?:public/)?", "g"), urlProd);
+                return content
+                  .toString()
+                  .replace(new RegExp(urlDev + "(?:public/)?", "g"), urlProd);
               }
             },
           },
         ],
       }),
       new webpack.ProvidePlugin({
-        Buffer: ['buffer', 'Buffer'],
+        Buffer: ["buffer", "Buffer"],
       }),
-
     ],
     devServer: {
       static: {
@@ -117,25 +107,7 @@ module.exports = async (env, options) => {
             : await getHttpsOptions(),
       },
       port: process.env.npm_package_config_dev_server_port || 8000,
-
-      // 🔥 Add this block to enable proxying
-      proxy: [
-        {
-          context: ['/Auth'], // auth token endpoint
-          target: 'https://stg.auth-b2b-twc.ibm.com',
-          changeOrigin: true,
-          secure: false,
-        },
-        {
-          context: ['/v3'], // API endpoint for /v3/carbon/...
-          target: 'https://foundation-staging.agtech.ibm.com',
-          changeOrigin: true,
-          secure: false,
-        }
-      ],
-
     },
-
   };
   return config;
 };
