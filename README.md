@@ -12,7 +12,7 @@ This is a custom Excel Add-in built using **TypeScript**, **Office.js**, and **W
 
 ## Key Folder Summary
 
-- `src/functions_component/` – Excel custom functions 
+- `src/functions/` – Excel custom functions 
 - `src/taskpane/` – UI logic and token dialog popup
 - `dist/` – Webpack output folder 
 - `manifest.xml` – Office Add-in manifest file

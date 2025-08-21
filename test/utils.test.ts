@@ -1,4 +1,4 @@
-import { convertExcelDateToISO } from "../src/functions_component/utils";
+import { convertExcelDateToISO } from "../src/functions/utils";
 
 describe("convertExcelDateToISO", () => {
   it("returns ISO string if input is already in YYYY-MM-DD format", () => {
