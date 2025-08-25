@@ -32,6 +32,7 @@ export async function genericApiCall(
   },
   invocation?: CustomFunctions.Invocation
 ): Promise<any[][]> {
+  
   try {
     const address = invocation?.address ?? null;
     await ensureClient();
