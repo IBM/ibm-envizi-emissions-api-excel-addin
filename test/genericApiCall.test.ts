@@ -1,180 +1,166 @@
+
+
+(global as any).CustomFunctions = {
+  Error: class extends Error {
+    code: string;
+    constructor(code: string, message: string) {
+      super(message);
+      this.code = code;
+      this.name = "CustomFunctions.Error";
+    }
+  },
+  ErrorCode: {
+    notAvailable: "NotAvailable",
+    invalidValue: "InvalidValue",
+  },
+};
+
+(global as any).OfficeRuntime = {
+  storage: {
+    setItem: jest.fn().mockResolvedValue(undefined),
+  },
+};
+
+
+
+
 import { genericApiCall } from "../src/functions/generic-api-call";
-import * as utils from "../src/functions/utils";
-import { createMockOfficeRuntime } from "./__mocks__/officeRuntimeMock";
+import { ensureClient } from "../src/functions/client";
+import { convertExcelDateToISO } from "../src/functions/utils";
 
 import {
-  Client,
   LocationEmission,
-  StationaryEmission,
   MobileEmission,
   FugitiveEmission,
+  StationaryEmission,
   GenericCalculationEmission,
+  TransportationDistributionEmission,
 } from "ibm-ghg-sdk";
 
-jest.mock("ibm-ghg-sdk");
-jest.mock("../src/functions/utils");
+jest.mock("../src/functions/client", () => ({
+  ensureClient: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock("../src/functions/utils", () => ({
+  convertExcelDateToISO: jest.fn().mockReturnValue("2025-08-23"),
+}));
+
+// Mock Emission classes
+jest.mock("ibm-ghg-sdk", () => ({
+  LocationEmission: { calculate: jest.fn() },
+  MobileEmission: { calculate: jest.fn() },
+  FugitiveEmission: { calculate: jest.fn() },
+  StationaryEmission: { calculate: jest.fn() },
+  GenericCalculationEmission: { calculate: jest.fn() },
+  TransportationDistributionEmission: { calculate: jest.fn() },
+}));
+
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore();
+});
+
+
+const mockResponse = {
+  totalCO2e: 100,
+  CO2: 50,
+  CH4: 10,
+  N2O: 5,
+  HFC: 0,
+  PFC: 0,
+  SF6: 0,
+  NF3: 0,
+  bioCO2: 0,
+  indirectCO2e: 2,
+  unit: "kgCO2e",
+  description: "Mock description",
+  transactionId: "txn-123",
+};
+
+type ApiCase = {
+  name: string;
+  apiType:
+    | "location"
+    | "stationary"
+    | "fugitive"
+    | "mobile"
+    | "calculation"
+    | "transportation_and_distribution";
+  emissionMock: jest.Mock;
+};
+
+const apiCases: ApiCase[] = [
+  { name: "Location", apiType: "location", emissionMock: LocationEmission.calculate as jest.Mock },
+  { name: "Stationary", apiType: "stationary", emissionMock: StationaryEmission.calculate as jest.Mock },
+  { name: "Fugitive", apiType: "fugitive", emissionMock: FugitiveEmission.calculate as jest.Mock },
+  { name: "Mobile", apiType: "mobile", emissionMock: MobileEmission.calculate as jest.Mock },
+  { name: "Generic Calculation", apiType: "calculation", emissionMock: GenericCalculationEmission.calculate as jest.Mock },
+  { name: "Transportation & Distribution", apiType: "transportation_and_distribution", emissionMock: TransportationDistributionEmission.calculate as jest.Mock },
+];
 
 describe("genericApiCall", () => {
   beforeEach(() => {
-    (utils.convertExcelDateToISO as jest.Mock).mockReturnValue("2025-01-01");
-
-    global.OfficeRuntime = createMockOfficeRuntime() as any;
-
-    (Client.getClient as jest.Mock).mockResolvedValue(undefined);
-    (LocationEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 123 });
-    (StationaryEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 456 });
-    (MobileEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 789 });
-    (FugitiveEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 111 });
-    (GenericCalculationEmission.calculate as jest.Mock).mockResolvedValue({ CO2e: 222 });
+    jest.clearAllMocks();
+    apiCases.forEach(c => c.emissionMock.mockResolvedValue(mockResponse));
   });
 
-  afterEach(() => jest.clearAllMocks());
+  describe.each(apiCases)("$name API", ({ apiType, emissionMock }) => {
+    it("should call the correct emission API and return excelResponse", async () => {
+      const payload = {
+        value: 100,
+        unit: "kWh",
+        country: "USA",
+        stateProvince: "New York",
+        date: "2025-01-01",
+        type: "Natural Gas",
+      };
 
-  it("returns error if OfficeRuntime.storage is missing", async () => {
-    global.OfficeRuntime = {} as any;
+      const result = await genericApiCall(apiType, payload, { address: "Sheet1!A1" } as any);
 
-    const result = await genericApiCall("location", {} as any);
+      expect(ensureClient).toHaveBeenCalled();
+      expect(convertExcelDateToISO).toHaveBeenCalledWith("2025-01-01");
+      expect(emissionMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activity: expect.objectContaining({
+            value: 100,
+            unit: "kWh",
+            type: "Natural Gas",
+          }),
+          location: expect.objectContaining({ country: "USA", stateProvince: "New York" }),
+          time: { date: "2025-08-23" },
+        })
+      );
 
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("OfficeRuntime.storage");
-  });
-
-  it("returns error if apiKey or clientId is missing", async () => {
-    global.OfficeRuntime = createMockOfficeRuntime(null, null) as any;
-
-    const result = await genericApiCall("location", {} as any);
-
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("Missing apiKey/clientId");
-  });
-
-  it("calls LocationEmission for 'location'", async () => {
-    const result = await genericApiCall("location", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "NY",
-      powerGrid: "NYISO",
-      type: "electricity",
-      value: 100,
-      unit: "kWh",
+      expect(result).toEqual([
+        [
+          100, 50, 10, 5, 0, 0, 0, 0, 0, 2,
+          "kgCO2e", "Mock description", "txn-123",
+        ],
+      ]);
     });
-
-    expect(LocationEmission.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["CO2e: 123"]);
   });
 
-  it("calls StationaryEmission for 'stationary'", async () => {
-    const result = await genericApiCall("stationary", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "CA",
-      type: "diesel",
-      value: 50,
-      unit: "L",
-    });
-
-    expect(StationaryEmission.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["CO2e: 456"]);
+  it("should throw error for unsupported apiType", async () => {
+    await expect(
+      genericApiCall("invalid" as any, { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+    ).rejects.toThrow(/Unsupported API type/);
   });
 
-  it("calls MobileEmission for 'mobile'", async () => {
-    const result = await genericApiCall("mobile", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "TX",
-      type: "gasoline",
-      value: 70,
-      unit: "L",
-    });
-
-    expect(MobileEmission.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["CO2e: 789"]);
+  it("should throw CustomFunctions.Error if emission returns invalid response", async () => {
+    (LocationEmission.calculate as jest.Mock).mockResolvedValueOnce(null);
+    await expect(
+      genericApiCall("location", { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+    ).rejects.toThrow("Invalid API response");
   });
 
-  it("calls FugitiveEmission for 'fugitive'", async () => {
-    const result = await genericApiCall("fugitive", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "FL",
-      type: "HFC",
-      value: 20,
-      unit: "kg",
-    });
-
-    expect(FugitiveEmission.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["CO2e: 111"]);
-  });
-
-  it("calls GenericCalculationEmission for 'calculation'", async () => {
-    const result = await genericApiCall("calculation", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "WA",
-      powerGrid: "PG1",
-      type: "wind",
-      value: 150,
-      unit: "kWh",
-    });
-
-    expect(GenericCalculationEmission.calculate).toHaveBeenCalled();
-    expect(result).toEqual(["CO2e: 222"]);
-  });
-
-  it("returns error for unsupported API type", async () => {
-    const result = await genericApiCall("unknown" as any, {} as any);
-
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("Unsupported API type");
-  });
-
-  it("returns error when API throws exception", async () => {
-    (LocationEmission.calculate as jest.Mock).mockRejectedValue(new Error("Some API failure"));
-
-    const result = await genericApiCall("location", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "NY",
-      powerGrid: "NYISO",
-      type: "electricity",
-      value: 100,
-      unit: "kWh",
-    });
-
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("Some API failure");
-  });
-
-  it("returns error if API returns invalid (null) response", async () => {
-    (LocationEmission.calculate as jest.Mock).mockResolvedValue(null);
-
-    const result = await genericApiCall("location", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "NY",
-      powerGrid: "NYISO",
-      type: "electricity",
-      value: 100,
-      unit: "kWh",
-    });
-
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("Invalid API response");
-  });
-
-  it("returns error if API returns non-object (string) response", async () => {
-    (LocationEmission.calculate as jest.Mock).mockResolvedValue("unexpected" as any);
-
-    const result = await genericApiCall("location", {
-      date: "44562",
-      country: "USA",
-      stateProvince: "NY",
-      powerGrid: "NYISO",
-      type: "electricity",
-      value: 100,
-      unit: "kWh",
-    });
-
-    expect(result[0]).toBe("Error");
-    expect(result[1]).toContain("Invalid API response");
+  it("should handle thrown error gracefully", async () => {
+    (StationaryEmission.calculate as jest.Mock).mockRejectedValueOnce(new Error("boom"));
+    await expect(
+      genericApiCall("stationary", { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+    ).rejects.toThrow("boom");
   });
 });
+

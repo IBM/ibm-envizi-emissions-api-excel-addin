@@ -6,30 +6,42 @@ import {
   FugitiveEmission,
   StationaryEmission,
   GenericCalculationEmission,
+  TransportationDistributionEmission,
 } from "ibm-ghg-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
 
 export async function genericApiCall(
-  apiType: "location" | "stationary" | "fugitive" | "mobile" | "calculation",
+  apiType:
+    | "location"
+    | "stationary"
+    | "fugitive"
+    | "mobile"
+    | "calculation"
+    | "transportation_and_distribution",
   payload: {
-    type: string;
     value: number;
     unit: string;
     country: string;
     stateProvince: string;
     date: string;
     powerGrid?: string;
-  }
+    type?: string;
+    factorId?: number;
+  },
+  invocation?: CustomFunctions.Invocation
 ): Promise<any[][]> {
+  
   try {
+    const address = invocation?.address ?? null;
     await ensureClient();
 
-    const location: any = {
-      country: payload.country,
-      stateProvince: payload.stateProvince,
-    };
+    const location: any = {};
+
+      if(payload.country) location.country= payload.country;
+      if(payload.stateProvince) location.stateProvince= payload.stateProvince;
+    
     if (apiType === "location" || apiType === "calculation") {
       if (payload.powerGrid) {
         location.powerGrid = payload.powerGrid;
@@ -37,9 +49,14 @@ export async function genericApiCall(
     }
 
     const apiParams: any = {
-      activity: { type: payload.type, value: payload.value, unit: payload.unit },
-      location,
+      activity: {
+        value: payload.value,
+        unit: payload.unit,
+        ...(payload.type ? { type: payload.type } : {}),
+        ...(payload.factorId ? { factorId: payload.factorId } : {}),
+      },
       includeDetails: false,
+      ...(Object.keys(location).length > 0 ? { location } : {}),
     };
 
     const formattedDate = payload.date?.trim() ? convertExcelDateToISO(payload.date) : null;
@@ -65,6 +82,9 @@ export async function genericApiCall(
       case "calculation":
         response = await GenericCalculationEmission.calculate(apiParams);
         break;
+      case "transportation_and_distribution":
+        response = await TransportationDistributionEmission.calculate(apiParams);
+        break;
       default:
         throw new CustomFunctions.Error(
           CustomFunctions.ErrorCode.notAvailable,
@@ -78,23 +98,32 @@ export async function genericApiCall(
       throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, message);
     }
 
-    return [
-      [
-        response.totalCO2e,
-        response.CO2,
-        response.CH4,
-        response.N2O,
-        response.HFC,
-        response.PFC,
-        response.SF6,
-        response.NF3,
-        response.bioCO2,
-        response.indirectCO2e,
-        response.unit,
-        response.description,
-        response.transactionId,
-      ],
+    const rowData: (string | number | null)[] = [
+      response.totalCO2e,
+      response.CO2,
+      response.CH4,
+      response.N2O,
+      response.HFC,
+      response.PFC,
+      response.SF6,
+      response.NF3,
+      response.bioCO2,
+      response.indirectCO2e,
+      response.unit,
+      response.description,
+      response.transactionId,
     ];
+    const excelResponse = [rowData];
+    if (OfficeRuntime?.storage) {
+      const storagePayload = { address, values: excelResponse };
+      OfficeRuntime.storage
+        .setItem(`freezeData-${address}`, JSON.stringify(storagePayload))
+        .catch((err) => {
+          console.error("[CustomFunction] Failed to store freezeData:", err);
+        });
+    }
+
+    return excelResponse;
   } catch (e) {
     if (e instanceof CustomFunctions.Error) {
       throw e;
