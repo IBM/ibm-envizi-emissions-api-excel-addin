@@ -1,7 +1,7 @@
 @Library(['ai-apps-shared-pipeline', 'ei-offering-config']) _
 
 sterlingPipeline {
-    repoName = "ibm-envizi-emissions-api-nodejs-sdk-internal"
+    repoName = "ibm-envizi-emissions-api-excel-addin-internal"
     minikubeTestEnabled = false
     agentLabel = null
     nodeversion = '22'
