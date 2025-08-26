@@ -27,6 +27,7 @@ async function getClientConfig(apiCredentials?: ApiCredentials): Promise<ClientC
     apiKey: resolvedApiCredentials.apiKey,
     clientId: resolvedApiCredentials.tenantId,
     orgId: resolvedApiCredentials.orgId,
+    isExcelAddIn: true
   };
   return config;
 }
