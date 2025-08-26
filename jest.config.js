@@ -7,10 +7,5 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: 'dist/coverage',
   coverageReporters: ['text', 'lcov'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true
-    }
-  }
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/']
 };
