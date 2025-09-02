@@ -1,7 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { Client } from "ibm-ghg-sdk";
-import { ClientConfig } from "ibm-ghg-sdk/dist/types/interfaces/Config";
+import { Client , ClientConfig } from "ibm-ghg-sdk";
 
 import { getApiUrl } from "../common/env";
 import {
