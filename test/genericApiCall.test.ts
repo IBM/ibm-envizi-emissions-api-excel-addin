@@ -21,9 +21,6 @@
   },
 };
 
-
-
-
 import { genericApiCall } from "../src/functions/generic-api-call";
 import { ensureClient } from "../src/functions/client";
 import { convertExcelDateToISO } from "../src/functions/utils";
@@ -63,7 +60,6 @@ afterAll(() => {
   (console.error as jest.Mock).mockRestore();
 });
 
-
 const mockResponse = {
   totalCO2e: 100,
   CO2: 50,
@@ -94,17 +90,29 @@ type ApiCase = {
 
 const apiCases: ApiCase[] = [
   { name: "Location", apiType: "location", emissionMock: LocationEmission.calculate as jest.Mock },
-  { name: "Stationary", apiType: "stationary", emissionMock: StationaryEmission.calculate as jest.Mock },
+  {
+    name: "Stationary",
+    apiType: "stationary",
+    emissionMock: StationaryEmission.calculate as jest.Mock,
+  },
   { name: "Fugitive", apiType: "fugitive", emissionMock: FugitiveEmission.calculate as jest.Mock },
   { name: "Mobile", apiType: "mobile", emissionMock: MobileEmission.calculate as jest.Mock },
-  { name: "Generic Calculation", apiType: "calculation", emissionMock: GenericCalculationEmission.calculate as jest.Mock },
-  { name: "Transportation & Distribution", apiType: "transportation_and_distribution", emissionMock: TransportationDistributionEmission.calculate as jest.Mock },
+  {
+    name: "Generic Calculation",
+    apiType: "calculation",
+    emissionMock: GenericCalculationEmission.calculate as jest.Mock,
+  },
+  {
+    name: "Transportation & Distribution",
+    apiType: "transportation_and_distribution",
+    emissionMock: TransportationDistributionEmission.calculate as jest.Mock,
+  },
 ];
 
 describe("genericApiCall", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    apiCases.forEach(c => c.emissionMock.mockResolvedValue(mockResponse));
+    apiCases.forEach((c) => c.emissionMock.mockResolvedValue(mockResponse));
   });
 
   describe.each(apiCases)("$name API", ({ apiType, emissionMock }) => {
@@ -118,7 +126,7 @@ describe("genericApiCall", () => {
         type: "Natural Gas",
       };
 
-      const result = await genericApiCall(apiType, payload, { address: "Sheet1!A1" } as any);
+      const result = await genericApiCall(apiType, payload);
 
       expect(ensureClient).toHaveBeenCalled();
       expect(convertExcelDateToISO).toHaveBeenCalledWith("2025-01-01");
@@ -135,32 +143,46 @@ describe("genericApiCall", () => {
       );
 
       expect(result).toEqual([
-        [
-          100, 50, 10, 5, 0, 0, 0, 0, 0, 2,
-          "kgCO2e", "Mock description", "txn-123",
-        ],
+        [100, 50, 10, 5, 0, 0, 0, 0, 0, 2, "kgCO2e", "Mock description", "txn-123"],
       ]);
     });
   });
 
   it("should throw error for unsupported apiType", async () => {
     await expect(
-      genericApiCall("invalid" as any, { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+      genericApiCall("invalid" as any, {
+        value: 1,
+        unit: "kg",
+        country: "US",
+        stateProvince: "",
+        date: "",
+      })
     ).rejects.toThrow(/Unsupported API type/);
   });
 
   it("should throw CustomFunctions.Error if emission returns invalid response", async () => {
     (LocationEmission.calculate as jest.Mock).mockResolvedValueOnce(null);
     await expect(
-      genericApiCall("location", { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+      genericApiCall("location", {
+        value: 1,
+        unit: "kg",
+        country: "US",
+        stateProvince: "",
+        date: "",
+      })
     ).rejects.toThrow("Invalid API response");
   });
 
   it("should handle thrown error gracefully", async () => {
     (StationaryEmission.calculate as jest.Mock).mockRejectedValueOnce(new Error("boom"));
     await expect(
-      genericApiCall("stationary", { value: 1, unit: "kg", country: "US", stateProvince: "", date: "" })
+      genericApiCall("stationary", {
+        value: 1,
+        unit: "kg",
+        country: "US",
+        stateProvince: "",
+        date: "",
+      })
     ).rejects.toThrow("boom");
   });
 });
-
