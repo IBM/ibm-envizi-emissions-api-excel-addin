@@ -16,13 +16,14 @@
       src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
     ></script>
 
-    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
+    <!-- Fluent UI -->
     <link
       rel="stylesheet"
       href="https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"
     />
 
     <!-- Template styles -->
+    <link href="reset.css" rel="stylesheet" type="text/css" />
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
   </head>
 
@@ -38,19 +39,165 @@
         your add-in to see app body.
       </h2>
     </section>
-    <main id="app-body" class="ms-welcome__main" style="display: none">
-      <h2 class="ms-font-xl">Account information</h2>
-      <form class="form" name="credentials">
-        <div class="form-grid">
-          <fluent-text-field name="apiKey" type="password" appearance="outline"
-            >API key</fluent-text-field
-          >
-          <fluent-text-field name="tenantId" appearance="outline">Tenant ID</fluent-text-field>
-          <fluent-text-field name="orgId" appearance="outline">Organization ID</fluent-text-field>
-          <fluent-checkbox checked name="saveCredentials">Save credentials</fluent-checkbox>
-          <fluent-button type="submit" appearance="accent">Login</fluent-button>
+
+    <main id="app-body" style="display: none">
+      <!-- Welcome page -->
+      <div class="page welcome-page" id="welcome-page" hidden>
+        <header class="welcome-header ms-bgColor-neutralLighter">
+          <img
+            width="90"
+            height="90"
+            src="../../assets/logo-filled.png"
+            alt="IBM Envizi Emissions API"
+          />
+          <h2 class="ms-font-xl">Welcome to the Envizi Emissions API add-in</h2>
+        </header>
+        <div class="welcome-body">
+          <p class="ms-font-l">Seamlessly integrate emissions data into your workflows.</p>
+          <br />
+          <br />
+          <p>With these APIs, you can:</p>
+          <ul class="ms-List">
+            <li class="ms-ListItem">Automate data integration</li>
+            <li class="ms-ListItem">Access real-time emissions insights</li>
+            <li class="ms-ListItem">Get auto-selected emissions factors</li>
+            <li class="ms-ListItem">Export your results quickly & easily</li>
+          </ul>
+          <div class="welcome-bottom">
+            <fluent-button id="get-started" type="submit" appearance="accent"
+              >Get started</fluent-button
+            >
+          </div>
         </div>
-      </form>
+      </div>
+
+      <!-- Login page -->
+      <div class="page login-page" id="login-page" hidden>
+        <div class="login-header">
+          <h2 class="ms-font-xl">Account credentials</h2>
+          <p>Enter the credentials from your Emissions API overview dashboard.</p>
+        </div>
+        <form class="form" name="login">
+          <div class="form-grid">
+            <fluent-text-field name="apiKey" type="password" appearance="outline"
+              >API key</fluent-text-field
+            >
+            <fluent-text-field name="tenantId" appearance="outline">Tenant ID</fluent-text-field>
+            <fluent-text-field name="orgId" appearance="outline">Organization ID</fluent-text-field>
+            <fluent-checkbox checked name="saveCredentials">Save credentials</fluent-checkbox>
+            <fluent-button class="login-button" type="submit" appearance="accent"
+              >Login</fluent-button
+            >
+          </div>
+        </form>
+      </div>
+
+      <!-- Main page -->
+      <div class="page main-page" id="main-page" hidden>
+        <fluent-tabs>
+          <fluent-tab id="home">Home</fluent-tab>
+          <fluent-tab id="account">Account</fluent-tab>
+          <fluent-tab-panel id="homePanel" class="home-panel">
+            <fluent-accordion>
+              <fluent-accordion-item expanded="true">
+                <span slot="heading">Getting started</span>
+                <div class="accordion-content">
+                  <p>Get started with the Emissions API Excel template:</p>
+                  <br />
+                  <div class="text-block">
+                    <p class="text-header">1. Choose a template</p>
+                    <p>Select the tab that matches your emissions scope or category.</p>
+                  </div>
+                  <div class="text-block">
+                    <p class="text-header">2. Enter your data</p>
+                    <p>Add activity details like fuel use, electricity, or travel.</p>
+                  </div>
+                  <div class="text-block">
+                    <p class="text-header">3. Connect to the API</p>
+                    <p>Use the add-in to retrieve factors and calculate emissions.</p>
+                  </div>
+                  <div class="text-block">
+                    <p class="text-header">4. Review and export</p>
+                    <p>Check your results and generate reports for sharing.</p>
+                  </div>
+                </div>
+              </fluent-accordion-item>
+              <fluent-accordion-item expanded="true">
+                <span slot="heading">Resources</span>
+                <div class="accordion-content">
+                  <p>
+                    Everything you need to get started, build, and succeed with the Envizi Emissions
+                    API.
+                  </p>
+                  <br />
+                  <div class="stack-gap-16">
+                    <div>
+                      <p class="block-header">Documentation</p>
+                      <div class="stack-gap-8">
+                        <fluent-anchor href="https://ibm.com" appearance="hypertext"
+                          >Emissions API overview</fluent-anchor
+                        >
+                        <fluent-anchor href="https://ibm.com" appearance="hypertext"
+                          >IBM product documentation</fluent-anchor
+                        >
+                        <fluent-anchor href="https://ibm.com" appearance="hypertext"
+                          >API documentation</fluent-anchor
+                        >
+                        <fluent-anchor href="https://ibm.com" appearance="hypertext"
+                          >Samples & tutorials</fluent-anchor
+                        >
+                      </div>
+                    </div>
+                    <div>
+                      <p class="block-header">Community</p>
+                      <div class="stack-gap-8">
+                        <fluent-anchor
+                          href="https://community.ibm.com/community/user/communities/community-home?CommunityKey=6853271a-0a5c-45f9-a9a2-0186706f68ec"
+                          appearance="hypertext"
+                          >Envizi Community</fluent-anchor
+                        >
+                        <fluent-anchor
+                          href="https://www.ibm.com/think/author/envizi"
+                          appearance="hypertext"
+                          >Envizi blog</fluent-anchor
+                        >
+                      </div>
+                    </div>
+                    <div>
+                      <p class="block-header">Support</p>
+                      <div class="stack-gap-8">
+                        <fluent-anchor
+                          href="https://your.feedback.ibm.com/jfe/form/SV_7Vh96izZeRghY34"
+                          appearance="hypertext"
+                          >Provide feedback</fluent-anchor
+                        >
+                        <fluent-anchor href="https://www.ibm.com/contact" appearance="hypertext"
+                          >Contact IBM</fluent-anchor
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fluent-accordion-item>
+            </fluent-accordion>
+          </fluent-tab-panel>
+          <fluent-tab-panel id="accountPanel" class="account-panel">
+            <form class="form" name="credentials">
+              <div class="form-grid">
+                <fluent-text-field name="apiKey" type="password" appearance="underline" readonly
+                  >API key</fluent-text-field
+                >
+                <fluent-text-field name="tenantId" appearance="underline" readonly
+                  >Tenant ID</fluent-text-field
+                >
+                <fluent-text-field name="orgId" appearance="underline" readonly
+                  >Organization ID</fluent-text-field
+                >
+              </div>
+            </form>
+          </fluent-tab-panel>
+        </fluent-tabs>
+      </div>
     </main>
   </body>
 </html>

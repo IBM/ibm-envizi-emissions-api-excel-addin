@@ -20,9 +20,9 @@ let _envType: EnvType;
 
 function detectEnvType(): EnvType {
   const origin = window.location.origin;
-  if (origin === "https://emissions.app.ibm.com") {
+  if (origin === "https://plugins.app.ibm.com") {
     return "prod";
-  } else if (origin === "https://emissions-dev.app.ibm.com") {
+  } else if (origin === "https://plugins-dev.app.ibm.com") {
     return "np";
   } else if (/localhost/gi.test(origin)) {
     return "local";
