@@ -6,7 +6,7 @@ sterlingPipeline {
     agentLabel = null
     nodeversion = '22'
     yarnLintCommand = { sh 'echo "ignoring lint"' }
-    yarnBuildCommand = { sh 'echo "ignoring yarn build"' }
+    yarnBuildCommand = { sh 'yarn build'}
     detectSecretsEnabled = true
     dockerBuildEnabled = false
     repoValidationEnabled = false

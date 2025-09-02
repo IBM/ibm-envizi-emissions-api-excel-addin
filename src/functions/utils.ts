@@ -1,3 +1,4 @@
+// Copyright IBM Corp. 2025
 export function convertExcelDateToISO(input: string): string {
   const trimmed = input.trim();
 

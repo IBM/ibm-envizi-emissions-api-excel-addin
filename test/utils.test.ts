@@ -1,3 +1,4 @@
+// Copyright IBM Corp. 2025
 import { convertExcelDateToISO } from "../src/functions/utils";
 
 describe("convertExcelDateToISO", () => {

@@ -1,4 +1,4 @@
-
+// Copyright IBM Corp. 2025
 
 (global as any).CustomFunctions = {
   Error: class extends Error {
