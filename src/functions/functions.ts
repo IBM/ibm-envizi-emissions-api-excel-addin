@@ -5,8 +5,6 @@ import { genericApiCall } from "./generic-api-call";
 /**
  * Calculates location-based emissions.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function location(
   value: number,
@@ -16,30 +14,23 @@ export async function location(
   powerGrid?: string,
   type?: string,
   factorId?: number,
-  unit?: string,
-  invocation?
+  unit?: string
 ): Promise<any[][]> {
-  return genericApiCall(
-    "location",
-    {
-      type,
-      factorId,
-      value,
-      unit,
-      country,
-      stateProvince,
-      date,
-      powerGrid,
-    },
-    invocation
-  );
+  return genericApiCall("location", {
+    type,
+    factorId,
+    value,
+    unit,
+    country,
+    stateProvince,
+    date,
+    powerGrid,
+  });
 }
 
 /**
  * Calculates stationary source emissions.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function stationary(
   value: number,
@@ -48,21 +39,22 @@ export async function stationary(
   stateProvince?: string,
   date?: string,
   type?: string,
-  factorId?: number,
-  invocation?
+  factorId?: number
 ): Promise<any[][]> {
-  return genericApiCall(
-    "stationary",
-    { type, factorId, value, unit, country, stateProvince, date },
-    invocation
-  );
+  return genericApiCall("stationary", {
+    type,
+    factorId,
+    value,
+    unit,
+    country,
+    stateProvince,
+    date,
+  });
 }
 
 /**
  * Calculates fugitive emissions.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function fugitive(
   value: number,
@@ -71,21 +63,14 @@ export async function fugitive(
   stateProvince?: string,
   date?: string,
   type?: string,
-  factorId?: number,
-  invocation?
+  factorId?: number
 ): Promise<any[][]> {
-  return genericApiCall(
-    "fugitive",
-    { type, factorId, value, unit, country, stateProvince, date },
-    invocation
-  );
+  return genericApiCall("fugitive", { type, factorId, value, unit, country, stateProvince, date });
 }
 
 /**
  * Calculates mobile source emissions.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function mobile(
   value: number,
@@ -94,21 +79,14 @@ export async function mobile(
   stateProvince?: string,
   date?: string,
   type?: string,
-  factorId?: number,
-  invocation?
+  factorId?: number
 ): Promise<any[][]> {
-  return genericApiCall(
-    "mobile",
-    { type, factorId, value, unit, country, stateProvince, date },
-    invocation
-  );
+  return genericApiCall("mobile", { type, factorId, value, unit, country, stateProvince, date });
 }
 
 /**
  * Calculates emissions using the generic calculation endpoint.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function calculation(
   value: number,
@@ -118,30 +96,23 @@ export async function calculation(
   date?: string,
   powerGrid?: string,
   type?: string,
-  factorId?: number,
-  invocation?
+  factorId?: number
 ): Promise<any[][]> {
-  return genericApiCall(
-    "calculation",
-    {
-      type,
-      factorId,
-      value,
-      unit,
-      country,
-      stateProvince,
-      date,
-      powerGrid,
-    },
-    invocation
-  );
+  return genericApiCall("calculation", {
+    type,
+    factorId,
+    value,
+    unit,
+    country,
+    stateProvince,
+    date,
+    powerGrid,
+  });
 }
 
 /**
  * Calculates emissions using the generic calculation endpoint.
  * @customfunction
- * @param {CustomFunctions.Invocation} invocation Invocation object.
- * @requiresAddress
  */
 export async function transportation_and_distribution(
   value: number,
@@ -150,20 +121,15 @@ export async function transportation_and_distribution(
   stateProvince?: string,
   date?: string,
   type?: string,
-  factorId?: number,
-  invocation?
+  factorId?: number
 ): Promise<any[][]> {
-  return genericApiCall(
-    "transportation_and_distribution",
-    {
-      type,
-      factorId,
-      value,
-      unit,
-      country,
-      stateProvince,
-      date,
-    },
-    invocation
-  );
+  return genericApiCall("transportation_and_distribution", {
+    type,
+    factorId,
+    value,
+    unit,
+    country,
+    stateProvince,
+    date,
+  });
 }

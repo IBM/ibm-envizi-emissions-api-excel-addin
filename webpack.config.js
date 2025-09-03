@@ -10,7 +10,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const urlDev = "https://localhost:8000/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const urlProd = "https://plugins.app.ibm.com/excel-addin/";
 
 /* global require, module, process, __dirname */
 

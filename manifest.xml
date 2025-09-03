@@ -5,12 +5,12 @@
   <ProviderName>IBM</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="IBM Envizi Emissions API"/>
-  <Description DefaultValue="Write your own Excel functions in TypeScript."/>
+  <Description DefaultValue="Seamlessly integrate emissions data into your workflows."/>
   <IconUrl DefaultValue="https://localhost:8000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:8000/assets/icon-64.png"/>
   <SupportUrl DefaultValue="https://www.ibm.com/mysupport"/>
   <AppDomains>
-    <AppDomain>https://emissions.app.ibm.com</AppDomain>
+    <AppDomain>https://plugins.app.ibm.com</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Workbook"/>
@@ -96,13 +96,13 @@
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="Functions.Namespace" DefaultValue="ENVIZI"/>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Get started with IBM Envizi Emissions API"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Task Pane"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="IBM Envizi Emissions API"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Your sample add-in loaded successfully. Go to the HOME tab and click the 'Show Task Pane' button to get started."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to Show a Task Pane"/>
+        <bt:String id="GetStarted.Description" DefaultValue="Seamlessly integrate emissions data into your workflows. Open the 'IBM Envizi Emissions API' task pane to get started."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Seamlessly integrate emissions data into your workflows."/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

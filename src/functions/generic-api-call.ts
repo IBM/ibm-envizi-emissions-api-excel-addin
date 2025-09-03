@@ -29,19 +29,16 @@ export async function genericApiCall(
     powerGrid?: string;
     type?: string;
     factorId?: number;
-  },
-  invocation?: CustomFunctions.Invocation
+  }
 ): Promise<any[][]> {
-  
   try {
-    const address = invocation?.address ?? null;
     await ensureClient();
 
     const location: any = {};
 
-      if(payload.country) location.country= payload.country;
-      if(payload.stateProvince) location.stateProvince= payload.stateProvince;
-    
+    if (payload.country) location.country = payload.country;
+    if (payload.stateProvince) location.stateProvince = payload.stateProvince;
+
     if (apiType === "location" || apiType === "calculation") {
       if (payload.powerGrid) {
         location.powerGrid = payload.powerGrid;
@@ -113,17 +110,7 @@ export async function genericApiCall(
       response.description,
       response.transactionId,
     ];
-    const excelResponse = [rowData];
-    if (OfficeRuntime?.storage) {
-      const storagePayload = { address, values: excelResponse };
-      OfficeRuntime.storage
-        .setItem(`freezeData-${address}`, JSON.stringify(storagePayload))
-        .catch((err) => {
-          console.error("[CustomFunction] Failed to store freezeData:", err);
-        });
-    }
-
-    return excelResponse;
+    return [rowData];
   } catch (e) {
     if (e instanceof CustomFunctions.Error) {
       throw e;
