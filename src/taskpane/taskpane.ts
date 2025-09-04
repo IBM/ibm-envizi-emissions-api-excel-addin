@@ -24,7 +24,7 @@ import {
   saveApiCredentialsToStorage,
   setApiCredentials,
 } from "../common/credentials";
-import { ensureClient } from "../functions/client";
+import { ensureClient, resetClient } from "../functions/client";
 
 /* global console, document, Excel, Office */
 
@@ -62,6 +62,8 @@ Office.onReady(() => {
     event.preventDefault();
     login();
   };
+
+  document.getElementById("logout-button").onclick = logout;
 
   loadApiCredentialsFromStorage().then((apiCredentials) => {
     if (apiCredentials) {
@@ -112,4 +114,16 @@ export function login(): void {
     .catch((e) => {
       // TODO:
     });
+}
+
+export function logout(): void {
+  setApiCredentials(null);
+  removeApiCredentialsFromStorage();
+  resetClient();
+
+  const loginForm = document.forms["login"];
+  loginForm["apiKey"].value = "";
+  loginForm["tenantId"].value = "";
+  loginForm["orgId"].value = "";
+  switchPage("login-page");
 }

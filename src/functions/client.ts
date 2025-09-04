@@ -41,3 +41,11 @@ export async function ensureClient(apiCredentials?: ApiCredentials): Promise<voi
   const config = await getClientConfig(apiCredentials);
   return Client.getClient(config);
 }
+
+/**
+ * Resets the client instance.
+ */
+export function resetClient(): void {
+  // Need to find a better way to reset later.
+  Client["instance"] = null;
+}

@@ -10,6 +10,18 @@ body {
   height: 100%;
 }
 
+.ms-font-m {
+  line-height: 20px;
+}
+
+.ms-font-l {
+  line-height: 24px;
+}
+
+.ms-font-xl {
+  line-height: 28px;
+}
+
 .ms-welcome__header {
   padding: 20px;
   padding-bottom: 30px;
@@ -174,4 +186,10 @@ b {
 .account-panel {
   padding-inline: 8px;
   padding-block: 20px;
+}
+
+.account-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: 32px;
 }
