@@ -2830,9 +2830,9 @@ camelcase@^6.3.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001737:
-  version "1.0.30001739"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001739.tgz#b34ce2d56bfc22f4352b2af0144102d623a124f4"
-  integrity sha512-y+j60d6ulelrNSwpPyrHdl+9mJnQzHBr08xm48Qno0nSk4h3Qojh+ziv2qE6rXf4k3tadF4o1J/1tAbVm1NtnA==
+  version "1.0.30001740"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001740.tgz#5adad3db14aa45be321dcd05fef2b2e9d8f34460"
+  integrity sha512-X6I2FZW2KjXKkAgsGgTwRmQXOcN0c7HtPR80KgJVj9LJi29be++fbf7JRPBnNXuzyJEW2ToGIpZ6JZeqqIwO0Q==
 
 chalk@4.1.2, chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.2:
   version "4.1.2"
@@ -4577,7 +4577,7 @@ hyperdyperid@^1.2.0:
 
 "ibm-ghg-sdk@file:./ibm-ghg-sdk-v0.0.1.tgz":
   version "0.0.1"
-  resolved "file:./ibm-ghg-sdk-v0.0.1.tgz#221d110147dcdfec9b053e6d59c0a22ce99f8639"
+  resolved "file:./ibm-ghg-sdk-v0.0.1.tgz#ed4ac3349b6ed839cb500cb6010c730449e13c7f"
   dependencies:
     axios "^1.11.0"
 
