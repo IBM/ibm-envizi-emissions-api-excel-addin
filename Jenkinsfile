@@ -14,7 +14,7 @@ sterlingPipeline {
     semanticReleaseBuildFiles = true
     deploymentEnabled = false
     sonarQubeAdditionalProperties = {[
-        "sonar.exclusions":"boms/**"
+        "sonar.exclusions":"boms/**" , "webpack.config.js" , "tsconfig.json" , "jest.config.js" , "manifest.xml"
     ]}
 
     acceptableFailedStageList = null
