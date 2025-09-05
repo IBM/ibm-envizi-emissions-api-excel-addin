@@ -116,7 +116,7 @@ describe("genericApiCall", () => {
   });
 
   describe.each(apiCases)("$name API", ({ apiType, emissionMock }) => {
-    it("should call the correct emission API and return excelResponse", async () => {
+    it("should call the correct emission API and return excelResponse (type-based payload)", async () => {
       const payload = {
         value: 100,
         unit: "kWh",
@@ -146,6 +146,31 @@ describe("genericApiCall", () => {
         [100, 50, 10, 5, 0, 0, 0, 0, 0, 2, "kgCO2e", "Mock description", "txn-123"],
       ]);
     });
+
+    it("should call the correct emission API and return excelResponse (factorId-based payload)", async () => {
+      const payload = {
+        value: 200,
+        unit: "kg",
+        factorId: 9999,
+      };
+
+      const result = await genericApiCall(apiType, payload);
+
+      expect(ensureClient).toHaveBeenCalled();
+      expect(emissionMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activity: expect.objectContaining({
+            value: 200,
+            unit: "kg",
+            factorId: 9999,
+          }),
+        })
+      );
+      // No location or time for factorId case
+      expect(result).toEqual([
+        [100, 50, 10, 5, 0, 0, 0, 0, 0, 2, "kgCO2e", "Mock description", "txn-123"],
+      ]);
+    });
   });
 
   it("should throw error for unsupported apiType", async () => {
@@ -153,9 +178,8 @@ describe("genericApiCall", () => {
       genericApiCall("invalid" as any, {
         value: 1,
         unit: "kg",
+        type: "Electricity",
         country: "US",
-        stateProvince: "",
-        date: "",
       })
     ).rejects.toThrow(/Unsupported API type/);
   });
@@ -166,9 +190,8 @@ describe("genericApiCall", () => {
       genericApiCall("location", {
         value: 1,
         unit: "kg",
+        type: "Electricity",
         country: "US",
-        stateProvince: "",
-        date: "",
       })
     ).rejects.toThrow("Invalid API response");
   });
@@ -179,9 +202,8 @@ describe("genericApiCall", () => {
       genericApiCall("stationary", {
         value: 1,
         unit: "kg",
+        type: "Electricity",
         country: "US",
-        stateProvince: "",
-        date: "",
       })
     ).rejects.toThrow("boom");
   });
