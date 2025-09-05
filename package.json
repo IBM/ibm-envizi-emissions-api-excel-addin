@@ -29,7 +29,7 @@
     "axios": "^1.10.0",
     "buffer": "^6.0.3",
     "core-js": "^3.36.0",
-    "ibm-ghg-sdk": "file:./ibm-ghg-sdk-v1.0.0.tgz",
+    "ibm-ghg-sdk": "file:./ibm-ghg-sdk-v0.0.1.tgz",
     "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {
