@@ -64,7 +64,7 @@
             <li class="ms-ListItem">Export your results quickly & easily</li>
           </ul>
           <div class="welcome-bottom">
-            <fluent-button id="get-started" type="submit" appearance="accent"
+            <fluent-button id="get-started-button" type="submit" appearance="accent"
               >Get started</fluent-button
             >
           </div>
@@ -78,7 +78,7 @@
           <p>
             Enter the credentials from your
             <fluent-anchor
-              href="https://www.app.ibm.com/envizi/emissions-api-home/overview"
+              id="overview-dashboard-link"
               target="_blank"
               appearance="hypertext"
               inline="true"
@@ -143,9 +143,6 @@
                     <div>
                       <p class="block-header">Documentation</p>
                       <div class="stack-gap-8">
-                        <fluent-anchor href="https://ibm.com" target="_blank" appearance="hypertext"
-                          >Emissions API overview</fluent-anchor
-                        >
                         <fluent-anchor
                           href="https://www.ibm.com/docs/en/envizi-esg-suite?topic=modules-ghg-emissions-api"
                           target="_blank"
@@ -214,6 +211,9 @@
               </div>
             </form>
             <div class="account-buttons">
+              <fluent-button id="view-dashboard-button" type="button" appearance="accent"
+                >View dashboard</fluent-button
+              >
               <fluent-button
                 class="logout-button"
                 id="logout-button"
