@@ -24,9 +24,16 @@ import {
   saveApiCredentialsToStorage,
   setApiCredentials,
 } from "../common/credentials";
+import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
 
 /* global console, document, Excel, Office */
+
+const apiHomeUrls = {
+  prod: "https://www.app.ibm.com/envizi/emissions-api-home",
+  np: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
+  local: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
+};
 
 let getStartedClicked = false;
 let pageElements: HTMLElement[];
@@ -51,19 +58,9 @@ Office.onReady(() => {
   pageElements = Array.from(document.getElementsByClassName("page")) as HTMLElement[];
   getStartedClicked = window.localStorage.getItem("getStartedClicked") === "true";
 
-  document.getElementById("get-started").onclick = () => {
-    getStartedClicked = true;
-    window.localStorage.setItem("getStartedClicked", "true");
-    switchPage("login-page");
-  };
-
-  const loginForm = document.forms["login"];
-  loginForm.onsubmit = (event: Event) => {
-    event.preventDefault();
-    login();
-  };
-
-  document.getElementById("logout-button").onclick = logout;
+  initGetStartedPage();
+  initLoginPage();
+  initMainPage();
 
   loadApiCredentialsFromStorage().then((apiCredentials) => {
     if (apiCredentials) {
@@ -82,6 +79,34 @@ Office.onReady(() => {
     switchPage(pageId);
   });
 });
+
+function getOverviewDashboardUrl(): string {
+  return `${apiHomeUrls[getEnvType()]}/overview`;
+}
+
+function initGetStartedPage(): void {
+  document.getElementById("get-started-button").onclick = () => {
+    getStartedClicked = true;
+    window.localStorage.setItem("getStartedClicked", "true");
+    switchPage("login-page");
+  };
+}
+
+function initLoginPage(): void {
+  (document.getElementById("overview-dashboard-link") as any).href = getOverviewDashboardUrl();
+  const loginForm = document.forms["login"];
+  loginForm.onsubmit = (event: Event) => {
+    event.preventDefault();
+    login();
+  };
+}
+
+function initMainPage(): void {
+  document.getElementById("view-dashboard-button").onclick = () => {
+    window.open(getOverviewDashboardUrl(), "_blank", "noopener");
+  };
+  document.getElementById("logout-button").onclick = logout;
+}
 
 function switchPage(id: string): void {
   pageElements.forEach((pageElement) => {
