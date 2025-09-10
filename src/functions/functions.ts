@@ -1,6 +1,8 @@
 ﻿// Copyright IBM Corp. 2025
 
 import { genericApiCall } from "./generic-api-call";
+import { factorSearch } from "./factorSeachHelper";
+import { factorHelper } from "./factorHelper";
 
 /**
  * Calculates location-based emissions.
@@ -9,16 +11,17 @@ import { genericApiCall } from "./generic-api-call";
 export async function location(
   type: string,
   value: number,
+  unit: string | undefined,
   country: string,
   stateProvince?: string,
   date?: string,
-  unit?: string,
   powerGrid?: string
 ): Promise<any[][]> {
+  const finalUnit = unit || "kwh";
   return genericApiCall("location", {
     type,
     value,
-    unit,
+    unit : finalUnit,
     country,
     stateProvince,
     date,
@@ -210,4 +213,41 @@ export async function calculation_by_factorId(
     value,
     unit,
   });
+}
+
+/**
+ * Calculates emissions using the generic calculation endpoint.
+ * @customfunction
+ */
+export async function factor_search(
+  search: string,
+  country: string,
+  stateProvince?: string,
+  date?: string,
+): Promise<any[][]> {
+  return factorSearch(search, country, stateProvince, date);
+}
+
+/**
+ * Calculates emissions using the generic calculation endpoint.
+ * @customfunction
+ */
+export async function factor(
+  type: string,
+  unit: string,
+  country: string,
+  stateProvince?: string,
+  date?: string,
+  factorSet?: string,
+  factorVersion?: string
+): Promise<any[][]> {
+  return factorHelper(type, unit, country, stateProvince, date, factorSet, factorVersion);
+}
+
+/**
+ * Calculates emissions using the generic calculation endpoint.
+ * @customfunction
+ */
+export async function factorById(factorId: number, unit?: string): Promise<any[][]> {
+  return factorHelper(factorId, unit);
 }
