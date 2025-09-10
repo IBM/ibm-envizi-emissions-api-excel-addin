@@ -121,6 +121,12 @@ b {
   width: 160px;
 }
 
+.copyright {
+  position: absolute;
+  inset-inline-start: 20px;
+  inset-block-end: 20px;
+}
+
 .login-page {
   padding: 20px;
 }
