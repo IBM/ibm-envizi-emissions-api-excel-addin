@@ -1,9 +1,21 @@
+// Copyright IBM Corp. 2025
 import * as api from "../src/functions/functions"
 import { genericApiCall } from "../src/functions/generic-api-call";
+import { factorSearch } from "../src/functions/factorSeachHelper";
+import { factorHelper } from "../src/functions/factorHelper";
 
 jest.mock("../src/functions/generic-api-call", () => ({
   genericApiCall: jest.fn(),
 }));
+
+jest.mock("../src/functions/factorSeachHelper", () => ({
+  factorSearch: jest.fn(),
+}));
+
+jest.mock("../src/functions/factorHelper", () => ({
+  factorHelper: jest.fn(),
+}));
+
 
 describe("emissions custom functions", () => {
   const mockedGenericApiCall = genericApiCall as jest.MockedFunction<typeof genericApiCall>;
@@ -23,7 +35,7 @@ describe("emissions custom functions", () => {
       fn: api.location,
       name: "location",
       apiType: "location",
-      args: ["electricity", 100, "USA", "NY", "2024-01-01", "kWh", "grid1"],
+      args: ["electricity", 100, "kWh","USA", "NY", "2024-01-01", "grid1"],
       expectedPayload: {
         type: "electricity",
         value: 100,
@@ -158,7 +170,34 @@ describe("emissions custom functions", () => {
 
   it("propagates errors from genericApiCall", async () => {
     mockedGenericApiCall.mockRejectedValueOnce(new Error("Boom!"));
-    await expect(api.location("electricity", 1, "USA")).rejects.toThrow("Boom!");
+    await expect(api.location("electricity", 1, "kwh" , "USA")).rejects.toThrow("Boom!");
   });
 });
 
+describe("factor-related functions", () => {
+  const mockedFactorSearch = factorSearch as jest.MockedFunction<typeof factorSearch>;
+  const mockedFactorHelper = factorHelper as jest.MockedFunction<typeof factorHelper>;
+
+  beforeEach(() => {
+    mockedFactorSearch.mockResolvedValue([["search-result"]]);
+    mockedFactorHelper.mockResolvedValue([["helper-result"]]);
+  });
+
+  it("factor_search calls factorSearch with correct arguments", async () => {
+    const result = await api.factor_search("electricity", "usa","new york","10/10/2020");
+    expect(mockedFactorSearch).toHaveBeenCalledWith("electricity", "usa","new york","10/10/2020");
+    expect(result).toEqual([["search-result"]]);
+  });
+
+  it("factor calls factorHelper with correct arguments", async () => {
+    const result = await api.factor("electricity", "kwh", "usa","new york","10/10/2020","factorSet","factorVersion");
+    expect(mockedFactorHelper).toHaveBeenCalledWith("electricity", "kwh", "usa","new york","10/10/2020","factorSet","factorVersion");
+    expect(result).toEqual([["helper-result"]]);
+  });
+
+  it("factorById calls factorHelper with correct arguments", async () => {
+    const result = await api.factorById(123, "kg");
+    expect(mockedFactorHelper).toHaveBeenCalledWith(123, "kg");
+    expect(result).toEqual([["helper-result"]]);
+  });
+});
