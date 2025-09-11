@@ -196,7 +196,7 @@ describe("factor-related functions", () => {
   });
 
   it("factorById calls factorHelper with correct arguments", async () => {
-    const result = await api.factorById(123, "kg");
+    const result = await api.factor_by_id(123, "kg");
     expect(mockedFactorHelper).toHaveBeenCalledWith(123, "kg");
     expect(result).toEqual([["helper-result"]]);
   });
