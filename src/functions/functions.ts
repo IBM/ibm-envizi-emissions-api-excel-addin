@@ -21,7 +21,7 @@ export async function location(
   return genericApiCall("location", {
     type,
     value,
-    unit : finalUnit,
+    unit: finalUnit,
     country,
     stateProvince,
     date,
@@ -138,7 +138,7 @@ export async function mobile_by_factorId(
 }
 
 /**
- * Calculates emissions using the generic calculation endpoint.
+ * Calculates emissions using the transportation and distribution endpoint.
  * @customfunction
  */
 export async function transportation_and_distribution(
@@ -160,7 +160,7 @@ export async function transportation_and_distribution(
 }
 
 /**
- * Calculates emissions using the generic calculation endpoint.
+ * Calculates emissions using the transportation and distribution endpoint.
  * @customfunction
  */
 export async function transportation_and_distribution_by_factorId(
@@ -216,20 +216,20 @@ export async function calculation_by_factorId(
 }
 
 /**
- * Calculates emissions using the generic calculation endpoint.
+ * Calculates emissions using the factor search endpoint.
  * @customfunction
  */
 export async function factor_search(
   search: string,
   country: string,
   stateProvince?: string,
-  date?: string,
+  date?: string
 ): Promise<any[][]> {
   return factorSearch(search, country, stateProvince, date);
 }
 
 /**
- * Calculates emissions using the generic calculation endpoint.
+ * Calculates emissions using the factor endpoint.
  * @customfunction
  */
 export async function factor(
@@ -245,9 +245,9 @@ export async function factor(
 }
 
 /**
- * Calculates emissions using the generic calculation endpoint.
+ * Calculates emissions using the factor endpoint.
  * @customfunction
  */
-export async function factorById(factorId: number, unit?: string): Promise<any[][]> {
+export async function factor_by_id(factorId: number, unit?: string): Promise<any[][]> {
   return factorHelper(factorId, unit);
 }
