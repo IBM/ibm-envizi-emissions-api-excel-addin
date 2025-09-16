@@ -237,11 +237,9 @@ export async function factor(
   unit: string,
   country: string,
   stateProvince?: string,
-  date?: string,
-  factorSet?: string,
-  factorVersion?: string
+  date?: string
 ): Promise<any[][]> {
-  return factorHelper(type, unit, country, stateProvince, date, factorSet, factorVersion);
+  return factorHelper(type, unit, country, stateProvince, date);
 }
 
 /**
