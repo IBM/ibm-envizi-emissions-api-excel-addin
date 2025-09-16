@@ -51,7 +51,8 @@ describe("factorHelper", () => {
   const baseResponse = {
     factorSet: "setA",
     source: "sourceA",
-    unit: "kg",
+    activityType: "fuel",
+    activityUnit: "L",
     name: "Diesel Combustion",
     description: "Diesel use",
     effectiveFrom: "2024-01-01",
@@ -68,9 +69,10 @@ describe("factorHelper", () => {
     NF3: 0.1,
     bioCO2: 0,
     indirectCO2e: 1.5,
+    unit: "L",
     transactionId: "abc-123",
-    activityType: "fuel",
-    activityUnit: "L",
+    
+    
   };
 
   it("returns all values from full response", async () => {
@@ -88,7 +90,8 @@ describe("factorHelper", () => {
       [
         baseResponse.factorSet,
         baseResponse.source,
-        baseResponse.unit,
+        baseResponse.activityType,
+        baseResponse.activityUnit,
         baseResponse.name,
         baseResponse.description,
         baseResponse.effectiveFrom,
@@ -105,9 +108,10 @@ describe("factorHelper", () => {
         baseResponse.NF3,
         baseResponse.bioCO2,
         baseResponse.indirectCO2e,
+         baseResponse.unit,
         baseResponse.transactionId,
-        baseResponse.activityType,
-        baseResponse.activityUnit,
+        
+        
       ],
     ]);
   });
@@ -133,6 +137,6 @@ describe("factorHelper", () => {
 
     const result = await factorHelper("fuel", "L");
 
-    expect(result[0][9]).toBe(123.45); // totalCO2e
+    expect(result[0][10]).toBe(123.45); // totalCO2e
   });
 });

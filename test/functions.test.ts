@@ -190,8 +190,8 @@ describe("factor-related functions", () => {
   });
 
   it("factor calls factorHelper with correct arguments", async () => {
-    const result = await api.factor("electricity", "kwh", "usa","new york","10/10/2020","factorSet","factorVersion");
-    expect(mockedFactorHelper).toHaveBeenCalledWith("electricity", "kwh", "usa","new york","10/10/2020","factorSet","factorVersion");
+    const result = await api.factor("electricity", "kwh", "usa","new york","10/10/2020");
+    expect(mockedFactorHelper).toHaveBeenCalledWith("electricity", "kwh", "usa","new york","10/10/2020");
     expect(result).toEqual([["helper-result"]]);
   });
 
