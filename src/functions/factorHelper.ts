@@ -10,9 +10,7 @@ export async function factorHelper(
   unit: string,
   country?: string,
   stateProvince?: string,
-  date?: string,
-  factorSet?: string,
-  factorVersion?: string
+  date?: string
 ): Promise<any[][]> {
   await ensureClient();
 
@@ -33,8 +31,6 @@ export async function factorHelper(
       apiParams.time = { date: formattedDate };
     }
 
-    if (factorSet) apiParams.factorSet = factorSet;
-    if (factorVersion) apiParams.factorVersion = factorVersion;
   } else {
     apiParams.activity.factorId = typeOrId;
   }
@@ -57,7 +53,8 @@ return [
   [
     getValue("factorSet"),
     getValue("source"),
-    getValue("unit"),
+    getValue("activityType"),
+    getValue("activityUnit"),
     getValue("name"),
     getValue("description"),
     getValue("effectiveFrom"),
@@ -74,9 +71,8 @@ return [
     getValue("NF3"),
     getValue("bioCO2"),
     getValue("indirectCO2e"),
+    getValue("unit"),
     getValue("transactionId"),
-    getValue("activityType"),
-    getValue("activityUnit"),
   ],
 ];
 }
