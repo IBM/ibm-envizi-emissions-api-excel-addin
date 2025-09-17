@@ -8,7 +8,7 @@ jest.mock("../src/functions/generic-api-call", () => ({
   genericApiCall: jest.fn(),
 }));
 
-jest.mock("../src/functions/factorSeachHelper", () => ({
+jest.mock("../src/functions/factorSearchHelper", () => ({
   factorSearch: jest.fn(),
 }));
 
