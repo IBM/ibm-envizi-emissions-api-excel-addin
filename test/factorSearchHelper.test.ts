@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { factorSearch } from "../src/functions/factorSeachHelper";
+import { factorSearch } from "../src/functions/factorSearchHelper";
 import { Factors } from "ibm-ghg-sdk";
 import { ensureClient } from "../src/functions/client";
 
