@@ -58,6 +58,7 @@ describe("factorHelper", () => {
     effectiveFrom: "2024-01-01",
     effectiveTo: "2025-01-01",
     publishedFrom: "2024-01-01",
+    publishedTo:"2024-01-01",
     region: "USA",
     totalCO2e: 123.45,
     CO2: 100,
@@ -97,6 +98,7 @@ describe("factorHelper", () => {
         baseResponse.effectiveFrom,
         baseResponse.effectiveTo,
         baseResponse.publishedFrom,
+        baseResponse.publishedTo,
         baseResponse.region,
         baseResponse.totalCO2e,
         baseResponse.CO2,
@@ -137,6 +139,6 @@ describe("factorHelper", () => {
 
     const result = await factorHelper("fuel", "L");
 
-    expect(result[0][10]).toBe(123.45); // totalCO2e
+    expect(result[0][11]).toBe(123.45); // totalCO2e
   });
 });
