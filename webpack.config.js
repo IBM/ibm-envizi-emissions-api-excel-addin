@@ -54,6 +54,12 @@ module.exports = async (env, options) => {
           exclude: /node_modules/,
           use: "html-loader",
         },
+        {
+          test: /\.m?js$/,
+          resolve: {
+            fullySpecified: false, // Disable the strict extension requirement
+          },
+        },
       ],
     },
     plugins: [
