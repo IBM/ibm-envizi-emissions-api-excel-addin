@@ -1,14 +1,14 @@
 // Copyright IBM Corp. 2025
 import * as api from "../src/functions/functions"
 import { genericApiCall } from "../src/functions/generic-api-call";
-import { factorSearch } from "../src/functions/factorSeachHelper";
+import { factorSearch } from "../src/functions/factorSearchHelper";
 import { factorHelper } from "../src/functions/factorHelper";
 
 jest.mock("../src/functions/generic-api-call", () => ({
   genericApiCall: jest.fn(),
 }));
 
-jest.mock("../src/functions/factorSeachHelper", () => ({
+jest.mock("../src/functions/factorSearchHelper", () => ({
   factorSearch: jest.fn(),
 }));
 

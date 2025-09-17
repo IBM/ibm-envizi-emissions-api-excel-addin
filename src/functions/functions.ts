@@ -1,7 +1,7 @@
 ﻿// Copyright IBM Corp. 2025
 
 import { genericApiCall } from "./generic-api-call";
-import { factorSearch } from "./factorSeachHelper";
+import { factorSearch } from "./factorSearchHelper";
 import { factorHelper } from "./factorHelper";
 
 /**
