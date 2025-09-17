@@ -122,6 +122,10 @@ export function login(): void {
     orgId: loginForm["orgId"].value,
   };
 
+  const errorMessageElement = document.getElementById("login-error-message");
+  errorMessageElement.innerText = "";
+  errorMessageElement.hidden = true;
+
   ensureClient(apiCredentials)
     .then(() => {
       if (loginForm["saveCredentials"].value) {
@@ -137,7 +141,12 @@ export function login(): void {
       switchPage("main-page");
     })
     .catch((e) => {
-      // TODO:
+      const errorMessage =
+        e.status === 401
+          ? "Invalid credentials. Please enter your credentials and try again."
+          : "Something went wrong. Please try again later.";
+      errorMessageElement.innerText = errorMessage;
+      errorMessageElement.hidden = false;
     });
 }
 

@@ -150,6 +150,10 @@ b {
   gap: 1rem;
 }
 
+.error-message {
+  color: #b10e1c;
+}
+
 .login-button {
   margin-block-start: 16px;
 }
