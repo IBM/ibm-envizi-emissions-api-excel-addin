@@ -60,6 +60,7 @@ return [
     getValue("effectiveFrom"),
     getValue("effectiveTo"),
     getValue("publishedFrom"),
+    getValue("publishedTo"),
     getValue("region"),
     getValue("totalCO2e"),
     getValue("CO2"),
