@@ -264,8 +264,8 @@
 <li><p>Download the <strong>manifest.xml</strong> file.</p></li>
 <li><p>You can either:</p>
 <ul class="simple">
-<li><p>Side-load the add-in into Excel, or</p></li>
-<li><p>Place the <code class="docutils literal notranslate"><span class="pre">manifest.xml</span></code> file in the appropriate folder (Mac only, see below).</p></li>
+<li><p>Place the <code class="docutils literal notranslate"><span class="pre">manifest.xml</span></code> file in the appropriate folder (Mac only, see below)</p></li>
+<li><p>Side-load the add-in into Excel</p></li>
 </ul>
 </li>
 </ol>
@@ -274,7 +274,26 @@
 <h2>Placing the Manifest File (Mac only)<a class="headerlink" href="#placing-the-manifest-file-mac-only" title="Link to this heading">¶</a></h2>
 <p>For macOS, place the <code class="docutils literal notranslate"><span class="pre">manifest.xml</span></code> file in the following path:</p>
 <p><code class="docutils literal notranslate"><span class="pre">/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents/wef/</span></code></p>
+<p><strong>Notes:</strong>
+- The Library folder is hidden by default on macOS. To reveal it :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Open Finder.</p></li>
+<li><p>In the top menu, click Go → Go to Folder…</p></li>
+<li><p>Enter ~/Library and press Enter.</p></li>
+</ul>
+</div></blockquote>
+<p>If the <code class="docutils literal notranslate"><span class="pre">wef</span></code> folder does not exist under the above path, create it manually:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">`/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents/`</span></code></p></li>
+<li><p>Create a new folder named wef.</p></li>
+<li><p>Place the manifest.xml file inside this folder.</p></li>
+</ul>
+</div></blockquote>
 <img alt="Placing manifest file in Mac directory" class="align-center" src="_images/placing-wef-file.png" />
+<p>After successfully placing the manifest file, you can see the add-in in the list of Developer Add-in section.</p>
+<img alt="Developer Add-in in Excel" class="align-center" src="_images/developer-add-in.png" />
 </section>
 <section id="installing-the-add-in-side-loading">
 <h2>Installing the Add-in (Side-loading)<a class="headerlink" href="#installing-the-add-in-side-loading" title="Link to this heading">¶</a></h2>

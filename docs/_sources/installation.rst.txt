@@ -24,9 +24,9 @@ Steps:
 2. Download the **manifest.xml** file.
 3. You can either:
    
-   - Side-load the add-in into Excel, or
-   - Place the ``manifest.xml`` file in the appropriate folder (Mac only, see below).
-
+   - Place the ``manifest.xml`` file in the appropriate folder (Mac only, see below)
+   - Side-load the add-in into Excel
+   
 Placing the Manifest File (Mac only)
 ------------------------------------
 
@@ -34,9 +34,30 @@ For macOS, place the ``manifest.xml`` file in the following path:
 
 ``/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/wef/``
 
+**Notes:**
+- The Library folder is hidden by default on macOS. To reveal it :
+
+   - Open Finder.
+   - In the top menu, click Go → Go to Folder…
+   - Enter ~/Library and press Enter.
+
+If the ``wef`` folder does not exist under the above path, create it manually:
+
+   - Navigate to ```/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/```
+   - Create a new folder named wef.
+   - Place the manifest.xml file inside this folder.
+
 .. image:: _images/placing-wef-file.png
    :alt: Placing manifest file in Mac directory
    :align: center
+
+
+After successfully placing the manifest file, you can see the add-in in the list of Developer Add-in section.
+
+.. image:: _images/developer-add-in.png
+   :alt: Developer Add-in in Excel
+   :align: center
+
 
 Installing the Add-in (Side-loading)
 ------------------------------------

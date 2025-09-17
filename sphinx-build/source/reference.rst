@@ -348,18 +348,22 @@ Factor
      - The emission factor dataset used for calculation (e.g., DEFRA, EPA).
    * - ``source``
      - Reference source of the factor (e.g., publication, license link).
-   * - ``dataType``
+   * - ``activityType``
      - Category of data (e.g., Electricity - Scope 3).
-   * - ``dataUnit``
+   * - ``activityUnit``
      - Unit of input activity data (e.g., kWh, liters).
    * - ``name``
      - Human-readable name of the factor (e.g., "Electricity: UK - 2023").
    * - ``Description``
      - Text description of the factor (e.g., "Electricity generated").
-   * - ``effectiveFrom`` / ``effectiveTo``
-     - Dates for which the factor is valid.
-   * - ``publishedFrom`` / ``publishedTo``
-     - Publication period of the factor set.
+   * - ``effectiveFrom``
+     - Dates for which the factor is valid from.
+   * - ``effectiveTo``
+     - Dates for which the factor is valid to.
+   * - ``publishedFrom``
+     - Publication period of the factor set from.
+   * - ``publishedTo``
+     - Publication period of the factor set to.
    * - ``region``
      - Geographic region where the factor applies.
    * - ``Total CO2e``
@@ -380,8 +384,8 @@ Factor
      - Nitrogen trifluoride (NF3) emissions reported separately.
    * - ``bioCO2``
      - Biogenic carbon dioxide (bioCO2) emissions, if applicable.
-   * - ``directCO2`` / ``indirectCO2e``
-     - Direct CO2 or indirect CO2 equivalent emissions reported separately.
+   * - ``indirectCO2e``
+     - Indirect CO2 equivalent emissions reported separately.
    * - ``Unit``
      - Output measurement unit (typically kgCO2e).
    * - ``Transaction Id``
@@ -408,41 +412,11 @@ Factor Search
      - The emission factor dataset used for calculation (e.g., DEFRA, EPA).
    * - ``source``
      - Reference source of the factor (e.g., publication, license link).
-   * - ``dataType``
+   * - ``activityType``
      - Category of data (e.g., Electricity - Scope 3).
-   * - ``dataUnit``
+   * - ``activityUnit``
      - Unit of input activity data (e.g., kWh, liters).
-   * - ``name``
-     - Human-readable name of the factor (e.g., "Electricity: UK - 2023").
-   * - ``Description``
-     - Text description of the factor (e.g., "Electricity generated").
-   * - ``effectiveFrom`` / ``effectiveTo``
-     - Dates for which the factor is valid.
-   * - ``publishedFrom`` / ``publishedTo``
-     - Publication period of the factor set.
    * - ``region``
      - Geographic region where the factor applies.
-   * - ``Total CO2e``
-     - The total emissions expressed as carbon dioxide equivalent (CO2e), sum of all GHGs weighted by GWP.
-   * - ``CO2``
-     - Carbon dioxide (CO2) emissions reported separately.
-   * - ``CH4``
-     - Methane (CH4) emissions reported separately.
-   * - ``N2O``
-     - Nitrous oxide (N2O) emissions reported separately.
-   * - ``HFC``
-     - Hydrofluorocarbon (HFC) emissions reported separately.
-   * - ``PFC``
-     - Perfluorocarbon (PFC) emissions reported separately.
-   * - ``SF6``
-     - Sulfur hexafluoride (SF6) emissions reported separately.
-   * - ``NF3``
-     - Nitrogen trifluoride (NF3) emissions reported separately.
-   * - ``bioCO2``
-     - Biogenic carbon dioxide (bioCO2) emissions, if applicable.
-   * - ``directCO2`` / ``indirectCO2e``
-     - Direct CO2 or indirect CO2 equivalent emissions reported separately.
-   * - ``Unit``
-     - Output measurement unit (typically kgCO2e).
-   * - ``Transaction Id``
-     - Unique identifier for the calculation transaction, used for reference and auditing.
+   * - ``factorId``
+     - Factor ID from Envizi.

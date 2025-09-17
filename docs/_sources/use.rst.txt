@@ -64,7 +64,7 @@ Users can enter a function such as:
    :align: center
 
 .. note::
-   If an error occurs, the add-in will display an error message.
+   If an error occurs, the add-in will display an error message once you hover over warning icon.
 
    .. image:: _images/error.png
       :alt: Example error message

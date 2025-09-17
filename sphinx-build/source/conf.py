@@ -17,6 +17,17 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
+# Language used for content
+language = 'en'
+
+# Source file suffix
+source_suffix = {
+    '.rst': 'restructuredtext',
+}
+
+# The master document
+master_doc = 'index'
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode'
