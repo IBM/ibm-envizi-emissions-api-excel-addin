@@ -40,7 +40,6 @@
     "@types/axios": "^0.9.36",
     "@types/custom-functions-runtime": "^1.6.8",
     "@types/jest": "^30.0.0",
-    "@types/jquery": "^3.5.33",
     "@types/node": "^24.0.4",
     "@types/office-js": "^1.0.524",
     "@types/office-runtime": "^1.0.35",
