@@ -10,6 +10,14 @@ body {
   height: 100%;
 }
 
+.ms-Fabric {
+  color: var(--colorNeutralForeground1);
+}
+
+.ms-bgColor-neutralLighter {
+  background-color: var(--colorNeutralBackground2) !important;
+}
+
 .ms-font-m {
   line-height: 20px;
 }
@@ -72,17 +80,6 @@ body {
 
 .ms-welcome__action.ms-Button--hero {
   margin-top: 30px;
-}
-
-fluent-button {
-  background-color: #0078d7;
-  color: #ffffff;
-}
-
-fluent-button:hover,
-fluent-button:focus {
-  background-color: #005a9e;
-  cursor: pointer;
 }
 
 b {
@@ -152,7 +149,7 @@ b {
 }
 
 .error-message {
-  color: #b10e1c;
+  color: var(--colorStatusDangerForeground1);
 }
 
 .login-button {
@@ -213,9 +210,4 @@ b {
 
 .account-buttons fluent-button {
   width: 256px;
-}
-
-#logout-button {
-  background-color: #ffffff;
-  color: #0078d7;
 }

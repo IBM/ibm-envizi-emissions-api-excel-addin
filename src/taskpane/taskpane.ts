@@ -4,20 +4,20 @@
  * See LICENSE in the project root for license information.
  */
 
-import { setTheme, Theme } from "@fluentui/web-components";
 import { webDarkTheme, webLightTheme } from "@fluentui/tokens";
 
 import {
   accordionDefinition,
   accordionItemDefinition,
-  LinkDefinition,
   ButtonDefinition,
   CheckboxDefinition,
+  FieldDefinition,
+  FluentDesignSystem,
+  LinkDefinition,
+  setTheme,
   TabDefinition,
   TablistDefinition,
   TextInputDefinition,
-  FieldDefinition,
-  FluentDesignSystem,
 } from "@fluentui/web-components";
 
 import {
@@ -41,7 +41,6 @@ TextInputDefinition.define(FluentDesignSystem.registry);
 FieldDefinition.define(FluentDesignSystem.registry);
 
 /* global console, document, Excel, Office */
-initStyleMode();
 
 const apiHomeUrls = {
   prod: "https://www.app.ibm.com/envizi/emissions-api-home",
@@ -51,6 +50,8 @@ const apiHomeUrls = {
 
 let getStartedClicked = false;
 let pageElements: HTMLElement[];
+
+initTheme();
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
@@ -164,7 +165,7 @@ export function logout(): void {
   switchPage("login-page");
 }
 
-function initStyleMode() {
+function initTheme(): void {
   if (isDarkMode()) {
     setTheme(webDarkTheme, document.body);
   } else {
@@ -172,6 +173,6 @@ function initStyleMode() {
   }
 }
 
-function isDarkMode() {
+function isDarkMode(): boolean {
   return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
