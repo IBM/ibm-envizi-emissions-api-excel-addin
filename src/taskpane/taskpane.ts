@@ -4,17 +4,20 @@
  * See LICENSE in the project root for license information.
  */
 
+import { setTheme, Theme } from "@fluentui/web-components";
+import { webDarkTheme, webLightTheme } from "@fluentui/tokens";
+
 import {
-  fluentAccordion,
-  fluentAccordionItem,
-  fluentAnchor,
-  fluentButton,
-  fluentCheckbox,
-  fluentTab,
-  fluentTabPanel,
-  fluentTabs,
-  fluentTextField,
-  provideFluentDesignSystem,
+  accordionDefinition,
+  accordionItemDefinition,
+  LinkDefinition,
+  ButtonDefinition,
+  CheckboxDefinition,
+  TabDefinition,
+  TablistDefinition,
+  TextInputDefinition,
+  FieldDefinition,
+  FluentDesignSystem,
 } from "@fluentui/web-components";
 
 import {
@@ -27,7 +30,18 @@ import {
 import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
 
+accordionDefinition.define(FluentDesignSystem.registry);
+accordionItemDefinition.define(FluentDesignSystem.registry);
+LinkDefinition.define(FluentDesignSystem.registry);
+ButtonDefinition.define(FluentDesignSystem.registry);
+CheckboxDefinition.define(FluentDesignSystem.registry);
+TabDefinition.define(FluentDesignSystem.registry);
+TablistDefinition.define(FluentDesignSystem.registry);
+TextInputDefinition.define(FluentDesignSystem.registry);
+FieldDefinition.define(FluentDesignSystem.registry);
+
 /* global console, document, Excel, Office */
+initStyleMode();
 
 const apiHomeUrls = {
   prod: "https://www.app.ibm.com/envizi/emissions-api-home",
@@ -37,18 +51,6 @@ const apiHomeUrls = {
 
 let getStartedClicked = false;
 let pageElements: HTMLElement[];
-
-provideFluentDesignSystem().register(
-  fluentAccordion(),
-  fluentAccordionItem(),
-  fluentAnchor(),
-  fluentButton(),
-  fluentCheckbox(),
-  fluentTab(),
-  fluentTabPanel(),
-  fluentTabs(),
-  fluentTextField()
-);
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
@@ -122,6 +124,10 @@ export function login(): void {
     orgId: loginForm["orgId"].value,
   };
 
+  const errorMessageElement = document.getElementById("login-error-message");
+  errorMessageElement.innerText = "";
+  errorMessageElement.hidden = true;
+
   ensureClient(apiCredentials)
     .then(() => {
       if (loginForm["saveCredentials"].value) {
@@ -137,7 +143,12 @@ export function login(): void {
       switchPage("main-page");
     })
     .catch((e) => {
-      // TODO:
+      const errorMessage =
+        e.status === 401
+          ? "Invalid credentials. Please enter your credentials and try again."
+          : "Something went wrong. Please try again later.";
+      errorMessageElement.innerText = errorMessage;
+      errorMessageElement.hidden = false;
     });
 }
 
@@ -151,4 +162,16 @@ export function logout(): void {
   loginForm["tenantId"].value = "";
   loginForm["orgId"].value = "";
   switchPage("login-page");
+}
+
+function initStyleMode() {
+  if (isDarkMode()) {
+    setTheme(webDarkTheme, document.body);
+  } else {
+    setTheme(webLightTheme, document.body);
+  }
+}
+
+function isDarkMode() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
 }

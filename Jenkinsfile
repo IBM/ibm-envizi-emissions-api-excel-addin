@@ -14,7 +14,7 @@ sterlingPipeline {
     semanticReleaseBuildFiles = true
     deploymentEnabled = false
     sonarQubeAdditionalProperties = {[
-        "sonar.exclusions":"boms/**"
+        "project.settings":"./sonar-project.properties"
     ]}
 
     acceptableFailedStageList = null
