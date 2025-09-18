@@ -52,7 +52,7 @@
           />
           <h2 class="ms-font-xl">Welcome to the Envizi Emissions API add-in</h2>
         </header>
-        <div class="welcome-body" style="color: var(--colorNeutralForeground1)">
+        <div class="welcome-body">
           <p class="ms-font-l">Seamlessly integrate emissions data into your workflows.</p>
           <br />
           <br />
@@ -64,22 +64,20 @@
             <li class="ms-ListItem">Export your results quickly & easily</li>
           </ul>
           <div class="welcome-bottom">
-            <fluent-button id="get-started-button" type="submit" appearance="accent"
+            <fluent-button id="get-started-button" type="submit" appearance="primary"
               >Get started</fluent-button
             >
           </div>
         </div>
-        <div style="color: var(--colorNeutralForeground1)" class="copyright">
-          © Copyright IBM Corp. 2025
-        </div>
+        <div class="copyright">© Copyright IBM Corp. 2025</div>
       </div>
 
       <!-- Login page -->
       <div class="page login-page" id="login-page" hidden>
-        <div class="login-header" style="color: var(--colorNeutralForeground1)">
+        <div class="login-header">
           <h2 class="ms-font-xl">Account credentials</h2>
           <p>
-            Enter the credentials from your <br />
+            Enter the credentials from your
             <fluent-link
               id="overview-dashboard-link"
               target="_blank"
@@ -101,7 +99,7 @@
               <fluent-checkbox checked name="saveCredentials" slot="input"></fluent-checkbox>
             </fluent-field>
             <div id="login-error-message" class="error-message" hidden></div>
-            <fluent-button class="login-button" type="submit" appearance="accent"
+            <fluent-button class="login-button" type="submit" appearance="primary"
               >Login</fluent-button
             >
           </div>
@@ -117,10 +115,8 @@
         <div id="homePanel" role="tabpanel" class="home-panel">
           <fluent-accordion>
             <fluent-accordion-item expanded="true">
-              <span slot="heading" style="color: var(--colorNeutralForeground1)"
-                >Getting started</span
-              >
-              <div class="accordion-content" style="color: var(--colorNeutralForeground1)">
+              <span slot="heading">Getting started</span>
+              <div class="accordion-content">
                 <p>Get started with the Emissions API Excel template:</p>
                 <br />
                 <div class="text-block">
@@ -142,8 +138,8 @@
               </div>
             </fluent-accordion-item>
             <fluent-accordion-item expanded="true">
-              <span slot="heading" style="color: var(--colorNeutralForeground1)">Resources</span>
-              <div class="accordion-content" style="color: var(--colorNeutralForeground1)">
+              <span slot="heading">Resources</span>
+              <div class="accordion-content">
                 <p>
                   Everything you need to get started, build, and succeed with the Envizi Emissions
                   API.
@@ -227,14 +223,14 @@
             </div>
           </form>
           <div class="account-buttons">
-            <fluent-button id="view-dashboard-button" type="button" appearance="accent"
+            <fluent-button id="view-dashboard-button" type="button" appearance="primary"
               >View dashboard</fluent-button
             >
             <fluent-button
               class="logout-button"
               id="logout-button"
               type="button"
-              appearance="lightweight"
+              appearance="outline"
               >Logout and switch accounts</fluent-button
             >
           </div>

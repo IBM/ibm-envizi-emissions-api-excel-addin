@@ -97,7 +97,7 @@
       <bt:ShortStrings>
         <bt:String id="Functions.Namespace" DefaultValue="ENVIZI"/>
         <bt:String id="GetStarted.Title" DefaultValue="Get started with IBM Envizi Emissions API"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="IBM Envizi"/>
         <bt:String id="TaskpaneButton.Label" DefaultValue="IBM Envizi Emissions API"/>
       </bt:ShortStrings>
       <bt:LongStrings>
