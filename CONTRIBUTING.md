@@ -2,12 +2,12 @@
 Our project welcomes external contributions. If you have an itch, please feel
 free to scratch it.
 
-To contribute notebooks or documentation, please submit a [pull request](https://github.com/IBM/Environmental-Intelligence/pulls).
+To contribute notebooks or documentation, please submit a [pull request](https://github.com/IBM/ibm-envizi-emissions-api-excel-addin/pulls).
 
 A good way to familiarize yourself with the notebooks and contribution process is
-to look for an issue in the [issue tracker](https://github.com/IBM/Environmental-Intelligence/issues).
+to look for an issue in the [issue tracker](https://github.com/IBM/ibm-envizi-emissions-api-excel-addin/issues).
 
-Before embarking on a more ambitious contribution, please [raise an issue](https://github.com/IBM/Environmental-Intelligence/issues).
+Before embarking on a more ambitious contribution, please [raise an issue](https://github.com/IBM/ibm-envizi-emissions-api-excel-addin/issues).
 
 **Note: We appreciate your effort, and want to avoid a situation where a contribution
 requires extensive rework (by you or by us), sits in backlog for a long time, or
@@ -15,12 +15,12 @@ cannot be accepted at all!**
 
 ### Proposing new features
 
-If you would like to add a new notebook, please [raise an issue](https://github.com/IBM/Environmental-Intelligence/issues)
+If you would like to add a new notebook, please [raise an issue](https://github.com/IBM/ibm-envizi-emissions-api-excel-addin/issues)
 before sending a pull request so the contribution can be discussed. 
 
 ### Fixing bugs
 
-If you would like to fix a bug, please [raise an issue](https://github.com/IBM/Environmental-Intelligence/issues) before sending a
+If you would like to fix a bug, please [raise an issue](https://github.com/IBM/ibm-envizi-emissions-api-excel-addin/issues) before sending a
 pull request so it can be tracked.
 
 ### Merge approval
