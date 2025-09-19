@@ -1,4 +1,4 @@
-# IBM Envizi - Carbon Engine Excel Add-in
+# IBM Envizi - Emissions API Excel Add-in
 
 ## Overview
 
