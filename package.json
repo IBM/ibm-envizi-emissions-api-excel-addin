@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IBM/ibm-envizi-emissions-api-excel-addin.git"
+    "url": "https://github.com/IBM/ibm-envizi-emissions-api-excel-addin"
   },
   "license": "MIT",
   "scripts": {
