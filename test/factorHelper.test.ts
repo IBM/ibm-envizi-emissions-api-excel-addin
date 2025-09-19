@@ -71,6 +71,7 @@ describe("factorHelper", () => {
     bioCO2: 0,
     indirectCO2e: 1.5,
     unit: "L",
+    factorId:"abc-123",
     transactionId: "abc-123",
     
     
@@ -110,7 +111,8 @@ describe("factorHelper", () => {
         baseResponse.NF3,
         baseResponse.bioCO2,
         baseResponse.indirectCO2e,
-         baseResponse.unit,
+        baseResponse.unit,
+        baseResponse.factorId,
         baseResponse.transactionId,
         
         
