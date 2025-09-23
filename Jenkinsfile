@@ -16,7 +16,7 @@ sterlingPipeline {
     sonarQubeAdditionalProperties = {[
         "project.settings":"./sonar-project.properties"
     ]}
-
+    caseCheckVulnsIgnoreList = 'bom.json'
     acceptableFailedStageList = null
 
 }
