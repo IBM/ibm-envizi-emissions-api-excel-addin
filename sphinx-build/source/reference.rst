@@ -2,9 +2,9 @@
 Reference
 =========
 
-This section describes all available custom functions provided by the IBM Envizi Emissions API Excel Add-in.
+This section describes all available custom functions provided by IBM Envizi for Excel.
 
-Each function calls the Envizi API to calculate greenhouse gas (GHG) emissions based on provided inputs.
+Each function calls the IBM Envizi Emissions API from Excel to calculate greenhouse gas (GHG) emissions based on provided inputs.
 
 General Notes
 -------------
