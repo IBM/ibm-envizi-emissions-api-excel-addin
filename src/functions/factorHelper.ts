@@ -73,6 +73,7 @@ return [
     getValue("bioCO2"),
     getValue("indirectCO2e"),
     getValue("unit"),
+    getValue("factorId"),
     getValue("transactionId"),
   ],
 ];

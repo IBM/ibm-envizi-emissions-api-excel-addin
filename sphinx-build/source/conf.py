@@ -6,10 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'IBM Envizi Emissions API Excel Add-in'
+project = 'IBM Envizi for Excel'
 copyright = '2025, IBM Corporation'
-author = 'Ridham Thumar'
-release = '1.0.0'
+author = 'Ridham Thumar, Steffan Taylor'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

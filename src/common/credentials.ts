@@ -51,3 +51,4 @@ export async function removeApiCredentialsFromStorage(): Promise<void> {
   }
   return OfficeRuntime.storage.removeItem(apiCredentialsKey);
 }
+

@@ -26,16 +26,12 @@ Built using **TypeScript**, **Office.js**, and **Webpack**, this add-in enhances
 
 ## Installation
 
-> **Note:** This project uses two manifest files:
-> - `manifest.xml` – For local development with localhost URLs
-> - `Envizi_manifest.xml` – For production deployment with links to deployed resources
-
 ### For End Users
 
-1. Download the latest release 
+1. Download the latest release from https://plugins.app.ibm.com/excel-addin/manifest.xml
 2. Open Excel and navigate to the "Insert" tab
-3. Select "My Add-ins" and browse to the downloaded Envizi_manifest.xml file
-4. Select the IBM Envizi Carbon Engine Add-in to install it
+3. Select "My Add-ins" and browse to the downloaded manifest.xml file
+4. Select the IBM Envizi - Emissions API Excel Add-in to install it
 
 ### For Developers
 

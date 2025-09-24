@@ -91,6 +91,10 @@ module.exports = async (env, options) => {
               }
             },
           },
+          {
+            from: "*.xlsx",
+            to: "[name][ext]",
+          },
         ],
       }),
       new webpack.ProvidePlugin({
