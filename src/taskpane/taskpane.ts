@@ -44,8 +44,6 @@ FieldDefinition.define(FluentDesignSystem.registry);
 
 const apiHomeUrls = {
   prod: "https://www.app.ibm.com/envizi/emissions-api-home",
-  np: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
-  local: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
 };
 
 let getStartedClicked = false;
