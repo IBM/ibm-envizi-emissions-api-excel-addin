@@ -1,6 +1,6 @@
-===================================================
-IBM Envizi Emissions API Excel Add-in Documentation
-===================================================
+==================================
+IBM Envizi for Excel Documentation
+==================================
 
 .. toctree::
    :maxdepth: 2
@@ -14,15 +14,12 @@ IBM Envizi Emissions API Excel Add-in Documentation
 Introduction
 ------------
 
-The IBM Envizi Emissions API Excel Add-in enables users to calculate and retrieve greenhouse gas (GHG) emissions
-data directly within Microsoft Excel spreadsheets.
-By integrating with the Envizi API, the add-in allows users to input activity data
-and instantly obtain standardized emissions factors and results.
+IBM Envizi for Excel enables users to calculate and retrieve greenhouse gas (GHG) emissions data directly within Microsoft Excel spreadsheets. By integrating with the IBM Envizi - Emissions API, the add-in allows users to input activity data and instantly obtain standardized emissions factors and results.
 
 This documentation provides:
 
 - Step-by-step guidance for installation and configuration
-- Instructions for authenticating and connecting to the Envizi API
+- Instructions for authenticating and connecting to the Envizi for Excel
 - Usage examples for common workflows in Excel
 - Reference details for available functions and parameters
 

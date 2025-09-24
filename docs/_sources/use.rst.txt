@@ -5,7 +5,7 @@ Use
 Logging In
 ----------
 
-After installation, launch the add-in by clicking the **Envizi Add-in** button on the Excel ribbon.
+After installation, launch the add-in by clicking the **IBM Envizi for Excel Add-in** button on the Excel ribbon.
 
 When prompted, provide your credentials:
 
@@ -13,12 +13,13 @@ When prompted, provide your credentials:
 - **tenantId** – Tenant identifier
 - **orgId** – Organization identifier
 
+Your credentials can be found on the `Overview Dashboard <https://www.app.ibm.com/envizi/emissions-api-home/overview?cuiURL=%2Femissions-api-home%2Foverview>`_ by clicking on the **View API Key** button.
+
 .. image:: _images/login.png
    :alt: Login screen of the add-in
    :align: center
 
-Credentials are validated against the Envizi API.
-Once validated, the **main interface** of the add-in becomes available:
+Once your credentials are validated, the **main interface** of the add-in becomes available:
 
 .. image:: _images/main.png
    :alt: Main interface of the add-in
@@ -55,9 +56,9 @@ Users can enter a function such as:
 
 **Process**
 
-1. The add-in processes the inputs and formats them for the Envizi API.
-2. The Envizi API calculates the emissions data.
-3. The result is returned and displayed in the Excel cell.
+1. IBM Envizi for Excel processes the inputs and formats them for the IBM Envizi - Emissions API,
+2. The IBM Envizi Emissions API calculates the emissions data,
+3. The result is then returned and displayed in the Excel cell.
 
 .. image:: _images/result.png
    :alt: API Result
