@@ -1,9 +1,9 @@
 {
-  "name": "ibm-envizi-emissions-api-excel-addin",
+  "name": "excel-custom-functions",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IBM/ibm-envizi-emissions-api-excel-addin"
+    "url": "https://github.ibm.com/fd4b-agrotech/ibm-envizi-emissions-api-excel-addin-internal.git"
   },
   "license": "MIT",
   "scripts": {

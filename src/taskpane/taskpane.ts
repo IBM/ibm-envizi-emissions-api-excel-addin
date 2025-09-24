@@ -4,7 +4,7 @@
  * See LICENSE in the project root for license information.
  */
 
-import { webDarkTheme, webLightTheme } from "@fluentui/tokens";
+import { Theme, webDarkTheme, webLightTheme } from "@fluentui/tokens";
 
 import {
   accordionDefinition,
@@ -43,7 +43,9 @@ FieldDefinition.define(FluentDesignSystem.registry);
 /* global console, document, Excel, Office */
 
 const apiHomeUrls = {
-  prod: "https://www.app.ibm.com/envizi/emissions-api-home"
+  prod: "https://www.app.ibm.com/envizi/emissions-api-home",
+  np: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
+  local: "https://www-dev.app.ibm.com/envizi/emissions-api-home",
 };
 
 let getStartedClicked = false;
@@ -164,13 +166,29 @@ export function logout(): void {
 }
 
 function initTheme(): void {
-  if (isDarkMode()) {
-    setTheme(webDarkTheme, document.body);
-  } else {
-    setTheme(webLightTheme, document.body);
-  }
+  setTheme(getCurrentTheme(), document.body);
 }
 
-function isDarkMode(): boolean {
-  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+function getCurrentTheme(): Theme {
+  let theme = webLightTheme;
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
+  const officeDark = Office.context?.officeTheme?.isDarkTheme ?? false;
+  const isOnline = Office.context?.diagnostics?.platform === Office.PlatformType.OfficeOnline;
+
+  if (!isOnline) {
+    // Determine dark mode based on Office theme and system preference
+    theme = (officeDark && prefersDark) || prefersDark ? webDarkTheme : webLightTheme;
+    listenToSystemThemeChanges();
+  }
+
+  return theme;
+}
+
+function listenToSystemThemeChanges(): void {
+  const darkModeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+  if (!darkModeQuery) return;
+
+  darkModeQuery.addEventListener("change", (e) => {
+    setTheme(e.matches ? webDarkTheme : webLightTheme);
+  });
 }
