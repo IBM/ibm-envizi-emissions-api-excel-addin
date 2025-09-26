@@ -90,20 +90,32 @@ function buildApiParams(apiType: ApiType, payload: Payload): any {
 }
 
 function formatResponse(response: any): (string | number | null)[][] {
+
+  const getValue = (key: string, type: "string" | "gas" = "string") => {
+    const value = response[key];
+    if (value === undefined || value === null) {
+      
+      if (type === "gas") return 0;
+  
+      return "";
+    }
+    return value;
+  };
+
   return [[
-    response.totalCO2e,
-    response.CO2,
-    response.CH4,
-    response.N2O,
-    response.HFC,
-    response.PFC,
-    response.SF6,
-    response.NF3,
-    response.bioCO2,
-    response.indirectCO2e,
-    response.unit,
-    response.description,
-    response.transactionId,
+    getValue("totalCO2e" , "gas"),
+    getValue("CO2" , "gas"),
+    getValue("CH4" , "gas"),
+    getValue("N2O" , "gas"),
+    getValue("HFC" , "gas"),
+    getValue("PFC" , "gas"),
+    getValue("SF6" , "gas"),
+    getValue("NF3" , "gas"),
+    getValue("bioCO2" , "gas"),
+    getValue("indirectCO2e" , "gas"),
+    getValue("unit" , "string"),
+    getValue("description", "string"),
+    getValue("transactionId", "string"),
   ]];
 }
 
