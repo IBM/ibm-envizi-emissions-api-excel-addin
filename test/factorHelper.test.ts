@@ -143,4 +143,72 @@ describe("factorHelper", () => {
 
     expect(result[0][11]).toBe(123.45); // totalCO2e
   });
+
+  it("returns default values for missing or null fields", async () => {
+  // Create a mock response with some fields missing (null or undefined)
+  const mockResponseWithNullValues = {
+    factorSet: null,         
+    source: "sourceA",       
+    activityType: "fuel",    
+    activityUnit: "L",
+    name: null,              
+    description: null,    
+    effectiveFrom: null,
+    effectiveTo: null,
+    publishedFrom: null,
+    publishedTo: null,         
+    region: null,            
+    totalCO2e: null,         
+    CO2: null,               
+    CH4: null,               
+    N2O: null,               
+    HFC: null,               
+    PFC: null,               
+    SF6: null,               
+    NF3: null,               
+    bioCO2: null,            
+    indirectCO2e: null,      
+    unit: "L",               
+    factorId: null,          
+    transactionId: null,     
+  };
+
+  
+  mockedRetrieveFactor.mockResolvedValue(JSON.stringify(mockResponseWithNullValues));
+
+  const result = await factorHelper("fuel", "L", "USA", "CA", "2024-01-01");
+
+  
+  expect(result).toEqual([
+    [
+      "",             
+      "sourceA",      
+      "fuel",         
+      "L",            
+      "",             
+      "",             
+      "",
+      "",
+      "",
+      "",
+      "",             
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      "L",            
+      "",              
+      "",             
+    ]
+  ]);
+});
+
+
+  
 });
