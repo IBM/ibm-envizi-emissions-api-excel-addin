@@ -46,35 +46,40 @@ export async function factorHelper(
     );
   }
 
-  const getValue = (key: keyof typeof response) =>
-  response[key] !== undefined ? response[key] : "";
+  const getValue = (key: keyof typeof response, type: "string" | "gas" = "string") => {
+    const value = response[key];
+    if (value === undefined || value === null) {
+      return type === "gas" ? 0 : ""; 
+    }
+    return value;
+  };
 
 return [
   [
-    getValue("factorSet"),
-    getValue("source"),
-    getValue("activityType"),
-    getValue("activityUnit"),
-    getValue("name"),
-    getValue("description"),
-    getValue("effectiveFrom"),
-    getValue("effectiveTo"),
-    getValue("publishedFrom"),
-    getValue("publishedTo"),
-    getValue("region"),
-    getValue("totalCO2e"),
-    getValue("CO2"),
-    getValue("CH4"),
-    getValue("N2O"),
-    getValue("HFC"),
-    getValue("PFC"),
-    getValue("SF6"),
-    getValue("NF3"),
-    getValue("bioCO2"),
-    getValue("indirectCO2e"),
-    getValue("unit"),
-    getValue("factorId"),
-    getValue("transactionId"),
+    getValue("factorSet", "string"),
+    getValue("source" , "string"),
+    getValue("activityType" , "string"),
+    getValue("activityUnit" , "string"),
+    getValue("name" , "string"),
+    getValue("description" , "string"),
+    getValue("effectiveFrom" , "string"),
+    getValue("effectiveTo" , "string"),
+    getValue("publishedFrom" , "string"),
+    getValue("publishedTo" , "string"),
+    getValue("region" , "string"),
+    getValue("totalCO2e" , "gas"),
+    getValue("CO2" , "gas"),
+    getValue("CH4" , "gas"),
+    getValue("N2O" , "gas"),
+    getValue("HFC" , "gas"),
+    getValue("PFC" , "gas"),
+    getValue("SF6" , "gas"),
+    getValue("NF3" , "gas"),
+    getValue("bioCO2" , "gas"),
+    getValue("indirectCO2e" , "gas"),
+    getValue("unit", "string"),
+    getValue("factorId" , "string"),
+    getValue("transactionId" , "string"),
   ],
 ];
 }
