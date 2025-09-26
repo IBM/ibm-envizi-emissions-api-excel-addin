@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Use" href="use.html" /><link rel="prev" title="IBM Envizi for Excel Documentation" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>Installation - IBM Envizi for Excel documentation</title>
+        <title>Installation on Windows - IBM Envizi for Excel documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,8 +199,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="use.html">Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 </ul>
@@ -223,7 +223,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/installation.rst.txt" title="View this page">
+  <a class="muted-link" href="_sources/windows.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -243,119 +243,138 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+          <section id="installation-on-windows">
+<h1>Installation on Windows<a class="headerlink" href="#installation-on-windows" title="Link to this heading">¶</a></h1>
+<p>This guide explains how to install an <strong>IBM Envizi Emissions API</strong> add-in from an XML manifest file on
+<strong>Windows</strong> using the <em>Trusted Add-in Catalogs</em> method.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h2>
-<p>Before installing the add-in, ensure the following requirements are met:</p>
 <ul class="simple">
-<li><p>Microsoft Excel (Office 365 Online, Mac or Windows)</p></li>
-<li><p>Active internet connection</p></li>
-<li><p>API credentials (<code class="docutils literal notranslate"><span class="pre">apiKey</span></code>, <code class="docutils literal notranslate"><span class="pre">tenantId</span></code>, <code class="docutils literal notranslate"><span class="pre">orgId</span></code>), are available on the <a class="reference external" href="https://www.app.ibm.com/envizi/emissions-api-home/overview?cuiURL=%2Femissions-api-home%2Foverview">Overview Dashboard</a> after <a class="reference external" href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-53999">sign up</a>.</p></li>
+<li><p>Microsoft Excel 2021 or later installed on Windows</p></li>
+<li><p>Access to the XML manifest file (<code class="docutils literal notranslate"><span class="pre">manifest.xml</span></code>)</p></li>
 </ul>
 </section>
-<section id="install">
-<h2>Install<a class="headerlink" href="#install" title="Link to this heading">¶</a></h2>
-<p>In order to use <strong>IBM Envizi Emissions API</strong> for Excel, there are two options to install:</p>
+<section id="step-1-locate-your-manifest-file">
+<h2>Step 1: Locate Your Manifest File<a class="headerlink" href="#step-1-locate-your-manifest-file" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Download from the AppSource Store (coming soon)</p></li>
-<li><p>Sideload a manifest.xml file</p></li>
+<li><p>Make sure you already have the <code class="docutils literal notranslate"><span class="pre">manifest.xml</span></code> file</p></li>
+<li><p>Save this file in an easy-to-access folder, such as: <code class="docutils literal notranslate"><span class="pre">C:\Addins\</span></code></p></li>
 </ol>
-<section id="microsoft-appsource-store">
-<h3>Microsoft AppSource Store<a class="headerlink" href="#microsoft-appsource-store" title="Link to this heading">¶</a></h3>
-<p>Coming soon.</p>
+<img alt="Placing the file" class="align-center" src="_images/placing-file.png" />
 </section>
-<section id="sideload">
-<h3>Sideload<a class="headerlink" href="#sideload" title="Link to this heading">¶</a></h3>
-<section id="download-the-manifest-file">
-<h4>Download the Manifest File<a class="headerlink" href="#download-the-manifest-file" title="Link to this heading">¶</a></h4>
-<p>The manifest file is available at the following location:</p>
-<p><a class="reference external" href="https://plugins.app.ibm.com/excel-addin/manifest.xml">manifest.xml</a></p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>If your browser displays the XML content instead of downloading the file, select <strong>File</strong> → <strong>Save As</strong>, name the file <strong>manifest.xml</strong>, and save it to your preferred location.</p>
-</div>
-<p>The following sections contain instructions for sideloading the Add-in in different environments, please choose the one that is relevant:</p>
-<ol class="arabic simple">
-<li><p>Office 365 - Online</p></li>
-<li><p>Mac</p></li>
-<li><p>Windows</p></li>
-</ol>
-</section>
-<section id="office-365-online">
-<h4>Office 365 - Online<a class="headerlink" href="#office-365-online" title="Link to this heading">¶</a></h4>
-<p>Office 365 Online provides the most straightforward method for sideloading the add-in.</p>
-<ul class="simple">
-<li><p>Go to <a class="reference external" href="https://excel.cloud.microsoft/">Excel</a></p></li>
-<li><p>From the <strong>Home</strong> tab, click Add-ins</p></li>
-<li><p>Click <strong>More Add-ins</strong></p></li>
-</ul>
-<img alt="Add-ins menu in Excel" class="align-center" src="_images/add-in.png" />
-<ul class="simple">
-<li><p>Click <strong>Upload My Add-in</strong></p></li>
-</ul>
-<img alt="Upload My Add-in option" class="align-center" src="_images/my-add-in.png" />
-<ul class="simple">
-<li><p>Click <strong>Browse</strong></p></li>
-<li><p>Find the <strong>manifest.xml</strong> you downloaded</p></li>
-<li><p>Click <strong>Upload</strong></p></li>
-</ul>
-<img alt="Uploading the manifest file" class="align-center" src="_images/upload.png" />
-<ul class="simple">
-<li><p>Confirm the installation. A new <strong>IBM Envizi Emissions API Add-in</strong> button will appear in the Excel ribbon (typically under the <strong>Home</strong> tab).</p></li>
-</ul>
-<img alt="Installed add-in in Excel ribbon" class="align-center" src="_images/installed.png" />
-</section>
-<section id="windows">
-<h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
-<p>The installation on a local Windows machine requires a network share and additional configuration steps.</p>
-<p>Please follow the <a class="reference internal" href="windows.html"><span class="doc">Windows</span></a> documentation.</p>
-</section>
-<section id="mac">
-<h4>Mac<a class="headerlink" href="#mac" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p>Open <cite>Finder</cite></p></li>
-<li><p>On the top menu bar, click <cite>Go</cite></p></li>
-<li><p>From the drop down menu that appears, click <cite>Go to folder</cite></p></li>
-</ul>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents
+<section id="step-2-share-the-folder">
+<h2>Step 2: Share the Folder<a class="headerlink" href="#step-2-share-the-folder" title="Link to this heading">¶</a></h2>
+<p>Make sure your file is placed on Network path or in Shared Folder.</p>
+<ol class="arabic">
+<li><p>To share the folder, right-click on the folder and select <strong>Properties</strong>.</p></li>
+<li><p>Navigate to the <strong>Sharing</strong> tab.</p></li>
+<li><p>Click on the <strong>Share</strong> button.</p></li>
+<li><p>Add New/Existing user with appropriate access permissions.</p></li>
+<li><p>After submitting, you will see a <strong>Network Path</strong> as follows: (keep this path handy)</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>\\&lt;user&gt;\Addins
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>&lt;username&gt; should be replaced with the name of your Mac user</p></li>
-</ul>
-</div>
-<ul class="simple">
-<li><p>If the <cite>wef</cite> folder does not exist, right-click and create a folder called <cite>wef</cite></p></li>
-<li><p>Click on the <cite>wef</cite> folder to enter it</p></li>
-<li><p>Place your downloaded <cite>manifest.xml</cite> file in the <cite>wef</cite> folder</p></li>
-</ul>
-<img alt="Placing manifest file in Mac directory" class="align-center" src="_images/placing-wef-file.png" />
-<p>After successfully placing the manifest file, the add-in will appear in the Developer Add-in section.</p>
-<img alt="Developer Add-in in Excel" class="align-center" src="_images/developer-add-in.png" />
-<p>For more information please see the <a class="reference external" href="https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac">Microsoft 365 Office Add-in Mac</a> documentation for Mac.</p>
-</section>
-</section>
-</section>
-<section id="calculation-mode-tip">
-<h2>Calculation Mode Tip<a class="headerlink" href="#calculation-mode-tip" title="Link to this heading">¶</a></h2>
-<p>After installation, change the calculation mode to <strong>Manual</strong> to prevent unnecessary API calls:</p>
-<ol class="arabic simple">
-<li><p>Go to <strong>Formulas → Calculation Options</strong>.</p></li>
-<li><p>Select <strong>Manual</strong>.</p></li>
-</ol>
-<img alt="Manual calculation mode in Excel" class="align-center" src="_images/calculation.png" />
-<ol class="arabic simple" start="3">
-<li><p>To recalculate a formula in manual calculation mode either press <strong>F9</strong> or do the following:</p>
-<ul class="simple">
-<li><p>Select the cell</p></li>
-<li><p>Press F2 (this puts the cell into edit mode)</p></li>
-<li><p>Press Enter</p></li>
-</ul>
 </li>
 </ol>
+<img alt="Shared folder properties" class="align-center" src="_images/share-folder.png" />
+</section>
+<section id="step-3-open-excel-and-access-options">
+<h2>Step 3: Open Excel and Access Options<a class="headerlink" href="#step-3-open-excel-and-access-options" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Launch <strong>Microsoft Excel</strong>.</p></li>
+<li><p>Go to the <strong>File</strong> menu (top-left corner).</p></li>
+<li><p>Scroll down and click <strong>Options</strong> (bottom-left of the menu).</p></li>
+<li><p>A window called <strong>Excel Options</strong> will appear.</p></li>
+</ol>
+<img alt="Options dialog box" class="align-center" src="_images/options.png" />
+</section>
+<section id="step-4-open-the-trust-center-settings">
+<h2>Step 4: Open the Trust Center Settings<a class="headerlink" href="#step-4-open-the-trust-center-settings" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple" start="5">
+<li><p>In the <strong>Excel Options</strong> window, look at the left-side menu.</p></li>
+<li><p>Click <strong>Trust Center</strong> (last item in the list).</p></li>
+<li><p>On the right-hand side, click the button <strong>Trust Center Settings…</strong>.</p></li>
+</ol>
+<img alt="Trust Center settings" class="align-center" src="_images/trust-center-1.png" />
+</section>
+<section id="step-5-configure-trusted-add-in-catalogs">
+<h2>Step 5: Configure Trusted Add-in Catalogs<a class="headerlink" href="#step-5-configure-trusted-add-in-catalogs" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>In the new <strong>Trust Center</strong> window, select <strong>Trusted Add-in Catalogs</strong> from the left menu.</p></li>
+<li><p>In the <strong>Catalog URL</strong> box, type the full Network Path to your manifest folder.
+Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">\\&lt;user&gt;\Addins</span></code></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Do not type the XML file path here.
+Only provide the <strong>Network Path</strong> from the sharing properties.</p>
+</div>
+</li>
+<li><p>After entering the Network Path, click <strong>Add Catalog</strong>.</p></li>
+<li><p>The Network Path will now appear in the list below.</p></li>
+<li><p>Select the checkbox <strong>Show in Menu</strong> so the add-in will be visible in Excel.</p></li>
+<li><p>Click <strong>OK</strong> to save your changes.</p></li>
+<li><p>Click <strong>OK</strong> again to close Excel Options.</p></li>
+</ol>
+<img alt="Trust Center catalog configuration" class="align-center" src="_images/trust-center-2.png" />
+</section>
+<section id="step-6-restart-excel">
+<h2>Step 6: Restart Excel<a class="headerlink" href="#step-6-restart-excel" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Close all open Excel windows.</p></li>
+<li><p>Open Excel again to refresh the add-ins.</p></li>
+</ol>
+</section>
+<section id="step-7-open-your-add-in-in-excel">
+<h2>Step 7: Open Your Add-in in Excel<a class="headerlink" href="#step-7-open-your-add-in-in-excel" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Go to the <strong>Insert</strong> tab in Excel.</p></li>
+<li><p>Click <strong>My Add-ins</strong> in the toolbar.</p></li>
+</ol>
+<img alt="Add-ins dialog" class="align-center" src="_images/more-add-in.png" />
+<ol class="arabic simple" start="3">
+<li><p>A dialog box will appear. Look for the section named <strong>Shared Folder</strong>.</p></li>
+<li><p><strong>IBM Envizi Emissions API</strong> add-in should now be listed here.</p></li>
+<li><p>Select the add-in and click <strong>Add</strong>.</p></li>
+</ol>
+<img alt="Add-In installed" class="align-center" src="_images/installed-windows.png" />
+</section>
+<section id="step-8-using-the-add-in">
+<h2>Step 8: Using the Add-in<a class="headerlink" href="#step-8-using-the-add-in" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Once installed, the Welcome task pane will appear and add-in is ready to use.</p></li>
+</ul>
+<img alt="Welcome Page" class="align-center" src="_images/welcome.png" />
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Add-in not appearing</strong></dt><dd><ul>
+<li><p>Make sure manifest file is on network path or shared folder.</p></li>
+<li><p>Ensure the manifest network path is correct and listed in Trusted Add-in Catalogs.</p></li>
+<li><p>Ensure you restarted Excel after saving settings.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Still not working</strong></dt><dd><ul>
+<li><p>Delete the catalog path, re-add it, and restart Excel again.</p></li>
+<li><p>Confirm you are running <strong>Office 2021 or later</strong> (older versions may not support this method).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Multiple add-ins</strong></dt><dd><ul>
+<li><p>If you have multiple manifest files, we recommend placing them in separate folders to avoid conflicts.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Please follow <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> documentation for next steps.</p>
 </section>
 </section>
 
@@ -364,26 +383,8 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="use.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Use</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Home</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -414,20 +415,17 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#">Installation on Windows</a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#install">Install</a><ul>
-<li><a class="reference internal" href="#microsoft-appsource-store">Microsoft AppSource Store</a></li>
-<li><a class="reference internal" href="#sideload">Sideload</a><ul>
-<li><a class="reference internal" href="#download-the-manifest-file">Download the Manifest File</a></li>
-<li><a class="reference internal" href="#office-365-online">Office 365 - Online</a></li>
-<li><a class="reference internal" href="#windows">Windows</a></li>
-<li><a class="reference internal" href="#mac">Mac</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#calculation-mode-tip">Calculation Mode Tip</a></li>
+<li><a class="reference internal" href="#step-1-locate-your-manifest-file">Step 1: Locate Your Manifest File</a></li>
+<li><a class="reference internal" href="#step-2-share-the-folder">Step 2: Share the Folder</a></li>
+<li><a class="reference internal" href="#step-3-open-excel-and-access-options">Step 3: Open Excel and Access Options</a></li>
+<li><a class="reference internal" href="#step-4-open-the-trust-center-settings">Step 4: Open the Trust Center Settings</a></li>
+<li><a class="reference internal" href="#step-5-configure-trusted-add-in-catalogs">Step 5: Configure Trusted Add-in Catalogs</a></li>
+<li><a class="reference internal" href="#step-6-restart-excel">Step 6: Restart Excel</a></li>
+<li><a class="reference internal" href="#step-7-open-your-add-in-in-excel">Step 7: Open Your Add-in in Excel</a></li>
+<li><a class="reference internal" href="#step-8-using-the-add-in">Step 8: Using the Add-in</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>

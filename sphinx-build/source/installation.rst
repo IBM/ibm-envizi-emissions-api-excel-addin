@@ -16,7 +16,7 @@ Before installing the add-in, ensure the following requirements are met:
 Install 
 -------
 
-In order to use Envizi for Excel there are two options to install:
+In order to use **IBM Envizi Emissions API** for Excel, there are two options to install:
 
 1. Download from the AppSource Store (coming soon)
 2. Sideload a manifest.xml file
@@ -37,7 +37,8 @@ The manifest file is available at the following location:
 
 `manifest.xml <https://plugins.app.ibm.com/excel-addin/manifest.xml>`_
 
-If your browser opens the file as an .xml file and displays text, select **File** -> **Save/Save Page As**, name the file **manifest.xml** and save to your machine.
+.. important::
+ If your browser displays the XML content instead of downloading the file, select **File** → **Save As**, name the file **manifest.xml**, and save it to your preferred location.
 
 The following sections contain instructions for sideloading the Add-in in different environments, please choose the one that is relevant:
 
@@ -48,15 +49,42 @@ The following sections contain instructions for sideloading the Add-in in differ
 Office 365 - Online
 -------------------
 
-The simplest method to sideload is to use the Office 365 Online.
+Office 365 Online provides the most straightforward method for sideloading the add-in.
 
 - Go to `Excel <https://excel.cloud.microsoft/>`_
 - From the **Home** tab, click Add-ins
 - Click **More Add-ins**
+
+.. image:: _images/add-in.png
+   :alt: Add-ins menu in Excel
+   :align: center
+
 - Click **Upload My Add-in**
+
+.. image:: _images/my-add-in.png
+   :alt: Upload My Add-in option
+   :align: center
+
 - Click **Browse**
 - Find the **manifest.xml** you downloaded
 - Click **Upload**
+
+.. image:: _images/upload.png
+   :alt: Uploading the manifest file
+   :align: center
+
+- Confirm the installation. A new **IBM Envizi Emissions API Add-in** button will appear in the Excel ribbon (typically under the **Home** tab).
+
+.. image:: _images/installed.png
+   :alt: Installed add-in in Excel ribbon
+   :align: center
+
+Windows
+-------
+
+The installation on a local Windows machine requires a network share and additional configuration steps.
+
+Please follow the :doc:`Windows <windows>` documentation.
 
 Mac
 ---
@@ -64,58 +92,33 @@ Mac
 - Open `Finder`
 - On the top menu bar, click `Go`
 - From the drop down menu that appears, click `Go to folder`
-- /Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents
+
+.. code-block:: none
+
+   /Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents
+   
+.. note::
+
    - <username> should be replaced with the name of your Mac user
-- if the `wef` folder exists
-   - otherwise right click and create a folder called `wef`
-- click on the `wef` folder to enter it
-- place your downloaded `manifest.xml` file in the `wef` folder
+
+- If the `wef` folder does not exist, right-click and create a folder called `wef`
+- Click on the `wef` folder to enter it
+- Place your downloaded `manifest.xml` file in the `wef` folder
 
 .. image:: _images/placing-wef-file.png
    :alt: Placing manifest file in Mac directory
    :align: center
    
-After successfully placing the manifest file, you can see the add-in in the list of Developer Add-in section.
+After successfully placing the manifest file, the add-in will appear in the Developer Add-in section.
 
 .. image:: _images/developer-add-in.png
    :alt: Developer Add-in in Excel
    :align: center
-   
-1. Open Microsoft Excel.
-2. Navigate to **Home → Add-ins → More Add-ins**.
 
-   .. image:: _images/add-in.png
-      :alt: Add-ins menu in Excel
-      :align: center
-      
-3. Click **Upload My Add-in**.
-
-   .. image:: _images/my-add-in.png
-      :alt: Upload My Add-in option
-      :align: center
-      
-4. Select the downloaded ``manifest.xml`` file.
-
-   .. image:: _images/upload.png
-      :alt: Uploading the manifest file
-      :align: center
-      
-5. Confirm the installation.
-   A new **Envizi Add-in** button will appear in the Excel ribbon (typically under the **Home** tab).
-   
-   .. image:: _images/installed.png
-      :alt: Installed add-in in Excel ribbon
-      :align: center
 
 For more information please see the `Microsoft 365 Office Add-in Mac <https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac>`_ documentation for Mac.
 
-Windows
--------
-
-In the case of sideloading, the installation on a local Windows machine requires a network share to host and has a few more steps for configuration.
-
-Please follow the `Microsoft 365 Office Add-in Windows <https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins>`_ documentation.
-
+--------------------
 Calculation Mode Tip
 --------------------
 
