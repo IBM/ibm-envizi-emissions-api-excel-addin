@@ -30,7 +30,6 @@ export async function factorHelper(
       const formattedDate = convertExcelDateToISO(date);
       apiParams.time = { date: formattedDate };
     }
-
   } else {
     apiParams.activity.factorId = typeOrId;
   }
@@ -40,46 +39,35 @@ export async function factorHelper(
   const response = typeof rawResponse === "string" ? JSON.parse(rawResponse) : rawResponse;
 
   if (!response || typeof response === "undefined") {
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.notAvailable,
-      "Invalid API response"
-    );
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Invalid API response");
   }
 
-  const getValue = (key: keyof typeof response, type: "string" | "gas" = "string") => {
-    const value = response[key];
-    if (value === undefined || value === null) {
-      return type === "gas" ? 0 : ""; 
-    }
-    return value;
-  };
-
-return [
-  [
-    getValue("factorSet", "string"),
-    getValue("source" , "string"),
-    getValue("activityType" , "string"),
-    getValue("activityUnit" , "string"),
-    getValue("name" , "string"),
-    getValue("description" , "string"),
-    getValue("effectiveFrom" , "string"),
-    getValue("effectiveTo" , "string"),
-    getValue("publishedFrom" , "string"),
-    getValue("publishedTo" , "string"),
-    getValue("region" , "string"),
-    getValue("totalCO2e" , "gas"),
-    getValue("CO2" , "gas"),
-    getValue("CH4" , "gas"),
-    getValue("N2O" , "gas"),
-    getValue("HFC" , "gas"),
-    getValue("PFC" , "gas"),
-    getValue("SF6" , "gas"),
-    getValue("NF3" , "gas"),
-    getValue("bioCO2" , "gas"),
-    getValue("indirectCO2e" , "gas"),
-    getValue("unit", "string"),
-    getValue("factorId" , "string"),
-    getValue("transactionId" , "string"),
-  ],
-];
+  return [
+    [
+      response.factorSet ?? "",
+      response.source ?? "",
+      response.activityType ?? "",
+      response.activityUnit ?? "",
+      response.name ?? "",
+      response.description ?? "",
+      response.effectiveFrom ?? "",
+      response.effectiveTo ?? "",
+      response.publishedFrom ?? "",
+      response.publishedTo ?? "",
+      response.region ?? "",
+      response.totalCO2e ?? 0,
+      response.CO2 ?? 0,
+      response.CH4 ?? 0,
+      response.N2O ?? 0,
+      response.HFC ?? 0,
+      response.PFC ?? 0,
+      response.SF6 ?? 0,
+      response.NF3 ?? 0,
+      response.bioCO2 ?? 0,
+      response.indirectCO2e ?? 0,
+      response.unit ?? "",
+      response.factorId ?? "",
+      response.transactionId ?? "",
+    ],
+  ];
 }
