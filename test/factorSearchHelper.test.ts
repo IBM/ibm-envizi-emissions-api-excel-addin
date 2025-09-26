@@ -76,8 +76,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
@@ -87,8 +87,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
@@ -108,4 +108,52 @@ describe("factorSearch", () => {
 
     await expect(factorSearch("x", "y")).rejects.toThrow("Something went wrong");
   });
+
+  it("returns default values for missing or null fields in factor search response", async () => {
+  
+  const mockResponseWithNullValues = {
+    factors: [
+      {
+        factorSet: null,        
+        source: "source1",      
+        activityType: "type1",  
+        activityUnit: "kg",     
+        region: "USA",          
+      },
+      {
+        factorSet: "set2",      
+        source: null,           
+        activityType: "type2",  
+        activityUnit: "L",      
+        region: "Canada",       
+      },
+    ],
+  };
+
+  
+  mockedSearch.mockResolvedValue(JSON.stringify(mockResponseWithNullValues));
+
+  const result = await factorSearch("diesel", "USA");
+
+  
+  expect(result).toEqual([
+    [
+      "",             
+      "source1",      
+      "type1",        
+      "kg",           
+      "USA",          
+      "",             
+    ],
+    [
+      "set2",         
+      "",             
+      "type2",        
+      "L",            
+      "Canada",       
+      "",             
+    ],
+  ]);
+});
+
 });

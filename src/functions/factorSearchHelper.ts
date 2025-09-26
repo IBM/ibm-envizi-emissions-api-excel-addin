@@ -34,14 +34,16 @@ function buildFactorSearchParams(
   return params;
 }
 
+
+
 function formatFactorSearchResponse(response: any): (string | number | null)[][] {
   return response.factors.map((factor: any) => [
-    factor.factorSet,
-    factor.source,
-    factor.activityType,
-    factor.activityUnit,
-    factor.region,
-    factor.factorId
+    factor.factorSet ?? "",
+    factor.source ?? "",
+    factor.activityType ?? "",
+    factor.activityUnit ?? "",
+    factor.region ?? "",
+    factor.factorId ?? ""
   ]);
 }
 
