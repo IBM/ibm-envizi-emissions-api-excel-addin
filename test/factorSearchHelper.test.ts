@@ -76,8 +76,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
@@ -87,8 +87,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
