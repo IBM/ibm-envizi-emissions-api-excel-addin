@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
@@ -58,7 +58,7 @@ export async function factorSearch(
 
     const apiParams = buildFactorSearchParams(search, country, stateProvince, date);
 
-    const rawResponse = await Factors.Search(apiParams);
+    const rawResponse = await Factor.search(apiParams);
 
   const response =
     typeof rawResponse === "string"

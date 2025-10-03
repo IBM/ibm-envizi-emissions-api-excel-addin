@@ -1,13 +1,13 @@
 // Copyright IBM Corp. 2025
 
 import { factorSearch } from "../src/functions/factorSearchHelper";
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 import { ensureClient } from "../src/functions/client";
 
 
-jest.mock("ibm-ghg-sdk", () => ({
-  Factors: {
-    Search: jest.fn(),
+jest.mock("emissions-api-sdk", () => ({
+  Factor: {
+    search: jest.fn(),
   },
 }));
 
@@ -21,7 +21,7 @@ jest.mock("../src/functions/utils", () => ({
 
 describe("factorSearch", () => {
   const mockedEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
-  const mockedSearch = Factors.Search as jest.MockedFunction<typeof Factors.Search>;
+  const mockedSearch = Factor.search as jest.MockedFunction<typeof Factor.search>;
 
   // Mock CustomFunctions global for Jest
   beforeAll(() => {

@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
@@ -34,7 +34,7 @@ export async function factorHelper(
     apiParams.activity.factorId = typeOrId;
   }
 
-  const rawResponse = await Factors.retrieveFactor(apiParams);
+  const rawResponse = await Factor.retrieveFactor(apiParams);
 
   const response = typeof rawResponse === "string" ? JSON.parse(rawResponse) : rawResponse;
 

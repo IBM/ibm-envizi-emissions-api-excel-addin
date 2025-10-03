@@ -1,13 +1,13 @@
 // Copyright IBM Corp. 2025
 
 import {
-  LocationEmission,
-  MobileEmission,
-  FugitiveEmission,
-  StationaryEmission,
-  GenericCalculationEmission,
-  TransportationDistributionEmission,
-} from "ibm-ghg-sdk";
+  Location,
+  Mobile,
+  Fugitive,
+  Stationary,
+  Calculation,
+  TransportationAndDistribution,
+} from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
@@ -43,12 +43,12 @@ type Payload = PayloadWithType | PayloadWithId;
 
 
 const emissionApiMap: Record<ApiType, (params: any) => Promise<any>> = {
-  location: LocationEmission.calculate,
-  stationary: StationaryEmission.calculate,
-  fugitive: FugitiveEmission.calculate,
-  mobile: MobileEmission.calculate,
-  transportation_and_distribution: TransportationDistributionEmission.calculate,
-  calculation: GenericCalculationEmission.calculate,
+  location: Location.calculate,
+  stationary: Stationary.calculate,
+  fugitive: Fugitive.calculate,
+  mobile: Mobile.calculate,
+  transportation_and_distribution: TransportationAndDistribution.calculate,
+  calculation: Calculation.calculate,
   
 };
 

@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { Client , ClientConfig } from "ibm-ghg-sdk";
+import { Client , ClientConfig } from "emissions-api-sdk";
 
 import { getApiUrl } from "../common/env";
 import {
