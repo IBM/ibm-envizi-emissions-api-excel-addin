@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
@@ -30,51 +30,44 @@ export async function factorHelper(
       const formattedDate = convertExcelDateToISO(date);
       apiParams.time = { date: formattedDate };
     }
-
   } else {
     apiParams.activity.factorId = typeOrId;
   }
 
-  const rawResponse = await Factors.retrieveFactor(apiParams);
+  const rawResponse = await Factor.retrieveFactor(apiParams);
 
   const response = typeof rawResponse === "string" ? JSON.parse(rawResponse) : rawResponse;
 
   if (!response || typeof response === "undefined") {
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.notAvailable,
-      "Invalid API response"
-    );
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Invalid API response");
   }
 
-  const getValue = (key: keyof typeof response) =>
-  response[key] !== undefined ? response[key] : "";
-
-return [
-  [
-    getValue("factorSet"),
-    getValue("source"),
-    getValue("activityType"),
-    getValue("activityUnit"),
-    getValue("name"),
-    getValue("description"),
-    getValue("effectiveFrom"),
-    getValue("effectiveTo"),
-    getValue("publishedFrom"),
-    getValue("publishedTo"),
-    getValue("region"),
-    getValue("totalCO2e"),
-    getValue("CO2"),
-    getValue("CH4"),
-    getValue("N2O"),
-    getValue("HFC"),
-    getValue("PFC"),
-    getValue("SF6"),
-    getValue("NF3"),
-    getValue("bioCO2"),
-    getValue("indirectCO2e"),
-    getValue("unit"),
-    getValue("factorId"),
-    getValue("transactionId"),
-  ],
-];
+  return [
+    [
+      response.factorSet ?? "",
+      response.source ?? "",
+      response.activityType ?? "",
+      response.activityUnit ?? "",
+      response.name ?? "",
+      response.description ?? "",
+      response.effectiveFrom ?? "",
+      response.effectiveTo ?? "",
+      response.publishedFrom ?? "",
+      response.publishedTo ?? "",
+      response.region ?? "",
+      response.totalCO2e ?? 0,
+      response.CO2 ?? 0,
+      response.CH4 ?? 0,
+      response.N2O ?? 0,
+      response.HFC ?? 0,
+      response.PFC ?? 0,
+      response.SF6 ?? 0,
+      response.NF3 ?? 0,
+      response.bioCO2 ?? 0,
+      response.indirectCO2e ?? 0,
+      response.unit ?? "",
+      response.factorId ?? "",
+      response.transactionId ?? "",
+    ],
+  ];
 }

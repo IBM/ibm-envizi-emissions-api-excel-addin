@@ -1,7 +1,7 @@
 // Copyright IBM Corp. 2025
 
 import { factorHelper } from "../src/functions/factorHelper";
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 import { ensureClient } from "../src/functions/client";
 import { convertExcelDateToISO } from "../src/functions/utils";
 
@@ -19,8 +19,8 @@ import { convertExcelDateToISO } from "../src/functions/utils";
   },
 };
 
-jest.mock("ibm-ghg-sdk", () => ({
-  Factors: {
+jest.mock("emissions-api-sdk", () => ({
+  Factor: {
     retrieveFactor: jest.fn(),
   },
 }));
@@ -35,8 +35,8 @@ jest.mock("../src/functions/utils", () => ({
 
 describe("factorHelper", () => {
   const mockedEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
-  const mockedRetrieveFactor = Factors.retrieveFactor as jest.MockedFunction<
-    typeof Factors.retrieveFactor
+  const mockedRetrieveFactor = Factor.retrieveFactor as jest.MockedFunction<
+    typeof Factor.retrieveFactor
   >;
   const mockedConvertDate = convertExcelDateToISO as jest.MockedFunction<
     typeof convertExcelDateToISO
@@ -143,4 +143,72 @@ describe("factorHelper", () => {
 
     expect(result[0][11]).toBe(123.45); // totalCO2e
   });
+
+  it("returns default values for missing or null fields", async () => {
+  // Create a mock response with some fields missing (null or undefined)
+  const mockResponseWithNullValues = {
+    factorSet: null,         
+    source: "sourceA",       
+    activityType: "fuel",    
+    activityUnit: "L",
+    name: null,              
+    description: null,    
+    effectiveFrom: null,
+    effectiveTo: null,
+    publishedFrom: null,
+    publishedTo: null,         
+    region: null,            
+    totalCO2e: null,         
+    CO2: null,               
+    CH4: null,               
+    N2O: null,               
+    HFC: null,               
+    PFC: null,               
+    SF6: null,               
+    NF3: null,               
+    bioCO2: null,            
+    indirectCO2e: null,      
+    unit: "L",               
+    factorId: null,          
+    transactionId: null,     
+  };
+
+  
+  mockedRetrieveFactor.mockResolvedValue(JSON.stringify(mockResponseWithNullValues));
+
+  const result = await factorHelper("fuel", "L", "USA", "CA", "2024-01-01");
+
+  
+  expect(result).toEqual([
+    [
+      "",             
+      "sourceA",      
+      "fuel",         
+      "L",            
+      "",             
+      "",             
+      "",
+      "",
+      "",
+      "",
+      "",             
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      0,              
+      "L",            
+      "",              
+      "",             
+    ]
+  ]);
+});
+
+
+  
 });

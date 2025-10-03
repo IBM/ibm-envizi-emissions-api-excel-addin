@@ -30,7 +30,7 @@
     "axios": "^1.10.0",
     "buffer": "^6.0.3",
     "core-js": "^3.36.0",
-    "ibm-ghg-sdk": "file:./ibm-ghg-sdk-v1.0.0.tgz",
+    "emissions-api-sdk": "1.0.0",
     "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {

@@ -1,13 +1,13 @@
 // Copyright IBM Corp. 2025
 
 import {
-  LocationEmission,
-  MobileEmission,
-  FugitiveEmission,
-  StationaryEmission,
-  GenericCalculationEmission,
-  TransportationDistributionEmission,
-} from "ibm-ghg-sdk";
+  Location,
+  Mobile,
+  Fugitive,
+  Stationary,
+  Calculation,
+  TransportationAndDistribution,
+} from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
 import { convertExcelDateToISO } from "./utils";
@@ -43,12 +43,12 @@ type Payload = PayloadWithType | PayloadWithId;
 
 
 const emissionApiMap: Record<ApiType, (params: any) => Promise<any>> = {
-  location: LocationEmission.calculate,
-  stationary: StationaryEmission.calculate,
-  fugitive: FugitiveEmission.calculate,
-  mobile: MobileEmission.calculate,
-  transportation_and_distribution: TransportationDistributionEmission.calculate,
-  calculation: GenericCalculationEmission.calculate,
+  location: Location.calculate,
+  stationary: Stationary.calculate,
+  fugitive: Fugitive.calculate,
+  mobile: Mobile.calculate,
+  transportation_and_distribution: TransportationAndDistribution.calculate,
+  calculation: Calculation.calculate,
   
 };
 
@@ -90,20 +90,21 @@ function buildApiParams(apiType: ApiType, payload: Payload): any {
 }
 
 function formatResponse(response: any): (string | number | null)[][] {
+  
   return [[
-    response.totalCO2e,
-    response.CO2,
-    response.CH4,
-    response.N2O,
-    response.HFC,
-    response.PFC,
-    response.SF6,
-    response.NF3,
-    response.bioCO2,
-    response.indirectCO2e,
-    response.unit,
-    response.description,
-    response.transactionId,
+    response.totalCO2e ?? 0,
+    response.CO2 ?? 0,
+    response.CH4 ?? 0,
+    response.N2O ?? 0,
+    response.HFC ?? 0,
+    response.PFC ?? 0,
+    response.SF6 ?? 0,
+    response.NF3 ?? 0,
+    response.bioCO2 ?? 0,
+    response.indirectCO2e ?? 0,
+    response.unit ?? "",
+    response.description ?? "",
+    response.transactionId ?? "",
   ]];
 }
 
