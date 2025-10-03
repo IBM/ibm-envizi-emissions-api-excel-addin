@@ -1,13 +1,13 @@
 // Copyright IBM Corp. 2025
 
 import { factorSearch } from "../src/functions/factorSearchHelper";
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 import { ensureClient } from "../src/functions/client";
 
 
-jest.mock("ibm-ghg-sdk", () => ({
-  Factors: {
-    Search: jest.fn(),
+jest.mock("emissions-api-sdk", () => ({
+  Factor: {
+    search: jest.fn(),
   },
 }));
 
@@ -21,7 +21,7 @@ jest.mock("../src/functions/utils", () => ({
 
 describe("factorSearch", () => {
   const mockedEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
-  const mockedSearch = Factors.Search as jest.MockedFunction<typeof Factors.Search>;
+  const mockedSearch = Factor.search as jest.MockedFunction<typeof Factor.search>;
 
   // Mock CustomFunctions global for Jest
   beforeAll(() => {
@@ -76,8 +76,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
@@ -87,8 +87,8 @@ describe("factorSearch", () => {
     const result = await factorSearch("diesel", "USA");
 
     expect(result).toEqual([
-      ["set1", "source1", "type1", "kg", "USA"],
-      ["set2", "source2", "type2", "L", "Canada"],
+      ["set1", "source1", "type1", "kg", "USA",""],
+      ["set2", "source2", "type2", "L", "Canada",""],
     ]);
   });
 
@@ -108,4 +108,52 @@ describe("factorSearch", () => {
 
     await expect(factorSearch("x", "y")).rejects.toThrow("Something went wrong");
   });
+
+  it("returns default values for missing or null fields in factor search response", async () => {
+  
+  const mockResponseWithNullValues = {
+    factors: [
+      {
+        factorSet: null,        
+        source: "source1",      
+        activityType: "type1",  
+        activityUnit: "kg",     
+        region: "USA",          
+      },
+      {
+        factorSet: "set2",      
+        source: null,           
+        activityType: "type2",  
+        activityUnit: "L",      
+        region: "Canada",       
+      },
+    ],
+  };
+
+  
+  mockedSearch.mockResolvedValue(JSON.stringify(mockResponseWithNullValues));
+
+  const result = await factorSearch("diesel", "USA");
+
+  
+  expect(result).toEqual([
+    [
+      "",             
+      "source1",      
+      "type1",        
+      "kg",           
+      "USA",          
+      "",             
+    ],
+    [
+      "set2",         
+      "",             
+      "type2",        
+      "L",            
+      "Canada",       
+      "",             
+    ],
+  ]);
+});
+
 });

@@ -26,13 +26,13 @@ import { ensureClient } from "../src/functions/client";
 import { convertExcelDateToISO } from "../src/functions/utils";
 
 import {
-  LocationEmission,
-  MobileEmission,
-  FugitiveEmission,
-  StationaryEmission,
-  GenericCalculationEmission,
-  TransportationDistributionEmission,
-} from "ibm-ghg-sdk";
+  Location,
+  Mobile,
+  Fugitive,
+  Stationary,
+  Calculation,
+  TransportationAndDistribution,
+} from "emissions-api-sdk";
 
 jest.mock("../src/functions/client", () => ({
   ensureClient: jest.fn().mockResolvedValue(undefined),
@@ -43,14 +43,18 @@ jest.mock("../src/functions/utils", () => ({
 }));
 
 // Mock Emission classes
-jest.mock("ibm-ghg-sdk", () => ({
-  LocationEmission: { calculate: jest.fn() },
-  MobileEmission: { calculate: jest.fn() },
-  FugitiveEmission: { calculate: jest.fn() },
-  StationaryEmission: { calculate: jest.fn() },
-  GenericCalculationEmission: { calculate: jest.fn() },
-  TransportationDistributionEmission: { calculate: jest.fn() },
-}));
+jest.mock("emissions-api-sdk", () => {
+  return {
+    __esModule: true,
+    Location: { calculate: jest.fn() },
+    Mobile: { calculate: jest.fn() },
+    Fugitive: { calculate: jest.fn() },
+    Stationary: { calculate: jest.fn() },
+    Calculation: { calculate: jest.fn() },
+    TransportationAndDistribution: { calculate: jest.fn() },
+    default: {},
+  };
+});
 
 beforeAll(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -89,23 +93,23 @@ type ApiCase = {
 };
 
 const apiCases: ApiCase[] = [
-  { name: "Location", apiType: "location", emissionMock: LocationEmission.calculate as jest.Mock },
+  { name: "Location", apiType: "location", emissionMock: Location.calculate as jest.Mock },
   {
     name: "Stationary",
     apiType: "stationary",
-    emissionMock: StationaryEmission.calculate as jest.Mock,
+    emissionMock: Stationary.calculate as jest.Mock,
   },
-  { name: "Fugitive", apiType: "fugitive", emissionMock: FugitiveEmission.calculate as jest.Mock },
-  { name: "Mobile", apiType: "mobile", emissionMock: MobileEmission.calculate as jest.Mock },
+  { name: "Fugitive", apiType: "fugitive", emissionMock: Fugitive.calculate as jest.Mock },
+  { name: "Mobile", apiType: "mobile", emissionMock: Mobile.calculate as jest.Mock },
   {
     name: "Generic Calculation",
     apiType: "calculation",
-    emissionMock: GenericCalculationEmission.calculate as jest.Mock,
+    emissionMock: Calculation.calculate as jest.Mock,
   },
   {
     name: "Transportation & Distribution",
     apiType: "transportation_and_distribution",
-    emissionMock: TransportationDistributionEmission.calculate as jest.Mock,
+    emissionMock: TransportationAndDistribution.calculate as jest.Mock,
   },
 ];
 
@@ -185,7 +189,7 @@ describe("genericApiCall", () => {
   });
 
   it("should throw CustomFunctions.Error if emission returns invalid response", async () => {
-    (LocationEmission.calculate as jest.Mock).mockResolvedValueOnce(null);
+    (Location.calculate as jest.Mock).mockResolvedValueOnce(null);
     await expect(
       genericApiCall("location", {
         value: 1,
@@ -197,7 +201,7 @@ describe("genericApiCall", () => {
   });
 
   it("should handle thrown error gracefully", async () => {
-    (StationaryEmission.calculate as jest.Mock).mockRejectedValueOnce(new Error("boom"));
+    (Stationary.calculate as jest.Mock).mockRejectedValueOnce(new Error("boom"));
     await expect(
       genericApiCall("stationary", {
         value: 1,
