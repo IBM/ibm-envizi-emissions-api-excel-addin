@@ -2,10 +2,12 @@
 <html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Use" href="use.html" /><link rel="prev" title="Windows" href="windows.html" />
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 --><title>Index - IBM Envizi for Excel documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
+        <title>Mac - IBM Envizi for Excel documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=8d04aa46" />
@@ -177,7 +179,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -197,11 +199,11 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="installation.html">Installation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="installation.html">Installation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="online.html">Office 365 - Online</a></li>
 <li class="toctree-l2"><a class="reference internal" href="windows.html">Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mac.html">Mac</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Mac</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="use.html">Use</a></li>
@@ -225,7 +227,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/mac.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -234,16 +242,57 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<section class="genindex-section">
-  <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"></div>
+          <section id="mac">
+<h1>Mac<a class="headerlink" href="#mac" title="Link to this heading">¶</a></h1>
+<p>This guide explains how to install the <strong>IBM Envizi Emissions API</strong> add-in from an XML manifest file on
+<strong>macOS</strong>.</p>
+<ol class="arabic simple">
+<li><p>Open <cite>Finder</cite></p></li>
+<li><p>On the top menu bar, click <cite>Go</cite></p></li>
+<li><p>From the drop down menu that appears, click <cite>Go to folder</cite></p></li>
+</ol>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>&lt;username&gt; should be replaced with the name of your Mac user</p></li>
+</ul>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>If the <cite>wef</cite> folder does not exist, right-click and create a folder called <cite>wef</cite></p></li>
+<li><p>Click on the <cite>wef</cite> folder to enter it</p></li>
+<li><p>Place your downloaded <cite>manifest.xml</cite> file in the <cite>wef</cite> folder</p></li>
+</ol>
+<img alt="Placing manifest file in Mac directory" class="align-center" src="_images/placing-wef-file.png" />
+<p>After successfully placing the manifest file, the add-in will appear in the Developer Add-in section.</p>
+<img alt="Developer Add-in in Excel" class="align-center" src="_images/developer-add-in.png" />
+<p>For more information please see the <a class="reference external" href="https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac">Microsoft 365 Office Add-in Mac</a> documentation for Mac.</p>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Add-in not appearing</strong></dt><dd><ul>
+<li><p>Make sure the manifest file is placed in the correct directory</p></li>
+<li><p>Ensure Excel has been restarted after placing the manifest file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>After installation, please refer to the <a class="reference internal" href="installation.html"><span class="doc">Calculation Mode Tip</span></a> section for optimizing your Excel configuration.</p>
+<p>Please follow <a class="reference internal" href="use.html"><span class="doc">Usage</span></a> documentation for next steps.</p>
+</section>
 </section>
 
         </article>
@@ -251,8 +300,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="use.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Use</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="windows.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Windows</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -271,8 +338,28 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Mac</a><ul>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

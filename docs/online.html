@@ -2,10 +2,12 @@
 <html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Windows" href="windows.html" /><link rel="prev" title="Installation" href="installation.html" />
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 --><title>Index - IBM Envizi for Excel documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
+        <title>Office 365 - Online - IBM Envizi for Excel documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=8d04aa46" />
@@ -177,7 +179,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -197,9 +199,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="installation.html">Installation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="online.html">Office 365 - Online</a></li>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="installation.html">Installation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Office 365 - Online</a></li>
 <li class="toctree-l2"><a class="reference internal" href="windows.html">Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mac.html">Mac</a></li>
 </ul>
@@ -225,7 +227,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/online.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -234,16 +242,45 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<section class="genindex-section">
-  <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"></div>
+          <section id="office-365-online">
+<h1>Office 365 - Online<a class="headerlink" href="#office-365-online" title="Link to this heading">¶</a></h1>
+<p>This guide explains how to install the <strong>IBM Envizi Emissions API</strong> add-in from an XML manifest file on
+<strong>Office 365 Online</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Office 365 Online provides the most straightforward method for sideloading the add-in.</p>
+</div>
+<ol class="arabic simple">
+<li><p>Go to <a class="reference external" href="https://excel.cloud.microsoft/">Excel</a></p></li>
+<li><p>From the <strong>Home</strong> tab, click Add-ins</p></li>
+<li><p>Click <strong>More Add-ins</strong></p></li>
+</ol>
+<img alt="Add-ins menu in Excel" class="align-center" src="_images/add-in.png" />
+<ol class="arabic simple" start="4">
+<li><p>Click <strong>Upload My Add-in</strong></p></li>
+</ol>
+<img alt="Upload My Add-in option" class="align-center" src="_images/my-add-in.png" />
+<ol class="arabic simple" start="5">
+<li><p>Click <strong>Browse</strong></p></li>
+<li><p>Find the <strong>manifest.xml</strong> you downloaded</p></li>
+<li><p>Click <strong>Upload</strong></p></li>
+</ol>
+<img alt="Uploading the manifest file" class="align-center" src="_images/upload.png" />
+<ol class="arabic simple" start="8">
+<li><p>Confirm the installation. A new <strong>IBM Envizi Emissions API Add-in</strong> button will appear in the Excel ribbon (typically under the <strong>Home</strong> tab).</p></li>
+</ol>
+<img alt="Installed add-in in Excel ribbon" class="align-center" src="_images/installed.png" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>After installation, please refer to the <a class="reference internal" href="installation.html"><span class="doc">Calculation Mode Tip</span></a> section for optimizing your Excel configuration.</p>
+<p>Please follow <a class="reference internal" href="use.html"><span class="doc">Usage</span></a> documentation for next steps.</p>
+</section>
 </section>
 
         </article>
@@ -251,8 +288,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="windows.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Windows</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="installation.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Installation</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -271,8 +326,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Office 365 - Online</a><ul>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

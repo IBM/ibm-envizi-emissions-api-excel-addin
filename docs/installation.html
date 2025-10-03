@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Use" href="use.html" /><link rel="prev" title="IBM Envizi for Excel Documentation" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Office 365 - Online" href="online.html" /><link rel="prev" title="IBM Envizi for Excel Documentation" href="index.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
         <title>Installation - IBM Envizi for Excel documentation</title>
@@ -200,7 +200,12 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Installation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="online.html">Office 365 - Online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows.html">Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mac.html">Mac</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="use.html">Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 </ul>
@@ -275,67 +280,17 @@
 <p class="admonition-title">Important</p>
 <p>If your browser displays the XML content instead of downloading the file, select <strong>File</strong> → <strong>Save As</strong>, name the file <strong>manifest.xml</strong>, and save it to your preferred location.</p>
 </div>
+</section>
+<section id="platform-specific-installation">
+<h4>Platform-Specific Installation<a class="headerlink" href="#platform-specific-installation" title="Link to this heading">¶</a></h4>
 <p>The following sections contain instructions for sideloading the Add-in in different environments, please choose the one that is relevant:</p>
-<ol class="arabic simple">
-<li><p>Office 365 - Online</p></li>
-<li><p>Mac</p></li>
-<li><p>Windows</p></li>
-</ol>
-</section>
-<section id="office-365-online">
-<h4>Office 365 - Online<a class="headerlink" href="#office-365-online" title="Link to this heading">¶</a></h4>
-<p>Office 365 Online provides the most straightforward method for sideloading the add-in.</p>
-<ul class="simple">
-<li><p>Go to <a class="reference external" href="https://excel.cloud.microsoft/">Excel</a></p></li>
-<li><p>From the <strong>Home</strong> tab, click Add-ins</p></li>
-<li><p>Click <strong>More Add-ins</strong></p></li>
-</ul>
-<img alt="Add-ins menu in Excel" class="align-center" src="_images/add-in.png" />
-<ul class="simple">
-<li><p>Click <strong>Upload My Add-in</strong></p></li>
-</ul>
-<img alt="Upload My Add-in option" class="align-center" src="_images/my-add-in.png" />
-<ul class="simple">
-<li><p>Click <strong>Browse</strong></p></li>
-<li><p>Find the <strong>manifest.xml</strong> you downloaded</p></li>
-<li><p>Click <strong>Upload</strong></p></li>
-</ul>
-<img alt="Uploading the manifest file" class="align-center" src="_images/upload.png" />
-<ul class="simple">
-<li><p>Confirm the installation. A new <strong>IBM Envizi Emissions API Add-in</strong> button will appear in the Excel ribbon (typically under the <strong>Home</strong> tab).</p></li>
-</ul>
-<img alt="Installed add-in in Excel ribbon" class="align-center" src="_images/installed.png" />
-</section>
-<section id="windows">
-<h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
-<p>The installation on a local Windows machine requires a network share and additional configuration steps.</p>
-<p>Please follow the <a class="reference internal" href="windows.html"><span class="doc">Windows</span></a> documentation.</p>
-</section>
-<section id="mac">
-<h4>Mac<a class="headerlink" href="#mac" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p>Open <cite>Finder</cite></p></li>
-<li><p>On the top menu bar, click <cite>Go</cite></p></li>
-<li><p>From the drop down menu that appears, click <cite>Go to folder</cite></p></li>
-</ul>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>&lt;username&gt; should be replaced with the name of your Mac user</p></li>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="online.html">Office 365 - Online</a></li>
+<li class="toctree-l1"><a class="reference internal" href="windows.html">Windows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mac.html">Mac</a></li>
 </ul>
 </div>
-<ul class="simple">
-<li><p>If the <cite>wef</cite> folder does not exist, right-click and create a folder called <cite>wef</cite></p></li>
-<li><p>Click on the <cite>wef</cite> folder to enter it</p></li>
-<li><p>Place your downloaded <cite>manifest.xml</cite> file in the <cite>wef</cite> folder</p></li>
-</ul>
-<img alt="Placing manifest file in Mac directory" class="align-center" src="_images/placing-wef-file.png" />
-<p>After successfully placing the manifest file, the add-in will appear in the Developer Add-in section.</p>
-<img alt="Developer Add-in in Excel" class="align-center" src="_images/developer-add-in.png" />
-<p>For more information please see the <a class="reference external" href="https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac">Microsoft 365 Office Add-in Mac</a> documentation for Mac.</p>
 </section>
 </section>
 </section>
@@ -364,12 +319,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="use.html">
+          <a class="next-page" href="online.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Use</div>
+                <div class="title">Office 365 - Online</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -420,9 +375,7 @@
 <li><a class="reference internal" href="#microsoft-appsource-store">Microsoft AppSource Store</a></li>
 <li><a class="reference internal" href="#sideload">Sideload</a><ul>
 <li><a class="reference internal" href="#download-the-manifest-file">Download the Manifest File</a></li>
-<li><a class="reference internal" href="#office-365-online">Office 365 - Online</a></li>
-<li><a class="reference internal" href="#windows">Windows</a></li>
-<li><a class="reference internal" href="#mac">Mac</a></li>
+<li><a class="reference internal" href="#platform-specific-installation">Platform-Specific Installation</a></li>
 </ul>
 </li>
 </ul>
