@@ -1,7 +1,7 @@
 // Copyright IBM Corp. 2025
 
 import { factorHelper } from "../src/functions/factorHelper";
-import { Factors } from "ibm-ghg-sdk";
+import { Factor } from "emissions-api-sdk";
 import { ensureClient } from "../src/functions/client";
 import { convertExcelDateToISO } from "../src/functions/utils";
 
@@ -19,8 +19,8 @@ import { convertExcelDateToISO } from "../src/functions/utils";
   },
 };
 
-jest.mock("ibm-ghg-sdk", () => ({
-  Factors: {
+jest.mock("emissions-api-sdk", () => ({
+  Factor: {
     retrieveFactor: jest.fn(),
   },
 }));
@@ -35,8 +35,8 @@ jest.mock("../src/functions/utils", () => ({
 
 describe("factorHelper", () => {
   const mockedEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
-  const mockedRetrieveFactor = Factors.retrieveFactor as jest.MockedFunction<
-    typeof Factors.retrieveFactor
+  const mockedRetrieveFactor = Factor.retrieveFactor as jest.MockedFunction<
+    typeof Factor.retrieveFactor
   >;
   const mockedConvertDate = convertExcelDateToISO as jest.MockedFunction<
     typeof convertExcelDateToISO
