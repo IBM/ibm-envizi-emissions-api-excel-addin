@@ -52,6 +52,23 @@ The following sections contain instructions for sideloading the Add-in in differ
    windows
    mac
 
+.. important::
+   Note that Excel custom functions are available on the following platforms:
+
+   - Office on the web
+   - Office on Windows
+      - Microsoft 365 subscription
+      - Retail perpetual **Office 2016 and later**
+      - Volume-licensed perpetual **Office 2021 and later**
+   - Office on Mac
+
+   Excel custom functions aren't currently supported in the following:
+
+   - Office on iPad
+   - Volume-licensed perpetual versions of **Office 2019 or earlier** on Windows
+
+   For more information, see `Supported platforms <https://learn.microsoft.com/en-us/office/dev/add-ins/excel/custom-functions-overview>`_.
+
 --------------------
 Calculation Mode Tip
 --------------------
