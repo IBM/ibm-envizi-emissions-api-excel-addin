@@ -223,9 +223,11 @@ export async function factor_search(
   search: string,
   country: string,
   stateProvince?: string,
-  date?: string
+  date?: string,
+  page?: number,
+  size?: number
 ): Promise<any[][]> {
-  return factorSearch(search, country, stateProvince, date);
+  return factorSearch(search, country, stateProvince, date, page, size);
 }
 
 /**
