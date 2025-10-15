@@ -79,6 +79,10 @@ describe("factorSearch", () => {
       ["set1", "source1", "type1", "kg", "USA",""],
       ["set2", "source2", "type2", "L", "Canada",""],
     ]);
+    
+    expect(mockedSearch).toHaveBeenCalledWith(expect.objectContaining({
+      pagination: { page: 1, size: 30 }
+    }));
   });
 
   it("parses and returns formatted result from JSON string response", async () => {
@@ -156,4 +160,13 @@ describe("factorSearch", () => {
   ]);
 });
 
+  it("uses custom pagination parameters when provided", async () => {
+    mockedSearch.mockResolvedValue(JSON.stringify(mockResponse));
+
+    await factorSearch("diesel", "USA", undefined, undefined, 2, 50);
+
+    expect(mockedSearch).toHaveBeenCalledWith(expect.objectContaining({
+      pagination: { page: 2, size: 50 }
+    }));
+  });
 });

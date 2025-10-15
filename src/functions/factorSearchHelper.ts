@@ -9,7 +9,9 @@ function buildFactorSearchParams(
   search: string,
   country: string,
   stateProvince?: string,
-  date?: string
+  date?: string,
+  page?: number,
+  size?: number
 ): any {
   const params: any = {
     activity: { search },
@@ -25,11 +27,10 @@ function buildFactorSearchParams(
     params.time = { date: formattedDate };
   }
 
-  
-    params.pagination = {};
-    params.pagination.page = 1;
-    params.pagination.size = 30;
-  
+  params.pagination = {
+    page: page || 1,
+    size: size || 30
+  };
 
   return params;
 }
@@ -51,12 +52,14 @@ export async function factorSearch(
   search: string,
   country: string,
   stateProvince?: string,
-  date?: string
+  date?: string,
+  page?: number,
+  size?: number
 ): Promise<any[][]> {
   try {
     await ensureClient();
 
-    const apiParams = buildFactorSearchParams(search, country, stateProvince, date);
+    const apiParams = buildFactorSearchParams(search, country, stateProvince, date, page, size);
 
     const rawResponse = await Factor.search(apiParams);
 
