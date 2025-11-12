@@ -29,6 +29,8 @@ import {
 } from "../common/credentials";
 import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
+import { loadAndPopulateApiTypes } from "../functions/api-types-loader";
+import { initializeValidationHandler, removeValidationHandler } from "./validation-handler";
 
 accordionDefinition.define(FluentDesignSystem.registry);
 accordionItemDefinition.define(FluentDesignSystem.registry);
@@ -64,6 +66,9 @@ Office.onReady(() => {
   initGetStartedPage();
   initLoginPage();
   initMainPage();
+  
+  // Initialize validation handler for data validation dropdowns
+  initializeValidationHandler();
 
   loadApiCredentialsFromStorage().then((apiCredentials) => {
     if (apiCredentials) {
@@ -130,7 +135,7 @@ export function login(): void {
   errorMessageElement.hidden = true;
 
   ensureClient(apiCredentials)
-    .then(() => {
+    .then(async () => {
       if (loginForm["saveCredentials"].value) {
         saveApiCredentialsToStorage(apiCredentials);
       } else {
@@ -141,6 +146,15 @@ export function login(): void {
       credentialsForm["apiKey"].value = apiCredentials.apiKey;
       credentialsForm["tenantId"].value = apiCredentials.tenantId;
       credentialsForm["orgId"].value = apiCredentials.orgId;
+      
+      // Load and populate API types after successful login
+      try {
+        await loadAndPopulateApiTypes();
+      } catch (error) {
+        console.error("Failed to load API types:", error);
+        // Continue to main page even if API types loading fails
+      }
+      
       switchPage("main-page");
     })
     .catch((e) => {
@@ -157,12 +171,18 @@ export function logout(): void {
   setApiCredentials(null);
   removeApiCredentialsFromStorage();
   resetClient();
+  
+  // Remove validation handler on logout
+  removeValidationHandler();
 
   const loginForm = document.forms["login"];
   loginForm["apiKey"].value = "";
   loginForm["tenantId"].value = "";
   loginForm["orgId"].value = "";
   switchPage("login-page");
+  
+  // Re-initialize validation handler after logout
+  initializeValidationHandler();
 }
 
 function initTheme(): void {
