@@ -34,6 +34,7 @@ const API_CONFIGS: ApiConfig[] = [
 
 /**
  * Map of API names to their fixed column indices (0-based)
+ * Note: factor uses the same column as calculation (same types)
  */
 export const API_COLUMN_MAP: Record<string, number> = {
   location: 0,
@@ -42,6 +43,7 @@ export const API_COLUMN_MAP: Record<string, number> = {
   stationary: 3,
   calculation: 4,
   transportationanddistribution: 5,
+  factor: 4, // Factor uses same types as calculation
 };
 
 /**
@@ -95,8 +97,8 @@ async function getOrCreateApiTypesSheet(context: Excel.RequestContext): Promise<
 
   if (!sheet) {
     sheet = sheets.add(API_TYPES_SHEET_NAME);
-    // Uncomment the line below to hide the sheet
-    // sheet.visibility = Excel.SheetVisibility.hidden;
+    // comment the line below to unhide the sheet
+    sheet.visibility = Excel.SheetVisibility.hidden;
   }
 
   return sheet;
@@ -177,5 +179,3 @@ export async function loadAndPopulateApiTypes(): Promise<void> {
     throw error;
   }
 }
-
-// Made with Bob
