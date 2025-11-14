@@ -85,13 +85,6 @@ async function applyDataValidation(cellAddress: string, apiName: string): Promis
       },
     };
     
-    // Set validation properties
-    targetCell.dataValidation.prompt = {
-      showPrompt: true,
-      title: `${apiName.charAt(0).toUpperCase() + apiName.slice(1)} Types`,
-      message: "Select a type from the dropdown list",
-    };
-    
     targetCell.dataValidation.errorAlert = {
       showAlert: true,
       style: Excel.DataValidationAlertStyle.stop,
@@ -132,9 +125,15 @@ async function onSettingsChanged(): Promise<void> {
     // Process the request
     await processValidationRequest(request);
     
-    // Clear the request after processing
+    // Clear the request after processing (synchronous operation)
     Office.context.document.settings.remove("validationRequest");
-    await Office.context.document.settings.saveAsync();
+    
+    // Save settings asynchronously with callback
+    Office.context.document.settings.saveAsync((result) => {
+      if (result.status === Office.AsyncResultStatus.Failed) {
+        console.error("Failed to save settings after clearing validation request:", result.error);
+      }
+    });
     
   } catch (error) {
     console.error("Error in settings change handler:", error);
