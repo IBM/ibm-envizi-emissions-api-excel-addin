@@ -22,14 +22,16 @@ export function setApiCredentials(apiCredentials: ApiCredentials): void {
   window.apiCredentials = apiCredentials;
 }
 
-export async function loadApiCredentialsFromStorage(): Promise<ApiCredentials | null> {
+export async function loadApiCredentialsFromStorage(setInMemory: boolean = true): Promise<ApiCredentials | null> {
   if (!OfficeRuntime.storage) {
     return null;
   }
   return OfficeRuntime.storage.getItem(apiCredentialsKey).then((credentialsJSON) => {
     if (credentialsJSON) {
       const apiCredentials = JSON.parse(credentialsJSON);
-      setApiCredentials(apiCredentials);
+      if (setInMemory) {
+        setApiCredentials(apiCredentials);
+      }
       return apiCredentials;
     }
     return null;
