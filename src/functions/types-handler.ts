@@ -4,6 +4,8 @@
  * Handles the types function logic for triggering data validation dropdowns
  */
 
+import { getApiCredentials, loadApiCredentialsFromStorage } from "../common/credentials";
+
 /**
  * Validates if the provided API name is valid
  * @param apiName The API name to validate
@@ -65,13 +67,25 @@ export async function handleTypesFunction(
   invocation: CustomFunctions.Invocation
 ): Promise<string> {
   try {
+    // Check if user is logged in (check memory first, then storage)
+    let credentials = getApiCredentials();
+    if (!credentials) {
+      credentials = await loadApiCredentialsFromStorage();
+      if (!credentials) {
+        throw new CustomFunctions.Error(
+          CustomFunctions.ErrorCode.notAvailable,
+          "Please log in first to use the TYPES function"
+        );
+      }
+    }
+    
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
     
     // Get cell address
     const cellAddress = invocation.address;
     
-    // Store validation request
+    // Store validation request with a flag to ensure sheet creation
     storeValidationRequest(cellAddress, normalizedApiName);
     
     // Return empty string so cell remains empty after validation is applied
