@@ -6,6 +6,14 @@ import {
   handleTypesFunction,
 } from "../src/functions/types-handler";
 
+// Mock credentials module
+jest.mock("../src/common/credentials", () => ({
+  getApiCredentials: jest.fn(),
+  loadApiCredentialsFromStorage: jest.fn(),
+}));
+
+import { getApiCredentials, loadApiCredentialsFromStorage } from "../src/common/credentials";
+
 // Mock Office
 const mockSettings = {
   set: jest.fn(),
@@ -47,8 +55,21 @@ global.CustomFunctions = {
 } as any;
 
 describe("types-handler", () => {
+  const mockGetApiCredentials = getApiCredentials as jest.MockedFunction<typeof getApiCredentials>;
+  const mockLoadApiCredentialsFromStorage = loadApiCredentialsFromStorage as jest.MockedFunction<typeof loadApiCredentialsFromStorage>;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Default: user is logged in (credentials in memory)
+    mockGetApiCredentials.mockReturnValue({
+      apiKey: "test-key",
+      tenantId: "test-tenant",
+      orgId: "test-org",
+    });
+    
+    // Default: no credentials in storage (since they're in memory)
+    mockLoadApiCredentialsFromStorage.mockResolvedValue(null);
   });
 
   describe("validateApiName", () => {
@@ -142,6 +163,41 @@ describe("types-handler", () => {
     const mockInvocation = {
       address: "Sheet1!A1",
     } as CustomFunctions.Invocation;
+
+    it("should throw error if user is not logged in (no credentials in memory or storage)", async () => {
+      mockGetApiCredentials.mockReturnValue(null);
+      mockLoadApiCredentialsFromStorage.mockResolvedValue(null);
+
+      await expect(handleTypesFunction("Location", mockInvocation)).rejects.toThrow();
+
+      try {
+        await handleTypesFunction("Location", mockInvocation);
+      } catch (error) {
+        expect((error as any).code).toBe("NotAvailable");
+        expect(error.message).toContain("Please log in first");
+      }
+    });
+
+    it("should work if credentials are in storage but not in memory", async () => {
+      mockGetApiCredentials.mockReturnValue(null);
+      mockLoadApiCredentialsFromStorage.mockResolvedValue({
+        apiKey: "test-key",
+        tenantId: "test-tenant",
+        orgId: "test-org",
+      });
+
+      const result = await handleTypesFunction("Location", mockInvocation);
+
+      expect(result).toBe("");
+      expect(mockLoadApiCredentialsFromStorage).toHaveBeenCalled();
+      expect(mockSettings.set).toHaveBeenCalledWith(
+        "validationRequest",
+        expect.objectContaining({
+          cellAddress: "Sheet1!A1",
+          apiName: "location",
+        })
+      );
+    });
 
     it("should handle valid API name successfully", async () => {
       const result = await handleTypesFunction("Location", mockInvocation);
