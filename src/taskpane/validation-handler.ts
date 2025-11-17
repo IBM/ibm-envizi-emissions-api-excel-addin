@@ -1,6 +1,6 @@
 // Copyright IBM Corp. 2025
 
-import { API_COLUMN_MAP } from "../functions/api-types-loader";
+import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "../functions/api-types-loader";
 
 /**
  * Sheet name where API types are stored
@@ -17,11 +17,40 @@ interface ValidationRequest {
 }
 
 /**
+ * Checks if the API types sheet exists
+ * @returns Promise<boolean> indicating if the sheet exists
+ */
+async function apiTypesSheetExists(): Promise<boolean> {
+  return Excel.run(async (context) => {
+    const sheets = context.workbook.worksheets;
+    sheets.load("items/name");
+    await context.sync();
+    
+    const sheet = sheets.items.find((s) => s.name === API_TYPES_SHEET_NAME);
+    return !!sheet;
+  });
+}
+
+/**
+ * Ensures the API types sheet exists, creating it if necessary
+ */
+async function ensureApiTypesSheet(): Promise<void> {
+  const sheetExists = await apiTypesSheetExists();
+  if (!sheetExists) {
+    console.log("API types sheet not found, creating it...");
+    await loadAndPopulateApiTypes();
+  }
+}
+
+/**
  * Applies data validation to a cell based on API types from the hidden sheet
  * @param cellAddress The address of the cell to apply validation to (e.g., "Sheet1!A1")
  * @param apiName The normalized API name (lowercase)
  */
 async function applyDataValidation(cellAddress: string, apiName: string): Promise<void> {
+  // Ensure the API types sheet exists before applying validation
+  await ensureApiTypesSheet();
+  
   await Excel.run(async (context) => {
     // Get the column index for this API
     const columnIndex = API_COLUMN_MAP[apiName];
