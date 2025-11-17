@@ -147,14 +147,6 @@ export function login(): void {
       credentialsForm["tenantId"].value = apiCredentials.tenantId;
       credentialsForm["orgId"].value = apiCredentials.orgId;
       
-      // Load and populate API types after successful login
-      try {
-        await loadAndPopulateApiTypes();
-      } catch (error) {
-        console.error("Failed to load API types:", error);
-        // Continue to main page even if API types loading fails
-      }
-      
       switchPage("main-page");
     })
     .catch((e) => {
@@ -167,9 +159,9 @@ export function login(): void {
     });
 }
 
-export function logout(): void {
+export async function logout(): Promise<void> {
   setApiCredentials(null);
-  removeApiCredentialsFromStorage();
+  await removeApiCredentialsFromStorage();
   resetClient();
   
   // Remove validation handler on logout
