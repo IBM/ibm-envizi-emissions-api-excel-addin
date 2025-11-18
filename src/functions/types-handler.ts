@@ -4,7 +4,7 @@
  * Handles the types function logic for triggering data validation dropdowns
  */
 
-import { getApiCredentials, loadApiCredentialsFromStorage } from "../common/credentials";
+import { getApiCredentials } from "../common/credentials";
 
 /**
  * Validates if the provided API name is valid
@@ -67,16 +67,13 @@ export async function handleTypesFunction(
   invocation: CustomFunctions.Invocation
 ): Promise<string> {
   try {
-    // Check if user is logged in (check memory first, then storage)
-    let credentials = getApiCredentials();
+    // Check if user is logged in
+    const credentials = getApiCredentials();
     if (!credentials) {
-      credentials = await loadApiCredentialsFromStorage();
-      if (!credentials) {
-        throw new CustomFunctions.Error(
-          CustomFunctions.ErrorCode.notAvailable,
-          "Please log in first to use the TYPES function"
-        );
-      }
+      throw new CustomFunctions.Error(
+        CustomFunctions.ErrorCode.notAvailable,
+        "Please log in first to use the TYPES function"
+      );
     }
     
     // Validate API name

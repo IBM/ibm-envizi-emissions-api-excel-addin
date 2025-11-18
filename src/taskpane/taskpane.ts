@@ -159,9 +159,9 @@ export function login(): void {
     });
 }
 
-export async function logout(): Promise<void> {
+export function logout(): void {
   setApiCredentials(null);
-  await removeApiCredentialsFromStorage();
+  removeApiCredentialsFromStorage();
   resetClient();
   
   // Remove validation handler on logout
