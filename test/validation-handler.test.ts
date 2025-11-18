@@ -4,7 +4,21 @@ import {
   initializeValidationHandler,
   removeValidationHandler,
 } from "../src/taskpane/validation-handler";
-import { API_COLUMN_MAP } from "../src/functions/api-types-loader";
+import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "../src/functions/api-types-loader";
+
+// Mock the api-types-loader module
+jest.mock("../src/functions/api-types-loader", () => ({
+  API_COLUMN_MAP: {
+    location: 0,
+    mobile: 1,
+    fugitive: 2,
+    stationary: 3,
+    calculation: 4,
+    transportationanddistribution: 5,
+    factor: 4,
+  },
+  loadAndPopulateApiTypes: jest.fn(),
+}));
 
 // Mock Excel
 const mockContext = {
@@ -95,7 +109,17 @@ global.Office = {
   },
 } as any;
 
+// Mock console methods to prevent output during tests
+global.console = {
+  ...console,
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+};
+
 describe("validation-handler", () => {
+  const mockLoadAndPopulateApiTypes = loadAndPopulateApiTypes as jest.MockedFunction<typeof loadAndPopulateApiTypes>;
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockContext.workbook.worksheets.getItem.mockReturnValue(mockSheet);
@@ -109,6 +133,9 @@ describe("validation-handler", () => {
       }
       return mockColumn;
     });
+    
+    // Default: loadAndPopulateApiTypes succeeds
+    mockLoadAndPopulateApiTypes.mockResolvedValue(undefined);
   });
 
   describe("initializeValidationHandler", () => {
@@ -282,6 +309,134 @@ describe("validation-handler", () => {
       expect(API_COLUMN_MAP.calculation).toBeDefined();
       expect(API_COLUMN_MAP.transportationanddistribution).toBeDefined();
       expect(API_COLUMN_MAP.factor).toBeDefined();
+    });
+  });
+
+  describe("sheet creation on demand", () => {
+    let originalWorksheets: any;
+
+    beforeEach(() => {
+      // Save original worksheets mock
+      originalWorksheets = mockContext.workbook.worksheets;
+    });
+
+    afterEach(() => {
+      // Restore original worksheets mock
+      mockContext.workbook.worksheets = originalWorksheets;
+    });
+
+    it("should create sheet when it does not exist", async () => {
+      // Mock Excel.run to simulate sheet checking and creation
+      const mockExcelRun = jest.fn();
+      mockExcelRun
+        .mockImplementationOnce((callback) => {
+          // First call: check if sheet exists
+          return callback({
+            workbook: {
+              worksheets: {
+                items: [], // No sheets exist
+                load: jest.fn(),
+              },
+            },
+            sync: jest.fn().mockResolvedValue(undefined),
+          });
+        })
+        .mockImplementation((callback) => {
+          // Subsequent calls: normal validation flow
+          return callback(mockContext);
+        });
+
+      (global.Excel as any).run = mockExcelRun;
+
+      const validationRequest = {
+        cellAddress: "Sheet1!A1",
+        apiName: "location",
+        timestamp: Date.now(),
+      };
+
+      mockSettings.get.mockReturnValue(validationRequest);
+
+      initializeValidationHandler();
+      const handler = mockSettings.addHandlerAsync.mock.calls[0][1];
+      
+      await handler();
+
+      expect(mockLoadAndPopulateApiTypes).toHaveBeenCalled();
+    });
+
+    it("should not create sheet when it already exists", async () => {
+      // Mock Excel.run to simulate existing sheet
+      const mockExcelRun = jest.fn();
+      mockExcelRun
+        .mockImplementationOnce((callback) => {
+          // First call: check if sheet exists
+          return callback({
+            workbook: {
+              worksheets: {
+                items: [{ name: "API_Types_Data" }], // Sheet exists
+                load: jest.fn(),
+              },
+            },
+            sync: jest.fn().mockResolvedValue(undefined),
+          });
+        })
+        .mockImplementation((callback) => {
+          // Subsequent calls: normal validation flow
+          return callback(mockContext);
+        });
+
+      (global.Excel as any).run = mockExcelRun;
+
+      const validationRequest = {
+        cellAddress: "Sheet1!A1",
+        apiName: "location",
+        timestamp: Date.now(),
+      };
+
+      mockSettings.get.mockReturnValue(validationRequest);
+
+      initializeValidationHandler();
+      const handler = mockSettings.addHandlerAsync.mock.calls[0][1];
+      
+      await handler();
+
+      expect(mockLoadAndPopulateApiTypes).not.toHaveBeenCalled();
+    });
+
+    it("should handle errors when creating sheet", async () => {
+      // Mock Excel.run to simulate sheet doesn't exist
+      const mockExcelRun = jest.fn();
+      mockExcelRun.mockImplementationOnce((callback) => {
+        return callback({
+          workbook: {
+            worksheets: {
+              items: [], // No sheets exist
+              load: jest.fn(),
+            },
+          },
+          sync: jest.fn().mockResolvedValue(undefined),
+        });
+      });
+
+      (global.Excel as any).run = mockExcelRun;
+
+      // Mock loadAndPopulateApiTypes to fail
+      mockLoadAndPopulateApiTypes.mockRejectedValueOnce(new Error("Failed to create sheet"));
+
+      const validationRequest = {
+        cellAddress: "Sheet1!A1",
+        apiName: "location",
+        timestamp: Date.now(),
+      };
+
+      mockSettings.get.mockReturnValue(validationRequest);
+
+      initializeValidationHandler();
+      const handler = mockSettings.addHandlerAsync.mock.calls[0][1];
+      
+      await handler();
+
+      expect(mockLoadAndPopulateApiTypes).toHaveBeenCalled();
     });
   });
 });

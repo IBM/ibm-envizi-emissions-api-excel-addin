@@ -53,6 +53,14 @@ global.CustomFunctions = {
   },
 } as any;
 
+// Mock console methods to prevent output during tests
+global.console = {
+  ...console,
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+};
+
 describe("types-handler", () => {
   const mockGetApiCredentials = getApiCredentials as jest.MockedFunction<typeof getApiCredentials>;
 
