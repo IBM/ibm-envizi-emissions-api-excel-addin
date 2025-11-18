@@ -29,7 +29,6 @@ import {
 } from "../common/credentials";
 import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
-import { loadAndPopulateApiTypes } from "../functions/api-types-loader";
 import { initializeValidationHandler, removeValidationHandler } from "./validation-handler";
 
 accordionDefinition.define(FluentDesignSystem.registry);
