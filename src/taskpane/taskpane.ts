@@ -29,7 +29,6 @@ import {
 } from "../common/credentials";
 import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
-import { initializeValidationHandler, removeValidationHandler } from "./validation-handler";
 
 accordionDefinition.define(FluentDesignSystem.registry);
 accordionItemDefinition.define(FluentDesignSystem.registry);
@@ -66,8 +65,6 @@ Office.onReady(() => {
   initLoginPage();
   initMainPage();
   
-  // Initialize validation handler for data validation dropdowns
-  initializeValidationHandler();
 
   loadApiCredentialsFromStorage().then((apiCredentials) => {
     if (apiCredentials) {
@@ -134,7 +131,7 @@ export function login(): void {
   errorMessageElement.hidden = true;
 
   ensureClient(apiCredentials)
-    .then(async () => {
+    .then( () => {
       if (loginForm["saveCredentials"].value) {
         saveApiCredentialsToStorage(apiCredentials);
       } else {
@@ -163,17 +160,11 @@ export function logout(): void {
   removeApiCredentialsFromStorage();
   resetClient();
   
-  // Remove validation handler on logout
-  removeValidationHandler();
-
   const loginForm = document.forms["login"];
   loginForm["apiKey"].value = "";
   loginForm["tenantId"].value = "";
   loginForm["orgId"].value = "";
   switchPage("login-page");
-  
-  // Re-initialize validation handler after logout
-  initializeValidationHandler();
 }
 
 function initTheme(): void {
