@@ -2,9 +2,24 @@
 
 import {
   validateApiName,
-  storeValidationRequest,
   handleTypesFunction,
 } from "../src/functions/types-handler";
+
+// Mock api-types-loader module
+jest.mock("../src/functions/api-types-loader", () => ({
+  API_COLUMN_MAP: {
+    location: 0,
+    mobile: 1,
+    fugitive: 2,
+    stationary: 3,
+    calculation: 4,
+    transportationanddistribution: 5,
+    factor: 4,
+  },
+  loadAndPopulateApiTypes: jest.fn(),
+}));
+
+import { loadAndPopulateApiTypes } from "../src/functions/api-types-loader";
 
 // Mock credentials module
 jest.mock("../src/common/credentials", () => ({
@@ -13,25 +28,65 @@ jest.mock("../src/common/credentials", () => ({
 
 import { getApiCredentials } from "../src/common/credentials";
 
-// Mock Office
-const mockSettings = {
-  set: jest.fn(),
-  saveAsync: jest.fn((callback) => {
-    if (callback) {
-      callback({ status: "succeeded" });
+// Mock Excel
+const mockTargetCell = {
+  dataValidation: {
+    clear: jest.fn(),
+    rule: null as any,
+    errorAlert: null as any,
+  },
+};
+
+const mockDataRange = {
+  values: [["type1"], ["type2"], ["type3"]],
+  load: jest.fn(),
+};
+
+const mockUsedRange = {
+  rowCount: 4,
+  load: jest.fn(),
+};
+
+const mockColumn = {
+  getUsedRange: jest.fn().mockReturnValue(mockUsedRange),
+};
+
+const mockApiTypesSheet = {
+  name: "API_Types_Data",
+  getRange: jest.fn().mockImplementation((address) => {
+    if (address.includes("2:")) {
+      return mockDataRange;
     }
+    return mockColumn;
   }),
 };
 
-global.Office = {
-  context: {
-    document: {
-      settings: mockSettings,
+const mockTargetSheet = {
+  name: "Sheet1",
+  getRange: jest.fn().mockReturnValue(mockTargetCell),
+};
+
+const mockContext = {
+  workbook: {
+    worksheets: {
+      items: [{ name: "API_Types_Data" }],
+      load: jest.fn(),
+      getItem: jest.fn().mockImplementation((name) => {
+        if (name === "API_Types_Data") return mockApiTypesSheet;
+        return mockTargetSheet;
+      }),
+      getActiveWorksheet: jest.fn().mockReturnValue(mockTargetSheet),
     },
   },
-  AsyncResultStatus: {
-    Succeeded: "succeeded",
-    Failed: "failed",
+  sync: jest.fn().mockResolvedValue(undefined),
+};
+
+const mockExcelRun = jest.fn((callback) => callback(mockContext));
+
+global.Excel = {
+  run: mockExcelRun,
+  DataValidationAlertStyle: {
+    stop: "stop",
   },
 } as any;
 
@@ -63,16 +118,27 @@ global.console = {
 
 describe("types-handler", () => {
   const mockGetApiCredentials = getApiCredentials as jest.MockedFunction<typeof getApiCredentials>;
+  const mockLoadAndPopulateApiTypes = loadAndPopulateApiTypes as jest.MockedFunction<typeof loadAndPopulateApiTypes>;
 
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Default: user is logged in (credentials in memory)
+    // Default: user is logged in
     mockGetApiCredentials.mockReturnValue({
       apiKey: "test-key",
       tenantId: "test-tenant",
       orgId: "test-org",
     });
+    
+    // Default: loadAndPopulateApiTypes succeeds
+    mockLoadAndPopulateApiTypes.mockResolvedValue(undefined);
+    
+    // Default: sheet exists
+    mockContext.workbook.worksheets.items = [{ name: "API_Types_Data" }];
+    
+    // Reset Excel.run mock
+    mockExcelRun.mockClear();
+    mockExcelRun.mockImplementation((callback) => callback(mockContext));
   });
 
   describe("validateApiName", () => {
@@ -118,50 +184,6 @@ describe("types-handler", () => {
     });
   });
 
-  describe("storeValidationRequest", () => {
-    it("should store validation request in Office settings", () => {
-      const cellAddress = "Sheet1!A1";
-      const apiName = "location";
-
-      storeValidationRequest(cellAddress, apiName);
-
-      expect(mockSettings.set).toHaveBeenCalledWith("validationRequest", {
-        cellAddress,
-        apiName,
-        timestamp: expect.any(Number),
-      });
-      expect(mockSettings.saveAsync).toHaveBeenCalled();
-    });
-
-    it("should call saveAsync with callback", () => {
-      storeValidationRequest("Sheet1!A1", "mobile");
-
-      expect(mockSettings.saveAsync).toHaveBeenCalledWith(expect.any(Function));
-    });
-
-    it("should handle different cell addresses", () => {
-      storeValidationRequest("Sheet2!B5", "fugitive");
-
-      expect(mockSettings.set).toHaveBeenCalledWith(
-        "validationRequest",
-        expect.objectContaining({
-          cellAddress: "Sheet2!B5",
-          apiName: "fugitive",
-        })
-      );
-    });
-
-    it("should include timestamp in stored request", () => {
-      const beforeTime = Date.now();
-      storeValidationRequest("Sheet1!A1", "stationary");
-      const afterTime = Date.now();
-
-      const callArgs = mockSettings.set.mock.calls[0][1];
-      expect(callArgs.timestamp).toBeGreaterThanOrEqual(beforeTime);
-      expect(callArgs.timestamp).toBeLessThanOrEqual(afterTime);
-    });
-  });
-
   describe("handleTypesFunction", () => {
     const mockInvocation = {
       address: "Sheet1!A1",
@@ -180,28 +202,62 @@ describe("types-handler", () => {
       }
     });
 
-    it("should handle valid API name successfully", async () => {
+    it("should create sheet if it doesn't exist", async () => {
+      // Mock sheet doesn't exist
+      mockContext.workbook.worksheets.items = [];
+
+      await handleTypesFunction("Location", mockInvocation);
+
+      expect(mockLoadAndPopulateApiTypes).toHaveBeenCalled();
+    });
+
+    it("should not create sheet if it already exists", async () => {
+      // Sheet exists (default behavior)
+      await handleTypesFunction("Location", mockInvocation);
+
+      expect(mockLoadAndPopulateApiTypes).not.toHaveBeenCalled();
+    });
+
+    it("should apply data validation to cell", async () => {
+      await handleTypesFunction("Location", mockInvocation);
+
+      expect(mockExcelRun).toHaveBeenCalled();
+      expect(mockTargetCell.dataValidation.clear).toHaveBeenCalled();
+      expect(mockTargetCell.dataValidation.rule).toEqual({
+        list: {
+          inCellDropDown: true,
+          source: "type1,type2,type3",
+        },
+      });
+    });
+
+    it("should set error alert for validation", async () => {
+      await handleTypesFunction("Location", mockInvocation);
+
+      expect(mockTargetCell.dataValidation.errorAlert).toEqual({
+        showAlert: true,
+        style: "stop",
+        title: "Invalid Type",
+        message: "Please select a valid type from the dropdown list",
+      });
+    });
+
+    it("should handle different API names", async () => {
+      await handleTypesFunction("mobile", mockInvocation);
+
+      expect(mockApiTypesSheet.getRange).toHaveBeenCalledWith("B:B"); // Column B for mobile
+    });
+
+    it("should handle factor API (uses calculation column)", async () => {
+      await handleTypesFunction("factor", mockInvocation);
+
+      expect(mockApiTypesSheet.getRange).toHaveBeenCalledWith("E:E"); // Column E for calculation/factor
+    });
+
+    it("should return empty string", async () => {
       const result = await handleTypesFunction("Location", mockInvocation);
 
       expect(result).toBe("");
-      expect(mockSettings.set).toHaveBeenCalledWith(
-        "validationRequest",
-        expect.objectContaining({
-          cellAddress: "Sheet1!A1",
-          apiName: "location",
-        })
-      );
-    });
-
-    it("should normalize API name before storing", async () => {
-      await handleTypesFunction("MOBILE", mockInvocation);
-
-      expect(mockSettings.set).toHaveBeenCalledWith(
-        "validationRequest",
-        expect.objectContaining({
-          apiName: "mobile",
-        })
-      );
     });
 
     it("should throw error for invalid API name", async () => {
@@ -210,81 +266,47 @@ describe("types-handler", () => {
       try {
         await handleTypesFunction("invalid", mockInvocation);
       } catch (error) {
-        // Error gets wrapped, so check the message contains the validation error
         expect(error.message).toContain("Invalid API name");
       }
     });
 
-    it("should use cell address from invocation", async () => {
-      const customInvocation = {
-        address: "Sheet2!C10",
-      } as CustomFunctions.Invocation;
+    it("should handle sheet creation failure", async () => {
+      // Mock sheet doesn't exist
+      mockContext.workbook.worksheets.items = [];
+      
+      // Mock loadAndPopulateApiTypes to fail
+      mockLoadAndPopulateApiTypes.mockRejectedValueOnce(new Error("API error"));
 
-      await handleTypesFunction("calculation", customInvocation);
-
-      expect(mockSettings.set).toHaveBeenCalledWith(
-        "validationRequest",
-        expect.objectContaining({
-          cellAddress: "Sheet2!C10",
-        })
-      );
-    });
-
-    it("should return empty string", async () => {
-      const result = await handleTypesFunction("TransportationAndDistribution", mockInvocation);
-
-      expect(result).toBe("");
-    });
-
-    it("should handle factor API name", async () => {
-      const result = await handleTypesFunction("factor", mockInvocation);
-
-      expect(result).toBe("");
-      expect(mockSettings.set).toHaveBeenCalledWith(
-        "validationRequest",
-        expect.objectContaining({
-          apiName: "factor",
-        })
-      );
-    });
-
-    it("should wrap non-CustomFunctions errors", async () => {
-      // Mock settings.set to throw a generic error
-      mockSettings.set.mockImplementationOnce(() => {
-        throw new Error("Generic error");
-      });
+      await expect(handleTypesFunction("Location", mockInvocation)).rejects.toThrow();
 
       try {
-        await handleTypesFunction("location", mockInvocation);
-        fail("Should have thrown an error");
+        await handleTypesFunction("Location", mockInvocation);
       } catch (error) {
         expect((error as any).code).toBe("NotAvailable");
         expect(error.message).toContain("Failed to set up validation");
-        expect(error.message).toContain("Generic error");
       }
     });
 
-    it("should handle validation errors", async () => {
-      // This tests the error from validateApiName
-      try {
-        await handleTypesFunction("invalid", mockInvocation);
-        fail("Should have thrown an error");
-      } catch (error) {
-        // Error message should contain validation information
-        expect(error.message).toContain("Invalid API name");
-      }
+    it("should handle cell address without sheet name", async () => {
+      const invocationWithoutSheet = {
+        address: "A1", // No sheet name
+      } as CustomFunctions.Invocation;
+
+      await handleTypesFunction("Location", invocationWithoutSheet);
+
+      expect(mockContext.workbook.worksheets.getActiveWorksheet).toHaveBeenCalled();
     });
 
-    it("should handle errors without message property", async () => {
-      mockSettings.set.mockImplementationOnce(() => {
-        throw { someProperty: "value" };
-      });
+    it("should handle empty types data", async () => {
+      // Mock empty data range
+      mockUsedRange.rowCount = 1; // Only header row
+
+      await expect(handleTypesFunction("Location", mockInvocation)).rejects.toThrow();
 
       try {
-        await handleTypesFunction("location", mockInvocation);
-        fail("Should have thrown an error");
+        await handleTypesFunction("Location", mockInvocation);
       } catch (error) {
-        expect(error.message).toContain("Unknown error");
+        expect(error.message).toContain("No types found for API");
       }
     });
   });
