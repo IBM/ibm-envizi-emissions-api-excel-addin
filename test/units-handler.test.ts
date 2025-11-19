@@ -1,10 +1,10 @@
 // Copyright IBM Corp. 2025
 
 import {
-  validateApiName,
   fetchUnits,
   handleUnitsFunction,
 } from "../src/functions/units-handler";
+import { validateApiName } from "../src/functions/validation-utils";
 
 // Mock emissions-api-sdk
 jest.mock("emissions-api-sdk", () => ({
