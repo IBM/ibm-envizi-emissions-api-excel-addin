@@ -7,40 +7,12 @@
 
 import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "./api-types-loader";
 import { ensureClient } from "./client";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./validation-utils";
 
 /**
  * Sheet name where API types are stored
  */
 const API_TYPES_SHEET_NAME = "API_Types_Data";
-
-/**
- * Validates if the provided API name is valid
- * @param apiName The API name to validate
- * @returns The normalized API name if valid
- * @throws CustomFunctions.Error if invalid
- */
-export function validateApiName(apiName: string): string {
-  const normalizedApiName = apiName.toLowerCase().trim();
-  
-  const validApiNames = [
-    "location",
-    "mobile",
-    "fugitive",
-    "stationary",
-    "calculation",
-    "transportationanddistribution",
-    "factor",
-  ];
-  
-  if (!validApiNames.includes(normalizedApiName)) {
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.invalidValue,
-      `Invalid API name. Valid options: ${validApiNames.join(", ")}`
-    );
-  }
-  
-  return normalizedApiName;
-}
 
 /**
  * Checks if the API types sheet exists
@@ -103,43 +75,19 @@ async function applyDataValidation(cellAddress: string, apiName: string): Promis
     dataRange.load("values");
     await context.sync();
     
-    // Parse the cell address to get sheet name and cell reference
-    const [sheetName, cellRef] = cellAddress.includes("!")
-      ? cellAddress.split("!")
-      : ["", cellAddress];
-    
     // Get the target cell
-    let targetCell: Excel.Range;
-    if (sheetName) {
-      const targetSheet = context.workbook.worksheets.getItem(sheetName);
-      targetCell = targetSheet.getRange(cellRef);
-    } else {
-      // If no sheet name, use active sheet
-      const activeSheet = context.workbook.worksheets.getActiveWorksheet();
-      targetCell = activeSheet.getRange(cellRef);
-    }
+    const targetCell = await getTargetCell(context, cellAddress);
     
-    // Clear any existing validation
-    targetCell.dataValidation.clear();
+    // Get the values from the data range and filter out empty values
+    const values = dataRange.values.flat().filter(v => v !== null && v !== "") as string[];
     
-    // Get the values from the data range and create a comma-separated list
-    const values = dataRange.values.flat().filter(v => v !== null && v !== "");
-    const valuesList = values.join(",");
-    
-    // Apply list validation using the values directly
-    targetCell.dataValidation.rule = {
-      list: {
-        inCellDropDown: true,
-        source: valuesList,
-      },
-    };
-    
-    targetCell.dataValidation.errorAlert = {
-      showAlert: true,
-      style: Excel.DataValidationAlertStyle.stop,
-      title: "Invalid Type",
-      message: "Please select a valid type from the dropdown list",
-    };
+    // Apply list validation
+    applyListValidation(
+      targetCell,
+      values,
+      "Invalid Type",
+      "Please select a valid type from the dropdown list"
+    );
     
     await context.sync();
   });
@@ -172,13 +120,7 @@ export async function handleTypesFunction(
     // Return empty string so cell remains empty after validation is applied
     return "";
   } catch (error) {
-    if (error instanceof CustomFunctions.Error) {
-      throw error;
-    }
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.notAvailable,
-      `Failed to set up validation: ${error.message || "Unknown error"}`
-    );
+    handleCustomFunctionError(error, "Failed to set up validation");
   }
 }
 
