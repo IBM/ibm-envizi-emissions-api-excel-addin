@@ -3,6 +3,22 @@
 import { genericApiCall } from "./generic-api-call";
 import { factorSearch } from "./factorSearchHelper";
 import { factorHelper } from "./factorHelper";
+import { handleTypesFunction } from "./types-handler";
+
+/**
+ * Triggers data validation dropdown for API types.
+ * Returns the API name and stores a request for the taskpane to apply validation.
+ * @customfunction
+ * @param apiName The name of the API (location, mobile, fugitive, stationary, calculation, transportationanddistribution, factor)
+ * @param invocation Invocation object to get cell address
+ * @requiresAddress
+ */
+export async function types(
+  apiName: string,
+  invocation: CustomFunctions.Invocation
+): Promise<string> {
+  return handleTypesFunction(apiName, invocation);
+}
 
 /**
  * Calculates location-based emissions.

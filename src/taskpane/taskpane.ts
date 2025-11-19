@@ -64,6 +64,7 @@ Office.onReady(() => {
   initGetStartedPage();
   initLoginPage();
   initMainPage();
+  
 
   loadApiCredentialsFromStorage().then((apiCredentials) => {
     if (apiCredentials) {
@@ -130,7 +131,7 @@ export function login(): void {
   errorMessageElement.hidden = true;
 
   ensureClient(apiCredentials)
-    .then(() => {
+    .then( () => {
       if (loginForm["saveCredentials"].value) {
         saveApiCredentialsToStorage(apiCredentials);
       } else {
@@ -141,6 +142,7 @@ export function login(): void {
       credentialsForm["apiKey"].value = apiCredentials.apiKey;
       credentialsForm["tenantId"].value = apiCredentials.tenantId;
       credentialsForm["orgId"].value = apiCredentials.orgId;
+      
       switchPage("main-page");
     })
     .catch((e) => {
@@ -157,7 +159,7 @@ export function logout(): void {
   setApiCredentials(null);
   removeApiCredentialsFromStorage();
   resetClient();
-
+  
   const loginForm = document.forms["login"];
   loginForm["apiKey"].value = "";
   loginForm["tenantId"].value = "";
