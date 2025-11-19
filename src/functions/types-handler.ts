@@ -5,8 +5,8 @@
  * Uses shared runtime to directly access Excel.run() API
  */
 
-import { getApiCredentials } from "../common/credentials";
 import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "./api-types-loader";
+import { ensureClient } from "./client";
 
 /**
  * Sheet name where API types are stored
@@ -157,14 +157,8 @@ export async function handleTypesFunction(
   invocation: CustomFunctions.Invocation
 ): Promise<string> {
   try {
-    // Check if user is logged in
-    const credentials = getApiCredentials();
-    if (!credentials) {
-      throw new CustomFunctions.Error(
-        CustomFunctions.ErrorCode.notAvailable,
-        "Please log in first to use the TYPES function"
-      );
-    }
+    // Ensure client is initialized (will check login and load credentials)
+    await ensureClient();
     
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
