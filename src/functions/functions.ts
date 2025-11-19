@@ -4,6 +4,7 @@ import { genericApiCall } from "./generic-api-call";
 import { factorSearch } from "./factorSearchHelper";
 import { factorHelper } from "./factorHelper";
 import { handleTypesFunction } from "./types-handler";
+import { handleUnitsFunction } from "./units-handler";
 
 /**
  * Triggers data validation dropdown for API types.
@@ -18,6 +19,23 @@ export async function types(
   invocation: CustomFunctions.Invocation
 ): Promise<string> {
   return handleTypesFunction(apiName, invocation);
+}
+
+/**
+ * Triggers data validation dropdown for API units.
+ * Fetches units on-demand from the API and applies validation to the cell.
+ * @customfunction
+ * @param apiName The name of the API (location, mobile, fugitive, stationary, calculation, transportationanddistribution, factor)
+ * @param type The type parameter to fetch units for (e.g., "electricity")
+ * @param invocation Invocation object to get cell address
+ * @requiresAddress
+ */
+export async function units(
+  apiName: string,
+  type: string,
+  invocation: CustomFunctions.Invocation
+): Promise<string> {
+  return handleUnitsFunction(apiName, type, invocation);
 }
 
 /**
