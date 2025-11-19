@@ -16,6 +16,7 @@ import {
   Factor,
 } from "emissions-api-sdk";
 import { ensureClient } from "./client";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./validation-utils";
 
 /**
  * Map of API names to their SDK classes
@@ -29,35 +30,6 @@ const API_CLASS_MAP = {
   transportationanddistribution: TransportationAndDistribution,
   factor: Factor,
 };
-
-/**
- * Validates if the provided API name is valid
- * @param apiName The API name to validate
- * @returns The normalized API name if valid
- * @throws CustomFunctions.Error if invalid
- */
-export function validateApiName(apiName: string): string {
-  const normalizedApiName = apiName.toLowerCase().trim();
-  
-  const validApiNames = [
-    "location",
-    "mobile",
-    "fugitive",
-    "stationary",
-    "calculation",
-    "transportationanddistribution",
-    "factor",
-  ];
-  
-  if (!validApiNames.includes(normalizedApiName)) {
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.invalidValue,
-      `Invalid API name. Valid options: ${validApiNames.join(", ")}`
-    );
-  }
-  
-  return normalizedApiName;
-}
 
 /**
  * Fetches units for a specific API type
@@ -105,42 +77,16 @@ export async function fetchUnits(apiName: string, type: string): Promise<string[
  */
 async function applyUnitsValidation(cellAddress: string, units: string[]): Promise<void> {
   await Excel.run(async (context) => {
-    // Parse the cell address to get sheet name and cell reference
-    const [sheetName, cellRef] = cellAddress.includes("!")
-      ? cellAddress.split("!")
-      : ["", cellAddress];
-    
     // Get the target cell
-    let targetCell: Excel.Range;
-    if (sheetName) {
-      const targetSheet = context.workbook.worksheets.getItem(sheetName);
-      targetCell = targetSheet.getRange(cellRef);
-    } else {
-      // If no sheet name, use active sheet
-      const activeSheet = context.workbook.worksheets.getActiveWorksheet();
-      targetCell = activeSheet.getRange(cellRef);
-    }
-    
-    // Clear any existing validation
-    targetCell.dataValidation.clear();
-    
-    // Create comma-separated list of units
-    const unitsList = units.join(",");
+    const targetCell = await getTargetCell(context, cellAddress);
     
     // Apply list validation
-    targetCell.dataValidation.rule = {
-      list: {
-        inCellDropDown: true,
-        source: unitsList,
-      },
-    };
-    
-    targetCell.dataValidation.errorAlert = {
-      showAlert: true,
-      style: Excel.DataValidationAlertStyle.stop,
-      title: "Invalid Unit",
-      message: "Please select a valid unit from the dropdown list",
-    };
+    applyListValidation(
+      targetCell,
+      units,
+      "Invalid Unit",
+      "Please select a valid unit from the dropdown list"
+    );
     
     await context.sync();
   });
@@ -184,14 +130,7 @@ export async function handleUnitsFunction(
     // Return empty string so cell remains empty after validation is applied
     return "";
   } catch (error) {
-    // Re-throw CustomFunctions.Error as-is
-    if (error instanceof CustomFunctions.Error || (error as any).name === "CustomFunctions.Error") {
-      throw error;
-    }
-    throw new CustomFunctions.Error(
-      CustomFunctions.ErrorCode.notAvailable,
-      `Failed to set up units validation: ${error.message || "Unknown error"}`
-    );
+    handleCustomFunctionError(error, "Failed to set up units validation");
   }
 }
 
