@@ -21,12 +21,12 @@ jest.mock("../src/functions/api-types-loader", () => ({
 
 import { loadAndPopulateApiTypes } from "../src/functions/api-types-loader";
 
-// Mock credentials module
-jest.mock("../src/common/credentials", () => ({
-  getApiCredentials: jest.fn(),
+// Mock client module
+jest.mock("../src/functions/client", () => ({
+  ensureClient: jest.fn(),
 }));
 
-import { getApiCredentials } from "../src/common/credentials";
+import { ensureClient } from "../src/functions/client";
 
 // Mock Excel
 const mockTargetCell = {
@@ -117,18 +117,14 @@ global.console = {
 };
 
 describe("types-handler", () => {
-  const mockGetApiCredentials = getApiCredentials as jest.MockedFunction<typeof getApiCredentials>;
+  const mockEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
   const mockLoadAndPopulateApiTypes = loadAndPopulateApiTypes as jest.MockedFunction<typeof loadAndPopulateApiTypes>;
 
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Default: user is logged in
-    mockGetApiCredentials.mockReturnValue({
-      apiKey: "test-key",
-      tenantId: "test-tenant",
-      orgId: "test-org",
-    });
+    // Default: ensureClient succeeds (user is logged in)
+    mockEnsureClient.mockResolvedValue(undefined);
     
     // Default: loadAndPopulateApiTypes succeeds
     mockLoadAndPopulateApiTypes.mockResolvedValue(undefined);
@@ -190,7 +186,9 @@ describe("types-handler", () => {
     } as CustomFunctions.Invocation;
 
     it("should throw error if user is not logged in", async () => {
-      mockGetApiCredentials.mockReturnValue(null);
+      // Mock ensureClient to throw error (user not logged in)
+      const loginError = new CustomFunctionsError("NotAvailable", "Enter your credentials in the task pane.");
+      mockEnsureClient.mockRejectedValueOnce(loginError);
 
       await expect(handleTypesFunction("Location", mockInvocation)).rejects.toThrow();
 
@@ -198,7 +196,6 @@ describe("types-handler", () => {
         await handleTypesFunction("Location", mockInvocation);
       } catch (error) {
         expect((error as any).code).toBe("NotAvailable");
-        expect(error.message).toContain("Please log in first");
       }
     });
 
