@@ -56,7 +56,7 @@ export async function fetchUnits(apiName: string, type: string): Promise<string[
     }
     
     // Extract units array from response
-    if (!parsedResponse || !parsedResponse.units || !Array.isArray(parsedResponse.units)) {
+    if (!parsedResponse?.units || !Array.isArray(parsedResponse.units)) {
       throw new Error(`Invalid response format from ${apiName} API`);
     }
     
