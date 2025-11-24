@@ -5,6 +5,7 @@ import { factorSearch } from "./factorSearchHelper";
 import { factorHelper } from "./factorHelper";
 import { handleTypesFunction } from "./types-handler";
 import { handleUnitsFunction } from "./units-handler";
+import { handleCountryFunction, handleStateProvinceFunction, handlePowerGridFunction } from "./area-handler";
 
 /**
  * Triggers data validation dropdown for API types.
@@ -36,6 +37,55 @@ export async function units(
   invocation: CustomFunctions.Invocation
 ): Promise<string> {
   return handleUnitsFunction(apiName, type, invocation);
+}
+
+/**
+ * Triggers data validation dropdown for country selection.
+ * Fetches countries from the API and applies validation to the cell.
+ * @customfunction
+ * @param apiName The name of the API (location, mobile, fugitive, stationary, calculation, transportationanddistribution, factor, factorsearch)
+ * @param invocation Invocation object to get cell address
+ * @requiresAddress
+ */
+export async function country(
+  apiName: string,
+  invocation: CustomFunctions.Invocation
+): Promise<string> {
+  return handleCountryFunction(apiName, invocation);
+}
+
+/**
+ * Triggers data validation dropdown for state/province selection.
+ * Fetches state/province data for the specified country and applies validation to the cell.
+ * @customfunction
+ * @param apiName The name of the API (location, mobile, fugitive, stationary, calculation, transportationanddistribution, factor, factorsearch)
+ * @param country The country alpha3 code (e.g., "USA", "CAN")
+ * @param invocation Invocation object to get cell address
+ * @requiresAddress
+ */
+export async function state_province(
+  apiName: string,
+  country: string,
+  invocation: CustomFunctions.Invocation
+): Promise<string> {
+  return handleStateProvinceFunction(apiName, country, invocation);
+}
+
+/**
+ * Triggers data validation dropdown for power grid selection.
+ * Fetches power grid data for the specified country and applies validation to the cell.
+ * @customfunction
+ * @param apiName The name of the API (location, mobile, fugitive, stationary, calculation, transportationanddistribution, factor, factorsearch)
+ * @param country The country alpha3 code (e.g., "USA", "CAN")
+ * @param invocation Invocation object to get cell address
+ * @requiresAddress
+ */
+export async function power_grid(
+  apiName: string,
+  country: string,
+  invocation: CustomFunctions.Invocation
+): Promise<string> {
+  return handlePowerGridFunction(apiName, country, invocation);
 }
 
 /**
