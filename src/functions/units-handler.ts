@@ -16,7 +16,7 @@ import {
   Factor,
 } from "emissions-api-sdk";
 import { ensureClient } from "./client";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./validation-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./metadata-utils";
 
 /**
  * Map of API names to their SDK classes
