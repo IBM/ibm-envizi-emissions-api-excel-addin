@@ -1,36 +1,7 @@
 // Copyright IBM Corp. 2025
 
-import {
-  Location,
-  Mobile,
-  Fugitive,
-  Stationary,
-  Calculation,
-  TransportationAndDistribution,
-} from "emissions-api-sdk";
-
 import { ensureClient } from "./client";
-
-/**
- * Configuration for each API endpoint
- */
-interface ApiConfig {
-  name: string;
-  getTypes: () => Promise<any>;
-}
-
-/**
- * All available API configurations in fixed column order
- * Column A: Location, B: Mobile, C: Fugitive, D: Stationary, E: Calculation, F: TransportationAndDistribution
- */
-const API_CONFIGS: ApiConfig[] = [
-  { name: "Location", getTypes: Location.getTypes },
-  { name: "Mobile", getTypes: Mobile.getTypes },
-  { name: "Fugitive", getTypes: Fugitive.getTypes },
-  { name: "Stationary", getTypes: Stationary.getTypes },
-  { name: "Calculation", getTypes: Calculation.getTypes },
-  { name: "TransportationAndDistribution", getTypes: TransportationAndDistribution.getTypes },
-];
+import { API_TYPES_CONFIGS } from "./metadata-utils";
 
 /**
  * Map of API names to their fixed column indices (0-based)
@@ -61,7 +32,7 @@ export async function fetchAllApiTypes(): Promise<Map<string, string[]>> {
   const apiTypesMap = new Map<string, string[]>();
 
   // Fetch types from all APIs in parallel for better performance
-  const fetchPromises = API_CONFIGS.map(async (config) => {
+  const fetchPromises = API_TYPES_CONFIGS.map(async (config) => {
     try {
       const response = await config.getTypes();
       // The SDK returns an object with a 'types' array property
@@ -123,14 +94,14 @@ export async function writeApiTypesToSheet(apiTypesMap: Map<string, string[]>): 
     });
 
     // Fixed column count (6 APIs)
-    const columnCount = API_CONFIGS.length;
+    const columnCount = API_TYPES_CONFIGS.length;
     const rowCount = maxTypes + 1; // +1 for header row
     const data: (string | null)[][] = Array(rowCount)
       .fill(null)
       .map(() => Array(columnCount).fill(null));
 
-    // Fill in the data in fixed column order matching API_CONFIGS
-    API_CONFIGS.forEach((config, columnIndex) => {
+    // Fill in the data in fixed column order matching API_TYPES_CONFIGS
+    API_TYPES_CONFIGS.forEach((config, columnIndex) => {
       const types = apiTypesMap.get(config.name) || [];
       
       // Set header
