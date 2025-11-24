@@ -1,7 +1,7 @@
 // Copyright IBM Corp. 2025
 
 import { handleTypesFunction } from "../src/functions/types-handler";
-import { validateApiName } from "../src/functions/validation-utils";
+import { validateApiName } from "../src/functions/metadata-utils";
 
 // Mock api-types-loader module
 jest.mock("../src/functions/api-types-loader", () => ({

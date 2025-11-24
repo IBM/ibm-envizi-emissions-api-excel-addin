@@ -4,7 +4,7 @@ import {
   fetchUnits,
   handleUnitsFunction,
 } from "../src/functions/units-handler";
-import { validateApiName } from "../src/functions/validation-utils";
+import { validateApiName } from "../src/functions/metadata-utils";
 
 // Mock emissions-api-sdk
 jest.mock("emissions-api-sdk", () => ({
