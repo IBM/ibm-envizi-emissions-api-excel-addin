@@ -2,6 +2,9 @@
 
 /**
  * Handles loading and populating area data (countries, states, power grids) from APIs
+ * Only stores data for 2 representative APIs to optimize storage:
+ * - calculation (represents: calculation, location, factor)
+ * - mobile (represents: mobile, stationary, fugitive, transportationanddistribution)
  */
 
 import { API_AREA_CONFIGS } from "./metadata-utils";
@@ -75,8 +78,8 @@ async function fetchAllAreaData(): Promise<Map<string, LocationData[]>> {
     areaDataMap.set(result.name, result.locations);
   });
 
-  // Note: factor and factorsearch are NOT stored in the sheet
-  // They will be handled by area-handler to use calculation data dynamically
+  // Note: Only 2 APIs are stored (calculation and mobile)
+  // Other APIs are mapped to these representatives in area-handler
 
   return areaDataMap;
 }
