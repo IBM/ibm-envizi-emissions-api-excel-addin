@@ -37,13 +37,22 @@ jest.mock("../src/functions/metadata-utils", () => ({
   handleCustomFunctionError: jest.fn(),
   VALID_API_NAMES: [
     "location",
-    "mobile", 
+    "mobile",
     "fugitive",
     "stationary",
     "calculation",
     "transportationanddistribution",
     "factor",
   ],
+  API_AREA_MAPPING: {
+    location: "calculation",
+    mobile: "mobile",
+    fugitive: "mobile",
+    stationary: "mobile",
+    calculation: "calculation",
+    transportationanddistribution: "mobile",
+    factor: "calculation",
+  },
 }));
 
 // Mock Excel
@@ -63,10 +72,9 @@ const mockAreaDataSheet = {
 const mockUsedRange = {
   values: [
     ["API Name", "Alpha3", "Country Name", "State/Province", "Power Grid"],
-    ["location", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
-    ["location", "CAN", "Canada", "Ontario, Quebec, British Columbia", ""],
-    ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
     ["calculation", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
+    ["calculation", "CAN", "Canada", "Ontario, Quebec, British Columbia", ""],
+    ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
   ],
   load: jest.fn(),
 };
@@ -160,10 +168,9 @@ describe("area-handler", () => {
     // Reset mock data to default
     mockUsedRange.values = [
       ["API Name", "Alpha3", "Country Name", "State/Province", "Power Grid"],
-      ["location", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
-      ["location", "CAN", "Canada", "Ontario, Quebec, British Columbia", ""],
-      ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
       ["calculation", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
+      ["calculation", "CAN", "Canada", "Ontario, Quebec, British Columbia", ""],
+      ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
     ];
 
     // Reset Excel.run mock
@@ -231,7 +238,7 @@ describe("area-handler", () => {
 
       expect(mockApplyListValidation).toHaveBeenCalledWith(
         mockTargetCell,
-        ["USA", "CAN"], // Alpha3 codes for location API
+        ["USA", "CAN"], // Alpha3 codes for calculation API (location maps to calculation)
         "Invalid Country",
         "Please select a valid country code from the dropdown list"
       );
@@ -300,7 +307,7 @@ describe("area-handler", () => {
       expect(mockGetTargetCell).toHaveBeenCalledWith(mockContext, "Sheet1!A1");
       expect(mockApplyListValidation).toHaveBeenCalledWith(
         mockTargetCell,
-        ["California", "Texas", "New York"], // State/provinces for USA in location API
+        ["California", "Texas", "New York"], // State/provinces for USA in calculation API (location maps to calculation)
         "Invalid State/Province",
         "Please select a valid state/province from the dropdown list"
       );
@@ -343,7 +350,7 @@ describe("area-handler", () => {
       expect(mockGetTargetCell).toHaveBeenCalledWith(mockContext, "Sheet1!A1");
       expect(mockApplyListValidation).toHaveBeenCalledWith(
         mockTargetCell,
-        ["WECC", "ERCOT", "NPCC"], // Power grids for USA in location API
+        ["WECC", "ERCOT", "NPCC"], // Power grids for USA in calculation API (location maps to calculation)
         "Invalid Power Grid",
         "Please select a valid power grid from the dropdown list"
       );
@@ -378,16 +385,12 @@ describe("area-handler", () => {
     it("should work with all supported API types for country function", async () => {
       const apis = ["location", "mobile", "fugitive", "stationary", "calculation", "transportationanddistribution", "factor"];
 
-      // Add data for all APIs to mock
+      // Only calculation and mobile data is stored (other APIs map to these)
       mockUsedRange.values = [
         ["API Name", "Alpha3", "Country Name", "State/Province", "Power Grid"],
-        ["location", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
-        ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
-        ["fugitive", "USA", "United States", "California", "WECC"],
-        ["stationary", "USA", "United States", "California, Texas", "WECC, ERCOT"],
         ["calculation", "USA", "United States", "California, Texas, New York", "WECC, ERCOT, NPCC"],
-        ["transportationanddistribution", "USA", "United States", "California", "WECC"],
-        ["factor", "USA", "United States", "California, Texas", "WECC, ERCOT"],
+        ["calculation", "CAN", "Canada", "Ontario, Quebec, British Columbia", ""],
+        ["mobile", "USA", "United States", "California, Texas", "WECC, ERCOT"],
       ];
 
       for (const api of apis) {

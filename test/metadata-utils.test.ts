@@ -66,19 +66,15 @@ describe("metadata-utils", () => {
   });
 
   describe("API_AREA_CONFIGS", () => {
-    it("should have 6 API configurations", () => {
-      expect(API_AREA_CONFIGS).toHaveLength(6);
+    it("should have 2 representative API configurations (optimization for area data)", () => {
+      expect(API_AREA_CONFIGS).toHaveLength(2);
     });
 
-    it("should have correct API names in lowercase", () => {
+    it("should have correct representative API names in lowercase", () => {
       const names = API_AREA_CONFIGS.map((config) => config.name);
       expect(names).toEqual([
-        "location",
-        "mobile",
-        "fugitive",
-        "stationary",
         "calculation",
-        "transportationanddistribution",
+        "mobile",
       ]);
     });
 

@@ -71,16 +71,29 @@ export const API_TYPES_CONFIGS: ApiTypesConfig[] = [
 
 /**
  * All available API configurations for area operations
- * Note: factor and factorsearch are NOT included as they use calculation data
+ * Only stores data for 2 representative APIs:
+ * - calculation (represents: calculation, location, factor)
+ * - mobile (represents: mobile, stationary, fugitive)
  */
 export const API_AREA_CONFIGS: ApiAreaConfig[] = [
-  { name: "location", class: Location },
-  { name: "mobile", class: Mobile },
-  { name: "fugitive", class: Fugitive },
-  { name: "stationary", class: Stationary },
   { name: "calculation", class: Calculation },
-  { name: "transportationanddistribution", class: TransportationAndDistribution },
+  { name: "mobile", class: Mobile },
 ];
+
+/**
+ * Maps API names to their representative API for area data
+ * Group 1 (calculation): calculation, location, factor
+ * Group 2 (mobile): mobile, stationary, fugitive
+ */
+export const API_AREA_MAPPING: Record<string, string> = {
+  calculation: "calculation",
+  location: "calculation",
+  factor: "calculation",
+  mobile: "mobile",
+  stationary: "mobile",
+  fugitive: "mobile",
+  transportationanddistribution: "mobile", // Maps to mobile group
+};
 
 /**
  * Validates if the provided API name is valid

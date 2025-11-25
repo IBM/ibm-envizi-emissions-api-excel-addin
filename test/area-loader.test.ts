@@ -252,32 +252,35 @@ describe("area-loader", () => {
       ]);
     });
 
-    it("should fetch area data from all APIs", async () => {
+    it("should fetch area data from representative APIs only", async () => {
       await loadAndPopulateAreaData();
 
-      expect(mockLocationGetArea).toHaveBeenCalled();
-      expect(mockMobileGetArea).toHaveBeenCalled();
-      expect(mockFugitiveGetArea).toHaveBeenCalled();
-      expect(mockStationaryGetArea).toHaveBeenCalled();
+      // Only calculation and mobile should be called (2 representative APIs)
       expect(mockCalculationGetArea).toHaveBeenCalled();
-      expect(mockTransportationGetArea).toHaveBeenCalled();
+      expect(mockMobileGetArea).toHaveBeenCalled();
+      
+      // Other APIs should NOT be called
+      expect(mockLocationGetArea).not.toHaveBeenCalled();
+      expect(mockFugitiveGetArea).not.toHaveBeenCalled();
+      expect(mockStationaryGetArea).not.toHaveBeenCalled();
+      expect(mockTransportationGetArea).not.toHaveBeenCalled();
       expect(mockFactorGetArea).not.toHaveBeenCalled();
     });
 
-    it("should populate data for all APIs", async () => {
+    it("should populate data for representative APIs only", async () => {
       await loadAndPopulateAreaData();
 
-      // Should have 1 header + 12 data rows (6 APIs × 2 countries, factor/factorsearch not stored)
-      expect(mockDataRange.values).toHaveLength(13);
+      // Should have 1 header + 4 data rows (2 APIs × 2 countries)
+      expect(mockDataRange.values).toHaveLength(5);
 
       // Check header row
       expect(mockDataRange.values[0]).toEqual([
         "API Name", "Alpha3", "Country Name", "State/Province", "Power Grid"
       ]);
 
-      // Check first few data rows for location API
+      // Check data rows for calculation API
       expect(mockDataRange.values[1]).toEqual([
-        "location",
+        "calculation",
         "USA",
         "United States",
         "California, Texas, New York",
@@ -285,7 +288,24 @@ describe("area-loader", () => {
       ]);
 
       expect(mockDataRange.values[2]).toEqual([
-        "location",
+        "calculation",
+        "CAN",
+        "Canada",
+        "Ontario, Quebec, British Columbia",
+        "",
+      ]);
+      
+      // Check data rows for mobile API
+      expect(mockDataRange.values[3]).toEqual([
+        "mobile",
+        "USA",
+        "United States",
+        "California, Texas, New York",
+        "WECC, ERCOT, NPCC",
+      ]);
+
+      expect(mockDataRange.values[4]).toEqual([
+        "mobile",
         "CAN",
         "Canada",
         "Ontario, Quebec, British Columbia",
@@ -293,18 +313,21 @@ describe("area-loader", () => {
       ]);
     });
 
-    it("should NOT store factor and factorsearch data in sheet", async () => {
+    it("should only store calculation and mobile data in sheet", async () => {
       await loadAndPopulateAreaData();
 
-      // Factor and factorsearch should NOT be in the sheet (skip header row)
-      const factorRows = mockDataRange.values.slice(1).filter(row => row[0] === "factor");
-      const factorsearchRows = mockDataRange.values.slice(1).filter(row => row[0] === "factorsearch");
+      // Only calculation and mobile should be in the sheet (skip header row)
+      const dataRows = mockDataRange.values.slice(1);
+      const apiNames = dataRows.map(row => row[0]);
       
-      expect(factorRows).toHaveLength(0);
-      expect(factorsearchRows).toHaveLength(0);
-
-      // Factor API should NOT be called
-      expect(mockFactorGetArea).not.toHaveBeenCalled();
+      expect(apiNames).toEqual(["calculation", "calculation", "mobile", "mobile"]);
+      
+      // Verify no other API data is stored
+      const otherApis = ["location", "fugitive", "stationary", "transportationanddistribution", "factor", "factorsearch"];
+      otherApis.forEach(api => {
+        const apiRows = dataRows.filter(row => row[0] === api);
+        expect(apiRows).toHaveLength(0);
+      });
     });
 
     it("should handle empty power grids array", async () => {
@@ -317,59 +340,59 @@ describe("area-loader", () => {
 
     it("should handle API with no locations", async () => {
       const emptyResponse = { locations: [] };
-      mockLocationGetArea.mockResolvedValueOnce(emptyResponse as any);
+      mockCalculationGetArea.mockResolvedValueOnce(emptyResponse as any);
 
       await loadAndPopulateAreaData();
 
-      // Should still have header + data from other APIs
-      expect(mockDataRange.values.length).toBeGreaterThan(1);
+      // Should still have header + data from mobile API (1 API × 2 countries = 2 rows + header)
+      expect(mockDataRange.values.length).toBe(3);
       
-      // But no location API data (skip header row)
-      const locationRows = mockDataRange.values.slice(1).filter(row => row[0] === "location");
-      expect(locationRows).toHaveLength(0);
+      // But no calculation API data (skip header row)
+      const calculationRows = mockDataRange.values.slice(1).filter(row => row[0] === "calculation");
+      expect(calculationRows).toHaveLength(0);
     });
 
     it("should handle API call failure", async () => {
-      mockLocationGetArea.mockRejectedValueOnce(new Error("API error"));
+      mockCalculationGetArea.mockRejectedValueOnce(new Error("API error"));
 
       // Should not throw - just logs error and continues with other APIs
       await loadAndPopulateAreaData();
 
-      // Should still have data from other APIs (5 APIs × 2 countries = 10 rows + header)
-      expect(mockDataRange.values.length).toBeGreaterThan(1);
+      // Should still have data from mobile API (1 API × 2 countries = 2 rows + header)
+      expect(mockDataRange.values.length).toBe(3);
       
-      // But no location API data
-      const locationRows = mockDataRange.values.slice(1).filter(row => row[0] === "location");
-      expect(locationRows).toHaveLength(0);
+      // But no calculation API data
+      const calculationRows = mockDataRange.values.slice(1).filter(row => row[0] === "calculation");
+      expect(calculationRows).toHaveLength(0);
     });
 
     it("should handle invalid JSON response", async () => {
-      mockLocationGetArea.mockResolvedValueOnce("invalid json" as any);
+      mockCalculationGetArea.mockResolvedValueOnce("invalid json" as any);
 
       // Should not throw - just logs error and continues with other APIs
       await loadAndPopulateAreaData();
 
-      // Should still have data from other APIs
-      expect(mockDataRange.values.length).toBeGreaterThan(1);
+      // Should still have data from mobile API
+      expect(mockDataRange.values.length).toBe(3);
       
-      // But no location API data
-      const locationRows = mockDataRange.values.slice(1).filter(row => row[0] === "location");
-      expect(locationRows).toHaveLength(0);
+      // But no calculation API data
+      const calculationRows = mockDataRange.values.slice(1).filter(row => row[0] === "calculation");
+      expect(calculationRows).toHaveLength(0);
     });
 
     it("should handle invalid response format", async () => {
       const invalidResponse = { locations: null };
-      mockLocationGetArea.mockResolvedValueOnce(invalidResponse as any);
+      mockCalculationGetArea.mockResolvedValueOnce(invalidResponse as any);
 
       // Should not throw - just logs error and continues with other APIs
       await loadAndPopulateAreaData();
 
-      // Should still have data from other APIs
-      expect(mockDataRange.values.length).toBeGreaterThan(1);
+      // Should still have data from mobile API
+      expect(mockDataRange.values.length).toBe(3);
       
-      // But no location API data
-      const locationRows = mockDataRange.values.slice(1).filter(row => row[0] === "location");
-      expect(locationRows).toHaveLength(0);
+      // But no calculation API data
+      const calculationRows = mockDataRange.values.slice(1).filter(row => row[0] === "calculation");
+      expect(calculationRows).toHaveLength(0);
     });
 
     it("should handle Excel.run failure", async () => {
@@ -399,17 +422,17 @@ describe("area-loader", () => {
           },
         ],
       };
-      mockLocationGetArea.mockResolvedValueOnce(partialResponse as any);
+      mockCalculationGetArea.mockResolvedValueOnce(partialResponse as any);
 
       await loadAndPopulateAreaData();
 
       // Should still create rows with empty values for missing properties (skip header row)
-      const locationRows = mockDataRange.values.slice(1).filter(row => row[0] === "location");
-      expect(locationRows).toHaveLength(2);
+      const calculationRows = mockDataRange.values.slice(1).filter(row => row[0] === "calculation");
+      expect(calculationRows).toHaveLength(2);
 
       // USA row with missing arrays
-      expect(locationRows[0]).toEqual([
-        "location",
+      expect(calculationRows[0]).toEqual([
+        "calculation",
         "USA",
         "United States",
         "",
@@ -417,8 +440,8 @@ describe("area-loader", () => {
       ]);
 
       // CAN row with missing country name
-      expect(locationRows[1]).toEqual([
-        "location",
+      expect(calculationRows[1]).toEqual([
+        "calculation",
         "CAN",
         "",
         "",
@@ -435,8 +458,8 @@ describe("area-loader", () => {
     it("should set data range with correct address", async () => {
       await loadAndPopulateAreaData();
 
-      // Should call getRangeByIndexes with correct parameters (1 header + 12 data rows = 13 total)
-      expect(mockAreaDataSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 13, 5);
+      // Should call getRangeByIndexes with correct parameters (1 header + 4 data rows = 5 total)
+      expect(mockAreaDataSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 5, 5);
     });
   });
 
@@ -444,13 +467,13 @@ describe("area-loader", () => {
     it("should handle errors gracefully without throwing", async () => {
       // API errors are caught and logged, but don't stop the function
       const genericError = new Error("Generic error");
-      mockLocationGetArea.mockRejectedValueOnce(genericError);
+      mockCalculationGetArea.mockRejectedValueOnce(genericError);
 
       // Should not throw
       await loadAndPopulateAreaData();
 
-      // Should still have data from other APIs
-      expect(mockDataRange.values.length).toBeGreaterThan(1);
+      // Should still have data from mobile API (1 API × 2 countries = 2 rows + header)
+      expect(mockDataRange.values.length).toBe(3);
     });
 
     it("should handle Excel.run errors", async () => {
@@ -490,27 +513,27 @@ describe("area-loader", () => {
 
       await loadAndPopulateAreaData();
 
-      // Should have 1 header + 12 data rows (6 APIs × 2 countries, factor/factorsearch not stored)
-      expect(mockDataRange.values).toHaveLength(13);
+      // Should have 1 header + 4 data rows (2 APIs × 2 countries)
+      expect(mockDataRange.values).toHaveLength(5);
 
-      // Check USA data (skip header row)
-      const usaLocationRow = mockDataRange.values.slice(1).find(
-        row => row[0] === "location" && row[1] === "USA"
+      // Check USA data for calculation API (skip header row)
+      const usaCalculationRow = mockDataRange.values.slice(1).find(
+        row => row[0] === "calculation" && row[1] === "USA"
       );
-      expect(usaLocationRow).toEqual([
-        "location",
+      expect(usaCalculationRow).toEqual([
+        "calculation",
         "USA",
         "United States",
         "California, Texas, New York, Florida",
         "WECC, ERCOT, NPCC, SERC",
       ]);
 
-      // Check GBR data (skip header row)
-      const gbrLocationRow = mockDataRange.values.slice(1).find(
-        row => row[0] === "location" && row[1] === "GBR"
+      // Check GBR data for calculation API (skip header row)
+      const gbrCalculationRow = mockDataRange.values.slice(1).find(
+        row => row[0] === "calculation" && row[1] === "GBR"
       );
-      expect(gbrLocationRow).toEqual([
-        "location",
+      expect(gbrCalculationRow).toEqual([
+        "calculation",
         "GBR",
         "United Kingdom",
         "England, Scotland, Wales, Northern Ireland",
