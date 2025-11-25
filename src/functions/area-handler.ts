@@ -7,7 +7,7 @@
 
 import { AREA_DATA_SHEET_NAME, AREA_COLUMN_MAP, loadAndPopulateAreaData } from "./area-loader";
 import { ensureClient } from "./client";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./metadata-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError, API_AREA_MAPPING } from "./metadata-utils";
 
 /**
  * Checks if the area data sheet exists
@@ -35,15 +35,14 @@ async function ensureAreaDataSheet(): Promise<void> {
 }
 
 /**
- * Maps factor and factorsearch to calculation for area data queries
+ * Maps API names to their representative API for area data queries
+ * Group 1 (calculation): calculation, location, factor
+ * Group 2 (mobile): mobile, stationary, fugitive, transportationanddistribution
  * @param apiName The API name to map
- * @returns The mapped API name (factor/factorsearch -> calculation, others unchanged)
+ * @returns The mapped API name
  */
 function mapApiNameForAreaData(apiName: string): string {
-  if (apiName === "factor" || apiName === "factorsearch") {
-    return "calculation";
-  }
-  return apiName;
+  return API_AREA_MAPPING[apiName] || apiName;
 }
 
 /**
