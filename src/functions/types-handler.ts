@@ -7,7 +7,7 @@
 
 import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "./api-types-loader";
 import { ensureClient } from "./client";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./validation-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./metadata-utils";
 
 /**
  * Sheet name where API types are stored

@@ -1,8 +1,18 @@
 // Copyright IBM Corp. 2025
 
 /**
- * Shared utilities for validation handlers
+ * Shared utilities and metadata for API operations
+ * This module contains common configurations and utilities used across different API handlers
  */
+
+import {
+  Location,
+  Mobile,
+  Fugitive,
+  Stationary,
+  Calculation,
+  TransportationAndDistribution,
+} from "emissions-api-sdk";
 
 /**
  * Valid API names supported by the system
@@ -16,6 +26,74 @@ export const VALID_API_NAMES = [
   "transportationanddistribution",
   "factor",
 ] as const;
+
+/**
+ * API class mapping for metadata operations
+ * Maps lowercase API names to their SDK classes
+ */
+export const API_CLASS_MAP = {
+  location: Location,
+  mobile: Mobile,
+  fugitive: Fugitive,
+  stationary: Stationary,
+  calculation: Calculation,
+  transportationanddistribution: TransportationAndDistribution,
+} as const;
+
+/**
+ * Configuration for API types operations
+ */
+export interface ApiTypesConfig {
+  name: string;
+  getTypes: () => Promise<any>;
+}
+
+/**
+ * Configuration for API area operations
+ */
+export interface ApiAreaConfig {
+  name: string;
+  class: typeof Location | typeof Mobile | typeof Fugitive | typeof Stationary | typeof Calculation | typeof TransportationAndDistribution;
+}
+
+/**
+ * All available API configurations for types operations
+ * Column A: Location, B: Mobile, C: Fugitive, D: Stationary, E: Calculation, F: TransportationAndDistribution
+ */
+export const API_TYPES_CONFIGS: ApiTypesConfig[] = [
+  { name: "Location", getTypes: Location.getTypes },
+  { name: "Mobile", getTypes: Mobile.getTypes },
+  { name: "Fugitive", getTypes: Fugitive.getTypes },
+  { name: "Stationary", getTypes: Stationary.getTypes },
+  { name: "Calculation", getTypes: Calculation.getTypes },
+  { name: "TransportationAndDistribution", getTypes: TransportationAndDistribution.getTypes },
+];
+
+/**
+ * All available API configurations for area operations
+ * Only stores data for 2 representative APIs:
+ * - calculation (represents: calculation, location, factor)
+ * - mobile (represents: mobile, stationary, fugitive)
+ */
+export const API_AREA_CONFIGS: ApiAreaConfig[] = [
+  { name: "calculation", class: Calculation },
+  { name: "mobile", class: Mobile },
+];
+
+/**
+ * Maps API names to their representative API for area data
+ * Group 1 (calculation): calculation, location, factor
+ * Group 2 (mobile): mobile, stationary, fugitive
+ */
+export const API_AREA_MAPPING: Record<string, string> = {
+  calculation: "calculation",
+  location: "calculation",
+  factor: "calculation",
+  mobile: "mobile",
+  stationary: "mobile",
+  fugitive: "mobile",
+  transportationanddistribution: "mobile", // Maps to mobile group
+};
 
 /**
  * Validates if the provided API name is valid
@@ -114,4 +192,4 @@ export function handleCustomFunctionError(error: unknown, defaultMessage: string
   );
 }
 
-
+// Made with Bob
