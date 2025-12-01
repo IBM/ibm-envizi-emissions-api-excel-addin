@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive guide to common error types that can be thrown by the GHG Emissions Service Excel plug in, along with troubleshooting steps to resolve them.
+This document provides a comprehensive guide to common error types that can be thrown by IBM Envizi - Emissions Calculations in Excel, along with troubleshooting steps to resolve them.
 
 ---
 
