@@ -1,7 +1,7 @@
 // Copyright IBM Corp. 2025
 
 import { handleTypesFunction } from "../src/functions/types-handler";
-import { validateApiName } from "../src/functions/metadata-utils";
+import { validateApiName, refreshSheetIfStale } from "../src/functions/metadata-utils";
 
 // Mock api-types-loader module
 jest.mock("../src/functions/api-types-loader", () => ({
@@ -25,6 +25,12 @@ jest.mock("../src/functions/client", () => ({
 }));
 
 import { ensureClient } from "../src/functions/client";
+
+// Mock metadata-utils
+jest.mock("../src/functions/metadata-utils", () => ({
+  ...jest.requireActual("../src/functions/metadata-utils"),
+  refreshSheetIfStale: jest.fn(),
+}));
 
 // Mock Excel
 const mockTargetCell = {
@@ -117,6 +123,7 @@ global.console = {
 describe("types-handler", () => {
   const mockEnsureClient = ensureClient as jest.MockedFunction<typeof ensureClient>;
   const mockLoadAndPopulateApiTypes = loadAndPopulateApiTypes as jest.MockedFunction<typeof loadAndPopulateApiTypes>;
+  const mockRefreshSheetIfStale = refreshSheetIfStale as jest.MockedFunction<typeof refreshSheetIfStale>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -126,6 +133,9 @@ describe("types-handler", () => {
     
     // Default: loadAndPopulateApiTypes succeeds
     mockLoadAndPopulateApiTypes.mockResolvedValue(undefined);
+    
+    // Default: refreshSheetIfStale returns false (no refresh needed)
+    mockRefreshSheetIfStale.mockResolvedValue(false);
     
     // Default: sheet exists
     mockContext.workbook.worksheets.items = [{ name: "API_Types_Data" }];
