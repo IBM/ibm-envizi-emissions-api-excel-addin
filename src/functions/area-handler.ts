@@ -7,7 +7,7 @@
 
 import { AREA_DATA_SHEET_NAME, AREA_COLUMN_MAP, loadAndPopulateAreaData } from "./area-loader";
 import { ensureClient } from "./client";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError, API_AREA_MAPPING } from "./metadata-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError, API_AREA_MAPPING, refreshSheetIfStale } from "./metadata-utils";
 
 /**
  * Checks if the area data sheet exists
@@ -139,6 +139,9 @@ export async function handleCountryFunction(
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
     
+    // Trigger 2: Check if data needs refresh based on age
+    await refreshSheetIfStale(AREA_DATA_SHEET_NAME, loadAndPopulateAreaData);
+    
     // Ensure area data sheet exists (create if needed)
     await ensureAreaDataSheet();
     
@@ -195,6 +198,9 @@ export async function handleStateProvinceFunction(
     
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
+    
+    // Trigger 2: Check if data needs refresh based on age
+    await refreshSheetIfStale(AREA_DATA_SHEET_NAME, loadAndPopulateAreaData);
     
     // Ensure area data sheet exists (create if needed)
     await ensureAreaDataSheet();
@@ -259,6 +265,9 @@ export async function handlePowerGridFunction(
     
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
+    
+    // Trigger 2: Check if data needs refresh based on age
+    await refreshSheetIfStale(AREA_DATA_SHEET_NAME, loadAndPopulateAreaData);
     
     // Ensure area data sheet exists (create if needed)
     await ensureAreaDataSheet();
