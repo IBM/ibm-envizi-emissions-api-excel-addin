@@ -29,6 +29,9 @@ import {
 } from "../common/credentials";
 import { getEnvType } from "../common/env";
 import { ensureClient, resetClient } from "../functions/client";
+import { refreshSheetOnLogin } from "../functions/metadata-utils";
+import { loadAndPopulateApiTypes } from "../functions/api-types-loader";
+import { loadAndPopulateAreaData } from "../functions/area-loader";
 
 accordionDefinition.define(FluentDesignSystem.registry);
 accordionItemDefinition.define(FluentDesignSystem.registry);
@@ -131,7 +134,7 @@ export function login(): void {
   errorMessageElement.hidden = true;
 
   ensureClient(apiCredentials)
-    .then( () => {
+    .then(async () => {
       if (loginForm["saveCredentials"].value) {
         saveApiCredentialsToStorage(apiCredentials);
       } else {
@@ -142,6 +145,15 @@ export function login(): void {
       credentialsForm["apiKey"].value = apiCredentials.apiKey;
       credentialsForm["tenantId"].value = apiCredentials.tenantId;
       credentialsForm["orgId"].value = apiCredentials.orgId;
+      
+      // Trigger 1: Always refresh existing data on login (if sheets exist)
+      try {
+        await refreshSheetOnLogin("API_Types_Data", loadAndPopulateApiTypes);
+        await refreshSheetOnLogin("API_Area_Data", loadAndPopulateAreaData);
+      } catch (error) {
+        console.error("⚠️ [LOGIN] Error during data refresh:", error);
+        // Don't block login if refresh fails
+      }
       
       switchPage("main-page");
     })
