@@ -13,7 +13,6 @@ import {
   Calculation,
   TransportationAndDistribution,
 } from "emissions-api-sdk";
-import { getApiCredentials } from "../common/credentials";
 
 /**
  * Valid API names supported by the system
