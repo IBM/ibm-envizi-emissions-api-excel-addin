@@ -7,7 +7,7 @@
 
 import { API_COLUMN_MAP, loadAndPopulateApiTypes } from "./api-types-loader";
 import { ensureClient } from "./client";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "./metadata-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError, refreshSheetIfStale } from "./metadata-utils";
 
 /**
  * Sheet name where API types are stored
@@ -110,6 +110,9 @@ export async function handleTypesFunction(
     
     // Validate API name
     const normalizedApiName = validateApiName(apiName);
+    
+    // Trigger 2: Check if data needs refresh based on age
+    await refreshSheetIfStale(API_TYPES_SHEET_NAME, loadAndPopulateApiTypes);
     
     // Ensure API types sheet exists (create if needed)
     await ensureApiTypesSheet();

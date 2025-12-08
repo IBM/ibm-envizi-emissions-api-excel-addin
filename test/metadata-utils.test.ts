@@ -5,6 +5,15 @@ import {
   VALID_API_NAMES,
   API_TYPES_CONFIGS,
   API_AREA_CONFIGS,
+  REFRESH_CONFIG,
+  SheetMetadata,
+  getSheetMetadata,
+  setSheetMetadata,
+  isSheetDataStale,
+  sheetExists,
+  deleteSheetIfExists,
+  refreshSheetIfStale,
+  refreshSheetOnLogin,
 } from "../src/functions/metadata-utils";
 
 // Mock CustomFunctions
@@ -136,6 +145,250 @@ describe("metadata-utils", () => {
       }
     });
   });
-});
 
-// Made with Bob
+  describe("REFRESH_CONFIG", () => {
+    it("should have correct refresh interval", () => {
+      expect(REFRESH_CONFIG.REFRESH_INTERVAL_MS).toBe(2 * 24 * 60 * 60 * 1000); // 2 days
+      expect(REFRESH_CONFIG.REFRESH_INTERVAL_DAYS).toBe(2);
+    });
+  });
+
+  describe("Refresh Mechanism", () => {
+    // Mock Excel context
+    const mockContext = {
+      workbook: {
+        worksheets: {
+          items: [] as any[],
+          load: jest.fn(),
+          getItem: jest.fn(),
+        },
+      },
+      sync: jest.fn().mockResolvedValue(undefined),
+    };
+
+    const mockSheet = {
+      name: "TestSheet",
+      getRangeByIndexes: jest.fn(),
+      delete: jest.fn(),
+    };
+
+    const mockRange = {
+      values: [["METADATA", "1234567890000"]],
+      load: jest.fn(),
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      
+      // Mock Excel.run
+      (global as any).Excel = {
+        run: jest.fn((callback) => callback(mockContext)),
+      };
+
+      mockContext.workbook.worksheets.items = [mockSheet];
+      mockContext.workbook.worksheets.getItem.mockReturnValue(mockSheet);
+      mockSheet.getRangeByIndexes.mockReturnValue(mockRange);
+    });
+
+    describe("getSheetMetadata", () => {
+      it("should return metadata when it exists", async () => {
+        mockRange.values = [["METADATA", "1234567890000"]];
+        
+        const metadata = await getSheetMetadata("TestSheet");
+        
+        expect(metadata).toEqual({
+          timestamp: 1234567890000,
+        });
+      });
+
+      it("should return null when metadata marker is missing", async () => {
+        mockRange.values = [["NOT_METADATA", "1234567890000"]];
+        
+        const metadata = await getSheetMetadata("TestSheet");
+        
+        expect(metadata).toBeNull();
+      });
+
+      it("should return null on error", async () => {
+        (global as any).Excel.run = jest.fn(() => Promise.reject(new Error("Sheet not found")));
+        
+        const metadata = await getSheetMetadata("NonExistentSheet");
+        
+        expect(metadata).toBeNull();
+      });
+    });
+
+    describe("setSheetMetadata", () => {
+      it("should write metadata to row 0", async () => {
+        const metadata: SheetMetadata = {
+          timestamp: 1234567890000,
+        };
+
+        await setSheetMetadata("TestSheet", metadata);
+
+        expect(mockSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 1, 2);
+        expect(mockRange.values).toEqual([["METADATA", "1234567890000"]]);
+      });
+    });
+
+    describe("isSheetDataStale", () => {
+      it("should return true when metadata is missing", async () => {
+        mockRange.values = [["NOT_METADATA", "1234567890000"]];
+        
+        const isStale = await isSheetDataStale("TestSheet");
+        
+        expect(isStale).toBe(true);
+      });
+
+      it("should return true when data is older than 2 days", async () => {
+        const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", threeDaysAgo.toString()]];
+        
+        const isStale = await isSheetDataStale("TestSheet");
+        
+        expect(isStale).toBe(true);
+      });
+
+      it("should return false when data is less than 2 days old", async () => {
+        const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
+        
+        const isStale = await isSheetDataStale("TestSheet");
+        
+        expect(isStale).toBe(false);
+      });
+
+      it("should return true on error", async () => {
+        (global as any).Excel.run = jest.fn(() => Promise.reject(new Error("Error")));
+        
+        const isStale = await isSheetDataStale("TestSheet");
+        
+        expect(isStale).toBe(true);
+      });
+    });
+
+    describe("sheetExists", () => {
+      it("should return true when sheet exists", async () => {
+        mockContext.workbook.worksheets.items = [{ name: "TestSheet" }];
+        
+        const exists = await sheetExists("TestSheet");
+        
+        expect(exists).toBe(true);
+      });
+
+      it("should return false when sheet does not exist", async () => {
+        mockContext.workbook.worksheets.items = [{ name: "OtherSheet" }];
+        
+        const exists = await sheetExists("TestSheet");
+        
+        expect(exists).toBe(false);
+      });
+
+      it("should return false on error", async () => {
+        (global as any).Excel.run = jest.fn(() => Promise.reject(new Error("Error")));
+        
+        const exists = await sheetExists("TestSheet");
+        
+        expect(exists).toBe(false);
+      });
+    });
+
+    describe("deleteSheetIfExists", () => {
+      it("should delete sheet when it exists", async () => {
+        mockContext.workbook.worksheets.items = [mockSheet];
+        
+        await deleteSheetIfExists("TestSheet");
+        
+        expect(mockSheet.delete).toHaveBeenCalled();
+      });
+
+      it("should not throw error when sheet does not exist", async () => {
+        mockContext.workbook.worksheets.items = [];
+        
+        await expect(deleteSheetIfExists("TestSheet")).resolves.not.toThrow();
+      });
+    });
+
+    describe("refreshSheetIfStale", () => {
+      const mockRecreateFunction = jest.fn().mockResolvedValue(undefined);
+
+      beforeEach(() => {
+        mockRecreateFunction.mockClear();
+      });
+
+      it("should return false when sheet does not exist", async () => {
+        mockContext.workbook.worksheets.items = [];
+        
+        const refreshed = await refreshSheetIfStale("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(false);
+        expect(mockRecreateFunction).not.toHaveBeenCalled();
+      });
+
+      it("should refresh when sheet exists and is stale", async () => {
+        mockContext.workbook.worksheets.items = [mockSheet];
+        const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", threeDaysAgo.toString()]];
+        
+        const refreshed = await refreshSheetIfStale("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(true);
+        expect(mockSheet.delete).toHaveBeenCalled();
+        expect(mockRecreateFunction).toHaveBeenCalled();
+      });
+
+      it("should not refresh when sheet exists but is fresh", async () => {
+        mockContext.workbook.worksheets.items = [mockSheet];
+        const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
+        
+        const refreshed = await refreshSheetIfStale("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(false);
+        expect(mockSheet.delete).not.toHaveBeenCalled();
+        expect(mockRecreateFunction).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("refreshSheetOnLogin", () => {
+      const mockRecreateFunction = jest.fn().mockResolvedValue(undefined);
+
+      beforeEach(() => {
+        mockRecreateFunction.mockClear();
+      });
+
+      it("should return false when sheet does not exist", async () => {
+        mockContext.workbook.worksheets.items = [];
+        
+        const refreshed = await refreshSheetOnLogin("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(false);
+        expect(mockRecreateFunction).not.toHaveBeenCalled();
+      });
+
+      it("should always refresh when sheet exists (regardless of age)", async () => {
+        mockContext.workbook.worksheets.items = [mockSheet];
+        const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
+        
+        const refreshed = await refreshSheetOnLogin("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(true);
+        expect(mockSheet.delete).toHaveBeenCalled();
+        expect(mockRecreateFunction).toHaveBeenCalled();
+      });
+
+      it("should refresh even with fresh data (< 2 days)", async () => {
+        mockContext.workbook.worksheets.items = [mockSheet];
+        const oneHourAgo = Date.now() - (1 * 60 * 60 * 1000);
+        mockRange.values = [["METADATA", oneHourAgo.toString()]];
+        
+        const refreshed = await refreshSheetOnLogin("TestSheet", mockRecreateFunction);
+        
+        expect(refreshed).toBe(true);
+        expect(mockSheet.delete).toHaveBeenCalled();
+        expect(mockRecreateFunction).toHaveBeenCalled();
+      });
+    });
+  });
+});

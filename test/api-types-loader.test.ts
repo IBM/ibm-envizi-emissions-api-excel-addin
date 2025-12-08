@@ -16,6 +16,15 @@ import {
 } from "emissions-api-sdk";
 import { ensureClient } from "../src/functions/client";
 
+// Mock window.apiCredentials
+(global as any).window = {
+  apiCredentials: {
+    tenantId: "test-tenant",
+    orgId: "test-org",
+    apiKey: "test-key",
+  },
+};
+
 // Mock the SDK modules
 jest.mock("emissions-api-sdk", () => ({
   Location: { getTypes: jest.fn() },
@@ -43,13 +52,6 @@ const mockContext = {
   sync: jest.fn(),
 };
 
-const mockSheet = {
-  name: "API_Types_Data",
-  visibility: null as any,
-  getUsedRange: jest.fn(),
-  getRangeByIndexes: jest.fn(),
-};
-
 const mockRange = {
   values: [] as any[][],
   clear: jest.fn(),
@@ -58,6 +60,13 @@ const mockRange = {
     fill: { color: "" },
     autofitColumns: jest.fn(),
   },
+};
+
+const mockSheet = {
+  name: "API_Types_Data",
+  visibility: null as any,
+  getUsedRange: jest.fn(),
+  getRangeByIndexes: jest.fn().mockReturnValue(mockRange),
 };
 
 global.Excel = {
@@ -152,8 +161,10 @@ describe("api-types-loader", () => {
   describe("writeApiTypesToSheet", () => {
     beforeEach(() => {
       mockSheet.getUsedRange.mockReturnValue(mockRange);
+      mockSheet.getRangeByIndexes.mockClear();
       mockSheet.getRangeByIndexes.mockReturnValue(mockRange);
       mockContext.workbook.worksheets.add.mockReturnValue(mockSheet);
+      mockContext.workbook.worksheets.getItem.mockReturnValue(mockSheet);
     });
 
     it("should create sheet if it does not exist", async () => {
@@ -197,15 +208,21 @@ describe("api-types-loader", () => {
 
       await writeApiTypesToSheet(apiTypesMap);
 
-      expect(mockSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 1, 6);
+      // The function calls getRangeByIndexes multiple times (for metadata, header, and data)
+      // Check that it was called with the header range parameters
+      const calls = mockSheet.getRangeByIndexes.mock.calls;
+      const headerCall = calls.find(call => call[0] === 1 && call[2] === 1 && call[3] === 6); // startRow=1, rowCount=1, colCount=6
+      expect(headerCall).toBeDefined();
     });
   });
 
   describe("loadAndPopulateApiTypes", () => {
     beforeEach(() => {
       mockSheet.getUsedRange.mockReturnValue(mockRange);
+      mockSheet.getRangeByIndexes.mockClear();
       mockSheet.getRangeByIndexes.mockReturnValue(mockRange);
       mockContext.workbook.worksheets.add.mockReturnValue(mockSheet);
+      mockContext.workbook.worksheets.getItem.mockReturnValue(mockSheet);
     });
 
     it("should fetch and write API types successfully", async () => {

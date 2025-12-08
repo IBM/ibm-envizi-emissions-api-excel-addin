@@ -7,7 +7,7 @@
  * - mobile (represents: mobile, stationary, fugitive, transportationanddistribution)
  */
 
-import { API_AREA_CONFIGS } from "./metadata-utils";
+import { API_AREA_CONFIGS, setSheetMetadata } from "./metadata-utils";
 
 /**
  * Sheet name where area data is stored
@@ -113,10 +113,11 @@ async function writeAreaDataToSheet(areaDataMap: Map<string, LocationData[]>): P
     // Prepare data rows
     const rows: any[][] = [];
     
-    // Add header row
+    // Row 0: Metadata (will be set separately)
+    // Row 1: Header row
     rows.push(["API Name", "Alpha3", "Country Name", "State/Province", "Power Grid"]);
     
-    // Add data rows for each API
+    // Row 2+: Data rows for each API
     areaDataMap.forEach((locations, apiName) => {
       locations.forEach((location) => {
         const stateProvinces = location.stateProvinces?.join(", ") || "";
@@ -132,12 +133,12 @@ async function writeAreaDataToSheet(areaDataMap: Map<string, LocationData[]>): P
       });
     });
     
-    // Write data to sheet
-    const range = sheet.getRangeByIndexes(0, 0, rows.length, 5);
+    // Write data to sheet (starting from row 1, row 0 is for metadata)
+    const range = sheet.getRangeByIndexes(1, 0, rows.length, 5);
     range.values = rows;
     
-    // Format header row
-    const headerRange = sheet.getRangeByIndexes(0, 0, 1, 5);
+    // Format header row (row 1)
+    const headerRange = sheet.getRangeByIndexes(1, 0, 1, 5);
     headerRange.format.font.bold = true;
     headerRange.format.fill.color = "#4472C4";
     headerRange.format.font.color = "white";
@@ -147,7 +148,12 @@ async function writeAreaDataToSheet(areaDataMap: Map<string, LocationData[]>): P
     
     await context.sync();
     
-    console.log(`Successfully wrote area data to sheet: ${AREA_DATA_SHEET_NAME}`);
+    // Store metadata in row 0
+    await setSheetMetadata(AREA_DATA_SHEET_NAME, {
+      timestamp: Date.now(),
+    });
+    
+    console.log(`✅ Successfully wrote area data to sheet: ${AREA_DATA_SHEET_NAME} with metadata`);
   });
 }
 

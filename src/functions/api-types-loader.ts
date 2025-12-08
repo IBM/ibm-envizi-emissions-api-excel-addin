@@ -1,7 +1,7 @@
 // Copyright IBM Corp. 2025
 
 import { ensureClient } from "./client";
-import { API_TYPES_CONFIGS } from "./metadata-utils";
+import { API_TYPES_CONFIGS, setSheetMetadata } from "./metadata-utils";
 
 /**
  * Map of API names to their fixed column indices (0-based)
@@ -95,30 +95,34 @@ export async function writeApiTypesToSheet(apiTypesMap: Map<string, string[]>): 
 
     // Fixed column count (6 APIs)
     const columnCount = API_TYPES_CONFIGS.length;
-    const rowCount = maxTypes + 1; // +1 for header row
+    const rowCount = maxTypes + 2; // +1 for metadata row, +1 for header row
     const data: (string | null)[][] = Array(rowCount)
       .fill(null)
       .map(() => Array(columnCount).fill(null));
+
+    // Row 0: Metadata (will be set separately)
+    // Row 1: Headers
+    // Row 2+: Data
 
     // Fill in the data in fixed column order matching API_TYPES_CONFIGS
     API_TYPES_CONFIGS.forEach((config, columnIndex) => {
       const types = apiTypesMap.get(config.name) || [];
       
-      // Set header
-      data[0][columnIndex] = config.name;
+      // Set header (row 1)
+      data[1][columnIndex] = config.name;
 
-      // Set types
+      // Set types (starting from row 2)
       types.forEach((type, typeIndex) => {
-        data[typeIndex + 1][columnIndex] = type;
+        data[typeIndex + 2][columnIndex] = type;
       });
     });
 
-    // Write data to sheet
-    const range = sheet.getRangeByIndexes(0, 0, rowCount, columnCount);
-    range.values = data;
+    // Write data to sheet (starting from row 1, row 0 is for metadata)
+    const range = sheet.getRangeByIndexes(1, 0, rowCount - 1, columnCount);
+    range.values = data.slice(1);
 
-    // Format headers
-    const headerRange = sheet.getRangeByIndexes(0, 0, 1, columnCount);
+    // Format headers (row 1)
+    const headerRange = sheet.getRangeByIndexes(1, 0, 1, columnCount);
     headerRange.format.font.bold = true;
     headerRange.format.fill.color = "#4472C4";
     headerRange.format.font.color = "white";
@@ -128,7 +132,12 @@ export async function writeApiTypesToSheet(apiTypesMap: Map<string, string[]>): 
 
     await context.sync();
 
-    console.log(`Successfully wrote API types to sheet: ${API_TYPES_SHEET_NAME}`);
+    // Store metadata in row 0
+    await setSheetMetadata(API_TYPES_SHEET_NAME, {
+      timestamp: Date.now(),
+    });
+
+    console.log(`✅ Successfully wrote API types to sheet: ${API_TYPES_SHEET_NAME} with metadata`);
   });
 }
 

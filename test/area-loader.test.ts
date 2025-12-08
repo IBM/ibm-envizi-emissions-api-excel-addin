@@ -6,6 +6,15 @@ import {
   AREA_COLUMN_MAP,
 } from "../src/functions/area-loader";
 
+// Mock window.apiCredentials
+(global as any).window = {
+  apiCredentials: {
+    tenantId: "test-tenant",
+    orgId: "test-org",
+    apiKey: "test-key",
+  },
+};
+
 // Mock emissions-api-sdk
 jest.mock("emissions-api-sdk", () => ({
   Location: {
@@ -458,8 +467,14 @@ describe("area-loader", () => {
     it("should set data range with correct address", async () => {
       await loadAndPopulateAreaData();
 
-      // Should call getRangeByIndexes with correct parameters (1 header + 4 data rows = 5 total)
-      expect(mockAreaDataSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 5, 5);
+      // Should call getRangeByIndexes - check that it was called with the data range
+      // The function calls getRangeByIndexes multiple times (for metadata, header, and data)
+      expect(mockAreaDataSheet.getRangeByIndexes).toHaveBeenCalled();
+      
+      // Verify the main data write call (1 header + 4 data rows = 5 total, 5 columns)
+      const calls = mockAreaDataSheet.getRangeByIndexes.mock.calls;
+      const dataCall = calls.find(call => call[0] === 1 && call[2] === 5); // startRow=1, rowCount=5
+      expect(dataCall).toBeDefined();
     });
   });
 

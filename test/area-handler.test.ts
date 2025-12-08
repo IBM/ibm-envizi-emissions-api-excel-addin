@@ -5,7 +5,7 @@ import {
   handleStateProvinceFunction,
   handlePowerGridFunction,
 } from "../src/functions/area-handler";
-import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError } from "../src/functions/metadata-utils";
+import { validateApiName, getTargetCell, applyListValidation, handleCustomFunctionError, refreshSheetIfStale } from "../src/functions/metadata-utils";
 
 // Mock area-loader module
 jest.mock("../src/functions/area-loader", () => ({
@@ -35,6 +35,7 @@ jest.mock("../src/functions/metadata-utils", () => ({
   getTargetCell: jest.fn(),
   applyListValidation: jest.fn(),
   handleCustomFunctionError: jest.fn(),
+  refreshSheetIfStale: jest.fn(),
   VALID_API_NAMES: [
     "location",
     "mobile",
@@ -135,6 +136,7 @@ describe("area-handler", () => {
   const mockGetTargetCell = getTargetCell as jest.MockedFunction<typeof getTargetCell>;
   const mockApplyListValidation = applyListValidation as jest.MockedFunction<typeof applyListValidation>;
   const mockHandleCustomFunctionError = handleCustomFunctionError as jest.MockedFunction<typeof handleCustomFunctionError>;
+  const mockRefreshSheetIfStale = refreshSheetIfStale as jest.MockedFunction<typeof refreshSheetIfStale>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -158,6 +160,9 @@ describe("area-handler", () => {
     mockHandleCustomFunctionError.mockImplementation((error) => {
       throw error;
     });
+
+    // Default: refreshSheetIfStale returns false (no refresh needed)
+    mockRefreshSheetIfStale.mockResolvedValue(false);
 
     // Default: sheet exists
     mockContext.workbook.worksheets.items = [{ name: "API_Area_Data" }];
