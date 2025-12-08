@@ -148,16 +148,6 @@ export function login(): void {
       credentialsForm["tenantId"].value = apiCredentials.tenantId;
       credentialsForm["orgId"].value = apiCredentials.orgId;
 
-      
-      // Trigger 1: Always refresh existing data on login (if sheets exist)
-      try {
-        await refreshSheetOnLogin("API_Types_Data", loadAndPopulateApiTypes);
-        await refreshSheetOnLogin("API_Area_Data", loadAndPopulateAreaData);
-      } catch (error) {
-        console.error("⚠️ [LOGIN] Error during data refresh:", error);
-        // Don't block login if refresh fails
-      }
-      
       switchPage("main-page");
       postLogin();
     })
@@ -180,7 +170,6 @@ async function postLogin(): Promise<void> {
     await refreshSheetOnLogin("API_Area_Data", loadAndPopulateAreaData);
   } catch (error) {
     console.error("Error during metadata refresh:", error);
-    // Don't block login if refresh fails
   }
 }
 
