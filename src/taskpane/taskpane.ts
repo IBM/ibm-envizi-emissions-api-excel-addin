@@ -173,6 +173,15 @@ export function login(): void {
 
 async function postLogin(): Promise<void> {
   // Processing needed after login
+  
+  // Refresh metadata sheets if they exist
+  try {
+    await refreshSheetOnLogin("API_Types_Data", loadAndPopulateApiTypes);
+    await refreshSheetOnLogin("API_Area_Data", loadAndPopulateAreaData);
+  } catch (error) {
+    console.error("Error during metadata refresh:", error);
+    // Don't block login if refresh fails
+  }
 }
 
 export function logout(): void {
