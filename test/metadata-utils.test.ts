@@ -173,7 +173,7 @@ describe("metadata-utils", () => {
     };
 
     const mockRange = {
-      values: [["METADATA", "1234567890000", "tenant1", "org1"]],
+      values: [["METADATA", "1234567890000"]],
       load: jest.fn(),
     };
 
@@ -192,19 +192,17 @@ describe("metadata-utils", () => {
 
     describe("getSheetMetadata", () => {
       it("should return metadata when it exists", async () => {
-        mockRange.values = [["METADATA", "1234567890000", "tenant1", "org1"]];
+        mockRange.values = [["METADATA", "1234567890000"]];
         
         const metadata = await getSheetMetadata("TestSheet");
         
         expect(metadata).toEqual({
           timestamp: 1234567890000,
-          tenantId: "tenant1",
-          orgId: "org1",
         });
       });
 
       it("should return null when metadata marker is missing", async () => {
-        mockRange.values = [["NOT_METADATA", "1234567890000", "tenant1", "org1"]];
+        mockRange.values = [["NOT_METADATA", "1234567890000"]];
         
         const metadata = await getSheetMetadata("TestSheet");
         
@@ -224,20 +222,18 @@ describe("metadata-utils", () => {
       it("should write metadata to row 0", async () => {
         const metadata: SheetMetadata = {
           timestamp: 1234567890000,
-          tenantId: "tenant1",
-          orgId: "org1",
         };
 
         await setSheetMetadata("TestSheet", metadata);
 
-        expect(mockSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 1, 4);
-        expect(mockRange.values).toEqual([["METADATA", "1234567890000", "tenant1", "org1"]]);
+        expect(mockSheet.getRangeByIndexes).toHaveBeenCalledWith(0, 0, 1, 2);
+        expect(mockRange.values).toEqual([["METADATA", "1234567890000"]]);
       });
     });
 
     describe("isSheetDataStale", () => {
       it("should return true when metadata is missing", async () => {
-        mockRange.values = [["NOT_METADATA", "1234567890000", "tenant1", "org1"]];
+        mockRange.values = [["NOT_METADATA", "1234567890000"]];
         
         const isStale = await isSheetDataStale("TestSheet");
         
@@ -246,7 +242,7 @@ describe("metadata-utils", () => {
 
       it("should return true when data is older than 2 days", async () => {
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", threeDaysAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", threeDaysAgo.toString()]];
         
         const isStale = await isSheetDataStale("TestSheet");
         
@@ -255,7 +251,7 @@ describe("metadata-utils", () => {
 
       it("should return false when data is less than 2 days old", async () => {
         const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", oneDayAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
         
         const isStale = await isSheetDataStale("TestSheet");
         
@@ -332,7 +328,7 @@ describe("metadata-utils", () => {
       it("should refresh when sheet exists and is stale", async () => {
         mockContext.workbook.worksheets.items = [mockSheet];
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", threeDaysAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", threeDaysAgo.toString()]];
         
         const refreshed = await refreshSheetIfStale("TestSheet", mockRecreateFunction);
         
@@ -344,7 +340,7 @@ describe("metadata-utils", () => {
       it("should not refresh when sheet exists but is fresh", async () => {
         mockContext.workbook.worksheets.items = [mockSheet];
         const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", oneDayAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
         
         const refreshed = await refreshSheetIfStale("TestSheet", mockRecreateFunction);
         
@@ -373,7 +369,7 @@ describe("metadata-utils", () => {
       it("should always refresh when sheet exists (regardless of age)", async () => {
         mockContext.workbook.worksheets.items = [mockSheet];
         const oneDayAgo = Date.now() - (1 * 24 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", oneDayAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", oneDayAgo.toString()]];
         
         const refreshed = await refreshSheetOnLogin("TestSheet", mockRecreateFunction);
         
@@ -385,7 +381,7 @@ describe("metadata-utils", () => {
       it("should refresh even with fresh data (< 2 days)", async () => {
         mockContext.workbook.worksheets.items = [mockSheet];
         const oneHourAgo = Date.now() - (1 * 60 * 60 * 1000);
-        mockRange.values = [["METADATA", oneHourAgo.toString(), "tenant1", "org1"]];
+        mockRange.values = [["METADATA", oneHourAgo.toString()]];
         
         const refreshed = await refreshSheetOnLogin("TestSheet", mockRecreateFunction);
         
