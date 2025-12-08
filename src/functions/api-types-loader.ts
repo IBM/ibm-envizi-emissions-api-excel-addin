@@ -2,7 +2,6 @@
 
 import { ensureClient } from "./client";
 import { API_TYPES_CONFIGS, setSheetMetadata } from "./metadata-utils";
-import { getApiCredentials } from "../common/credentials";
 
 /**
  * Map of API names to their fixed column indices (0-based)
@@ -134,14 +133,9 @@ export async function writeApiTypesToSheet(apiTypesMap: Map<string, string[]>): 
     await context.sync();
 
     // Store metadata in row 0
-    const credentials = getApiCredentials();
-    if (credentials) {
-      await setSheetMetadata(API_TYPES_SHEET_NAME, {
-        timestamp: Date.now(),
-        tenantId: credentials.tenantId,
-        orgId: credentials.orgId,
-      });
-    }
+    await setSheetMetadata(API_TYPES_SHEET_NAME, {
+      timestamp: Date.now(),
+    });
 
     console.log(`✅ Successfully wrote API types to sheet: ${API_TYPES_SHEET_NAME} with metadata`);
   });
