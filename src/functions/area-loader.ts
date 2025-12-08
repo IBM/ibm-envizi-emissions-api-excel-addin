@@ -8,7 +8,6 @@
  */
 
 import { API_AREA_CONFIGS, setSheetMetadata } from "./metadata-utils";
-import { getApiCredentials } from "../common/credentials";
 
 /**
  * Sheet name where area data is stored
@@ -150,14 +149,9 @@ async function writeAreaDataToSheet(areaDataMap: Map<string, LocationData[]>): P
     await context.sync();
     
     // Store metadata in row 0
-    const credentials = getApiCredentials();
-    if (credentials) {
-      await setSheetMetadata(AREA_DATA_SHEET_NAME, {
-        timestamp: Date.now(),
-        tenantId: credentials.tenantId,
-        orgId: credentials.orgId,
-      });
-    }
+    await setSheetMetadata(AREA_DATA_SHEET_NAME, {
+      timestamp: Date.now(),
+    });
     
     console.log(`✅ Successfully wrote area data to sheet: ${AREA_DATA_SHEET_NAME} with metadata`);
   });
