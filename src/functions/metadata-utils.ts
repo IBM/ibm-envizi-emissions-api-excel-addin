@@ -112,8 +112,6 @@ export const REFRESH_CONFIG = {
  */
 export interface SheetMetadata {
   timestamp: number;
-  tenantId: string;
-  orgId: string;
 }
 
 /**
@@ -125,7 +123,7 @@ export async function getSheetMetadata(sheetName: string): Promise<SheetMetadata
   try {
     return await Excel.run(async (context) => {
       const sheet = context.workbook.worksheets.getItem(sheetName);
-      const metadataRange = sheet.getRangeByIndexes(0, 0, 1, 3);
+      const metadataRange = sheet.getRangeByIndexes(0, 0, 1, 2);
       metadataRange.load("values");
       await context.sync();
 
@@ -136,8 +134,6 @@ export async function getSheetMetadata(sheetName: string): Promise<SheetMetadata
 
       return {
         timestamp: parseInt(values[1] as string),
-        tenantId: values[2] as string,
-        orgId: values[3] as string,
       };
     });
   } catch (error) {
@@ -154,8 +150,8 @@ export async function getSheetMetadata(sheetName: string): Promise<SheetMetadata
 export async function setSheetMetadata(sheetName: string, metadata: SheetMetadata): Promise<void> {
   await Excel.run(async (context) => {
     const sheet = context.workbook.worksheets.getItem(sheetName);
-    const metadataRange = sheet.getRangeByIndexes(0, 0, 1, 4);
-    metadataRange.values = [["METADATA", metadata.timestamp.toString(), metadata.tenantId, metadata.orgId]];
+    const metadataRange = sheet.getRangeByIndexes(0, 0, 1, 2);
+    metadataRange.values = [["METADATA", metadata.timestamp.toString()]];
     await context.sync();
   });
 }
