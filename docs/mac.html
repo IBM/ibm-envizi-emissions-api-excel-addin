@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Reference" href="reference.html" /><link rel="prev" title="Mac" href="mac.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Use" href="use.html" /><link rel="prev" title="Windows" href="windows.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
-        <title>Use - IBM Envizi for Excel documentation</title>
+        <title>Mac - IBM Envizi for Excel documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -200,13 +200,13 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="installation.html">Installation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="installation.html">Installation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Installation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="online.html">Office 365 - Online</a></li>
 <li class="toctree-l2"><a class="reference internal" href="windows.html">Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mac.html">Mac</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Mac</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="use.html">Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting Guide</a></li>
 </ul>
@@ -229,7 +229,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/use.rst.txt" title="View this page">
+  <a class="muted-link" href="_sources/mac.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -249,67 +249,50 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="use">
-<h1>Use<a class="headerlink" href="#use" title="Link to this heading">¶</a></h1>
-<section id="logging-in">
-<h2>Logging In<a class="headerlink" href="#logging-in" title="Link to this heading">¶</a></h2>
-<p>After installation, launch the add-in by clicking the <strong>IBM Envizi for Excel Add-in</strong> button on the Excel ribbon.</p>
-<p>When prompted, provide your credentials:</p>
-<ul class="simple">
-<li><p><strong>apiKey</strong> – API access key</p></li>
-<li><p><strong>tenantId</strong> – Tenant identifier</p></li>
-<li><p><strong>orgId</strong> – Organization identifier</p></li>
-</ul>
-<p>Your credentials can be found on the <a class="reference external" href="https://www.app.ibm.com/envizi/emissions-api-home/overview?cuiURL=%2Femissions-api-home%2Foverview">Overview Dashboard</a> by clicking on the <strong>View API Key</strong> button.</p>
-<img alt="Login screen of the add-in" class="align-center" src="_images/login.png" />
-<p>Once your credentials are validated, the <strong>main interface</strong> of the add-in becomes available:</p>
-<img alt="Main interface of the add-in" class="align-center" src="_images/main.png" />
-</section>
-<section id="working-with-functions">
-<h2>Working with Functions<a class="headerlink" href="#working-with-functions" title="Link to this heading">¶</a></h2>
-<p>The add-in provides custom Excel functions that retrieve and calculate emissions data.</p>
-<p><strong>Example: Stationary emissions</strong></p>
-<p>Users can enter a function such as:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>=ENVIZI.STATIONARY(type, value, unit, country, [stateProvince], [date])
+          <section id="mac">
+<h1>Mac<a class="headerlink" href="#mac" title="Link to this heading">¶</a></h1>
+<p>This guide explains how to install the <strong>IBM Envizi Emissions API</strong> add-in from an XML manifest file on
+<strong>macOS</strong>.</p>
+<ol class="arabic simple">
+<li><p>Open <cite>Finder</cite></p></li>
+<li><p>On the top menu bar, click <cite>Go</cite></p></li>
+<li><p>From the drop down menu that appears, click <cite>Go to folder</cite></p></li>
+</ol>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/&lt;username&gt;/Library/Containers/com.microsoft.Excel/Data/Documents
 </pre></div>
 </div>
-<p><strong>Parameters</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: Activity type</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: Numeric activity value</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">unit</span></code>: Unit of measurement</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">country</span></code>: ISO alpha-3 country code</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stateProvince</span></code> <em>(optional)</em>: State or province identifier</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">date</span></code> <em>(optional)</em>: Activity date</p></li>
+<li><p>&lt;username&gt; should be replaced with the name of your Mac user</p></li>
 </ul>
-<img alt="Stationary Function" class="align-center" src="_images/function.png" />
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Ensure that there are enough empty cells available to display the results. If sufficient space is not available, a spill error will occur.</p>
 </div>
-<p><strong>Process</strong></p>
-<ol class="arabic simple">
-<li><p>IBM Envizi for Excel processes the inputs and formats them for the IBM Envizi - Emissions API,</p></li>
-<li><p>The IBM Envizi Emissions API calculates the emissions data,</p></li>
-<li><p>The result is then returned and displayed in the Excel cell.</p></li>
+<ol class="arabic simple" start="4">
+<li><p>If the <cite>wef</cite> folder does not exist, right-click and create a folder called <cite>wef</cite></p></li>
+<li><p>Click on the <cite>wef</cite> folder to enter it</p></li>
+<li><p>Place your downloaded <cite>manifest.xml</cite> file in the <cite>wef</cite> folder</p></li>
 </ol>
-<img alt="API Result" class="align-center" src="_images/result.png" />
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If an error occurs, the add-in will display an error message once you hover over warning icon.</p>
-<a class="reference internal image-reference" href="_images/error.png"><img alt="Example error message" class="align-center" src="_images/error.png" style="width: 220px; height: 145px;" />
-</a>
-</div>
+<img alt="Placing manifest file in Mac directory" class="align-center" src="_images/placing-wef-file.png" />
+<p>After successfully placing the manifest file, the add-in will appear in the Developer Add-in section.</p>
+<img alt="Developer Add-in in Excel" class="align-center" src="_images/developer-add-in.png" />
+<p>For more information please see the <a class="reference external" href="https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac">Microsoft 365 Office Add-in Mac</a> documentation for Mac.</p>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Add-in not appearing</strong></dt><dd><ul>
+<li><p>Make sure the manifest file is placed in the correct directory</p></li>
+<li><p>Ensure Excel has been restarted after placing the manifest file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </section>
-<section id="exporting-results">
-<h2>Exporting Results<a class="headerlink" href="#exporting-results" title="Link to this heading">¶</a></h2>
-<p>To export computed results (without formulas):</p>
-<ol class="arabic simple">
-<li><p>Copy the cells containing the formulas.</p></li>
-<li><p>Use <strong>Paste Values</strong> to paste only the calculated results into a new location.</p></li>
-</ol>
-<a class="reference internal image-reference" href="_images/paste.png"><img alt="Paste Values option in Excel" class="align-center" src="_images/paste.png" style="width: 220px; height: 420px;" />
-</a>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>After installation, please refer to the <a class="reference internal" href="installation.html"><span class="doc">Calculation Mode Tip</span></a> section for optimizing your Excel configuration.</p>
+<p>Please follow <a class="reference internal" href="use.html"><span class="doc">Usage</span></a> documentation for next steps.</p>
 </section>
 </section>
 
@@ -318,23 +301,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="reference.html">
+          <a class="next-page" href="use.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Reference</div>
+                <div class="title">Use</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="mac.html">
+          <a class="prev-page" href="windows.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Mac</div>
+                <div class="title">Windows</div>
                 
               </div>
             </a>
@@ -368,10 +351,9 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Use</a><ul>
-<li><a class="reference internal" href="#logging-in">Logging In</a></li>
-<li><a class="reference internal" href="#working-with-functions">Working with Functions</a></li>
-<li><a class="reference internal" href="#exporting-results">Exporting Results</a></li>
+<li><a class="reference internal" href="#">Mac</a><ul>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
 </ul>
