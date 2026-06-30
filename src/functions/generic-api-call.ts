@@ -9,12 +9,12 @@ import {
   RealEstate,
   Stationary,
   TransportationAndDistribution,
+  PhysicalActivity
 } from "emissions-api-sdk";
 
 import { ensureClient } from "./client";
-import { FunctionNameType, formatRow } from "./headers-config";
+import { formatRow, FunctionNameType } from "./headers-config";
 import { convertExcelDateToISO, extractSymbolFromDisplay, extractValueAfterDash } from "./utils";
-
 
 type ApiType = Extract<
   FunctionNameType,
@@ -26,12 +26,21 @@ type ApiType = Extract<
   | "calculation"
   | "economic_activity"
   | "real_estate"
+  | "physical_activity"
 >;
 
 interface BasePayload {
   value: number;
   unit?: string;
-  
+}
+
+export interface AttributionPayload {
+  outstandingAmount?: number;
+  propertyValue?: number;
+  totalEquity?: number;
+  totalDebt?: number;
+  evic?: number;
+  revenue?: number;
 }
 
 export interface PayloadWithType extends BasePayload {
@@ -40,14 +49,15 @@ export interface PayloadWithType extends BasePayload {
   stateProvince?: string;
   date?: string;
   powerGrid?: string;
+  attribution?: AttributionPayload;
 }
 
 export interface PayloadWithId extends BasePayload {
   factorId: number;
+  attribution?: AttributionPayload;
 }
 
 type Payload = PayloadWithType | PayloadWithId;
-
 
 const emissionApiMap: Record<ApiType, (params: any) => Promise<any>> = {
   location: Location.calculate,
@@ -58,15 +68,19 @@ const emissionApiMap: Record<ApiType, (params: any) => Promise<any>> = {
   calculation: Calculation.calculate,
   economic_activity: EconomicActivity.calculate,
   real_estate: RealEstate.calculate,
+  physical_activity: PhysicalActivity.calculate,
 };
 
-function buildLocation(payload: PayloadWithType, apiType: ApiType): Record<string, string> | undefined {
+function buildLocation(
+  payload: PayloadWithType,
+  apiType: ApiType
+): Record<string, string> | undefined {
   const { country, stateProvince, powerGrid } = payload;
-  
+
   // Extract country alpha3 from display format
   // "United States (USA)" → "USA" or "USA" → "USA"
   const countryCode = extractSymbolFromDisplay(country) || country;
-  
+
   const location: any = { country: countryCode };
 
   if (stateProvince) {
@@ -84,15 +98,15 @@ function buildLocation(payload: PayloadWithType, apiType: ApiType): Record<strin
 }
 
 function buildApiParams(apiType: ApiType, payload: Payload): any {
-  const { value, unit } = payload;
-  
+  const { value, unit, attribution } = payload;
+
   // Extract unit symbol from display format
   // "kilogram (kg)" → "kg" or "kg" → "kg"
   const unitSymbol = unit ? extractSymbolFromDisplay(unit) : undefined;
-  
+
   const activity: any = {
     value,
-    ...(unitSymbol ? { unit: unitSymbol } : {})
+    ...(unitSymbol ? { unit: unitSymbol } : {}),
   };
 
   if ("type" in payload) {
@@ -110,6 +124,34 @@ function buildApiParams(apiType: ApiType, payload: Payload): any {
     const formattedDate = payload.date?.trim() ? convertExcelDateToISO(payload.date) : null;
     if (formattedDate) {
       apiParams.time = { date: formattedDate };
+    }
+  }
+
+  // Add attribution if provided (for real_estate, physical_activity, and economic_activity)
+  if (attribution) {
+    const attributionObj: any = {};
+
+    if (attribution.outstandingAmount !== undefined) {
+      attributionObj.outstandingAmount = attribution.outstandingAmount;
+    }
+    if (attribution.propertyValue !== undefined) {
+      attributionObj.propertyValue = attribution.propertyValue;
+    }
+    if (attribution.totalEquity !== undefined) {
+      attributionObj.totalEquity = attribution.totalEquity;
+    }
+    if (attribution.totalDebt !== undefined) {
+      attributionObj.totalDebt = attribution.totalDebt;
+    }
+    if (attribution.evic !== undefined) {
+      attributionObj.evic = attribution.evic;
+    }
+    if (attribution.revenue !== undefined) {
+      attributionObj.revenue = attribution.revenue;
+    }
+
+    if (Object.keys(attributionObj).length > 0) {
+      apiParams.attribution = attributionObj;
     }
   }
 
@@ -136,7 +178,10 @@ export async function genericApiCall(apiType: ApiType, payload: Payload): Promis
     const response = await apiFn(apiParams);
 
     if (!response || typeof response !== "object") {
-      throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Invalid API response");
+      throw new CustomFunctions.Error(
+        CustomFunctions.ErrorCode.notAvailable,
+        "Invalid API response"
+      );
     }
 
     return formatResponse(response, apiType);

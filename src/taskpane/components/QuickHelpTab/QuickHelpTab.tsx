@@ -16,8 +16,8 @@ import {
   Button,
   Image,
   Link,
-  Text,
   makeStyles,
+  Text,
 } from "@fluentui/react-components";
 import {
   ArrowDownload16Regular,
@@ -191,7 +191,11 @@ function GettingStartedAccordionItem(): React.ReactElement {
           </p>
 
           <div className={styles.imageWrapper}>
-            <Button className={styles.imageContainer} onClick={handleImageClick}>
+            <Button
+              className={styles.imageContainer}
+              onClick={handleImageClick}
+              data-autotrack-cta="How to use Excel add-in"
+            >
               <Image alt="How to play" src="assets/excel-how-to.png" fit="cover" />
               <div className={styles.playButtonOverlay}>
                 <PlayCircleFilled />

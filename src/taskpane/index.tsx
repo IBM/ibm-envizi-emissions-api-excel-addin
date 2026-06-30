@@ -1,10 +1,13 @@
 // Copyright IBM Corp. 2025, 2026
 
+import "./styles.scss";
+import "./taskpane.css";
+
 import React from "react";
 import { createRoot } from "react-dom/client";
+
 import { TaskpaneApp } from "./TaskpaneApp";
-import "./reset.css";
-import "./taskpane.css";
+import { analyticsService } from "./services/analyticsService";
 
 /* global Office */
 
@@ -23,6 +26,7 @@ function hideSideloadMessage() {
  */
 function initializeApp() {
   hideSideloadMessage();
+  analyticsService.initialize();
 
   const rootElement = document.getElementById("root");
   if (!rootElement) {

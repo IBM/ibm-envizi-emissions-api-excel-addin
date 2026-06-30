@@ -4,9 +4,10 @@ import { FluentProvider } from "@fluentui/react-components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { LoginPage } from "./components/LoginPage";
-import { MainPage } from "./components/MainPage";
-import { WelcomePage } from "./components/WelcomePage";
+import { LoginPage } from "./components/LoginPage/LoginPage";
+import { MainPage } from "./components/MainPage/MainPage";
+import { WelcomePage } from "./components/WelcomePage/WelcomePage";
+import { ActivityRecommenderProvider } from "./context/ActivityRecommenderContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { useAuth, useTheme } from "./hooks";
@@ -56,7 +57,9 @@ function AppWithTheme() {
   return (
     <FluentProvider theme={theme} className="fluent-provider">
       <AuthProvider>
-        <AppContent />
+        <ActivityRecommenderProvider>
+          <AppContent />
+        </ActivityRecommenderProvider>
       </AuthProvider>
     </FluentProvider>
   );

@@ -81,6 +81,10 @@ module.exports = async (env, options) => {
             fullySpecified: false, // Disable the strict extension requirement
           },
         },
+        {
+          test: /\.s[ac]ss$/i,
+          use: ["style-loader", "css-loader", "sass-loader"],
+        },
       ],
     },
     plugins: [
@@ -143,7 +147,7 @@ module.exports = async (env, options) => {
       }),
     ],
     performance: {
-      maxEntrypointSize: 614400,
+      maxEntrypointSize: 1048576,
       maxAssetSize: 1048576,
     },
     devServer: {
